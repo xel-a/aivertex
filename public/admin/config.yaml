@@ -1,0 +1,37 @@
+backend:
+    name: github
+    repo: xel-a/aivertex
+    branch: main
+
+media_folder: '/src/assets/images'
+public_folder: '/src/assets/images'
+
+collections:
+    - name: 'blog'
+      label: 'Blog Posts'
+      folder: 'src/content/blog'
+      create: true
+      slug: '{{slug}}'
+      extension: 'md'
+      format: 'frontmatter'
+
+      fields:
+          - { label: 'Title', name: 'title', widget: 'string' }
+
+          - { label: 'Description', name: 'description', widget: 'text' }
+
+          - { label: 'Publish Date', name: 'pubDate', widget: 'datetime' }
+
+          - label: 'Author'
+            name: 'author'
+            widget: 'select' 
+            options:
+                - Axel Ignacio
+
+          - { label: 'Category', name: 'category', widget: 'text' }
+
+          - { label: 'Tags', name: 'tags', widget: 'list' }
+
+          - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
+
+          - { label: 'Body', name: 'body', widget: 'markdown' }

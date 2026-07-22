@@ -1,0 +1,103 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Layout from './Layout.astro';
+import { getReadingTime } from '../utils/readingTime';
+
+interface Props {
+	frontmatter: CollectionEntry<'blog'>['data'];
+	body: CollectionEntry<'blog'>['body'];
+}
+
+const { frontmatter, body } = Astro.props;
+
+const contentText = body?.trim().split(/\s+/).join(' ')!;
+const readingTime = getReadingTime(contentText)
+---
+
+<Layout pageTitle={frontmatter.title}>
+	<article class='content'>
+		<section class='info'>
+			<p>
+				{
+					frontmatter.pubDate.toLocaleDateString('en-CA', {
+						month: 'long',
+						day: 'numeric',
+						year: 'numeric',
+					})
+				}
+			</p>
+			<span>·</span>
+			<p>{readingTime.minutes} min read</p>
+		</section>
+		<h1 class='title'>{frontmatter.title}</h1>
+		<section class='tags'>
+			{
+				frontmatter.tags.map((tag: string) => (
+					<p class='tag'>
+						<a href={`tags/${tag}`}>{tag}</a>
+					</p>
+				))
+			}
+		</section>
+		<slot />
+	</article>
+</Layout>
+
+<style>
+	.content {
+		max-width: 750px;
+		margin: auto;
+	}
+
+	a {
+		color: unset;
+		text-decoration: none;
+	}
+
+	.title,
+	.date {
+		margin: 0;
+	}
+
+	.title {
+		font-size: 3rem;
+		margin-bottom: 10px;
+	}
+
+	.info {
+		color: var(--color-shadow);
+		margin-bottom: -10px;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+	}
+
+	.tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+		margin-bottom: 40px;
+	}
+
+	.tag {
+		color: var(--color-text);
+		margin: 0.25em 0;
+		border: 2px solid var(--color-shadow);
+		border-radius: 0.5em;
+		padding: 5px 10px;
+		font-size: 0.9em;
+		font-weight: bold;
+		background-color: var(--color-background-shadow);
+		transition:
+			border-color 0.6s ease,
+			color 0.6s ease,
+			transform 0.6s ease;
+		cursor: pointer;
+	}
+
+	.tag:hover {
+		border-color: var(--color-link);
+		color: var(--color-link);
+		transform: translateY(-5px);
+	}
+</style>
