@@ -1,9 +1,12 @@
 ---
+import NavLine from './NavLine.astro';
 
+const { pageTitle } = Astro.props;
+const vertices = ['About', 'Blogs', 'Lab', 'Projects'];
 ---
 
 <header>
-	<a href="/" class='aivertex-logo'>
+	<a href='/' class='aivertex-logo'>
 		<svg class='icon' viewBox='0 0 260 260' xmlns='http://www.w3.org/2000/svg'>
 			<rect width='260' height='260' fill='transparent'></rect>
 			<g class='needle'>
@@ -14,9 +17,15 @@
 		</svg>
 		<h1 class='logo-title'>aivertex</h1>
 	</a>
+	{vertices.includes(pageTitle) ? <NavLine current={pageTitle.toLowerCase()} /> : null}
 </header>
 
 <style>
+	header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
 	.aivertex-logo {
 		display: flex;
 		align-items: center;

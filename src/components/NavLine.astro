@@ -1,0 +1,190 @@
+---
+export interface Props {
+	current: 'about' | 'blogs' | 'lab' | 'projects';
+}
+
+const { current } = Astro.props;
+
+const items = [
+	{ id: 'about', label: 'About', href: '/about' },
+	{ id: 'blogs', label: 'Blogs', href: '/blog' },
+	{ id: 'lab', label: 'Lab', href: '/lab' },
+	{ id: 'projects', label: 'Projects', href: '/projects' },
+] as const;
+
+const n = items.length;
+const trackStart = 8;
+const trackEnd = 92;
+const step = (trackEnd - trackStart) / (n - 1);
+const points = items.map((item, i) => ({
+	...item,
+	x: trackStart + step * i,
+}));
+
+const trackLeft = points[0].x;
+const trackWidth = points[n - 1].x - points[0].x;
+const currentPoint = points.find((p) => p.id === current)!;
+
+// one highlight "edge" per non-current point, spanning from the current
+// page's position to that point's position
+const edges = points
+	.filter((p) => p.id !== current)
+	.map((p) => ({
+		id: p.id,
+		left: Math.min(currentPoint.x, p.x),
+		width: Math.abs(p.x - currentPoint.x),
+	}));
+
+// exposed as CSS custom properties so hover rules can move the active dot
+// to a specific target position without fighting inline-style specificity
+const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`]));
+---
+
+<nav class='nav-line' aria-label='Site navigation' style={cssVars}>
+	<div class='nav-labels'>
+		{
+			points.map((p) => (
+				<a
+					href={p.href}
+					class={`nav-label ${p.id === current ? 'active current' : ''}`}
+					data-target={p.id}
+					data-pos={`${p.x}%`}
+					style={{ '--pos': `${p.x}%` }}>
+					{p.label}
+				</a>
+			))
+		}
+	</div>
+
+	<div class='nav-track-row'>
+		<div class='track' style={{ left: `${trackLeft}%`, width: `${trackWidth}%` }}></div>
+		{edges.map((e) => <div class='edge' data-edge={e.id} style={{ left: `${e.left}%`, width: `${e.width}%` }} />)}
+		{
+			points
+				.filter((p) => p.id !== current)
+				.map((p) => <span class='point' data-target={p.id} data-pos={`${p.x}%`} style={{ '--pos': `${p.x}%` }} />)
+		}
+
+		<span id='indicator' class='indicator' style={{ left: `${currentPoint.x}%` }}></span>
+	</div>
+	<script>
+		import '../scripts/navline';
+	</script>
+</nav>
+
+<style>
+	.nav-line {
+		position: relative;
+		width: 100%;
+		max-width: 420px;
+	}
+
+	.nav-labels {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		height: 28px;
+		margin-bottom: 8px;
+	}
+
+	.nav-label {
+		flex: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
+		color: var(--color-muted);
+		text-decoration: none;
+		font-weight: bold;
+		letter-spacing: 1.5px;
+		text-transform: uppercase;
+		white-space: nowrap;
+		transition: color 0.2s ease;
+		cursor: pointer;
+	}
+
+	.nav-label:hover {
+		color: var(--color-link);
+	}
+
+	.nav-label.active {
+		color: var(--color-link);
+	}
+
+	.nav-track-row {
+		position: relative;
+		height: 8px;
+	}
+
+	.track {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		height: 1px;
+		background: var(--color-shadow);
+	}
+
+	.edge {
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		height: 1px;
+		background: var(--color-link);
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity 0.55s ease-in-out;
+	}
+
+	.point {
+		position: absolute;
+		top: 50%;
+		left: var(--pos);
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: var(--color-shadow);
+		transform: translate(-50%, -50%);
+		z-index: 1;
+		transition:
+			left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+			width 0.25s ease,
+			height 0.25s ease,
+			background 0.25s ease;
+		pointer-events: none;
+	}
+
+	.indicator {
+		position: absolute;
+		top: 50%;
+		left: var(--pos);
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--color-link);
+		transform: translate(-50%, -50%);
+		z-index: 2;
+		transition: left 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	/* light up the edge, and slide the active dot toward whichever
+	   label/dot is currently hovered */
+	.nav-line:has(.nav-label[data-target='about']:hover) .edge[data-edge='about'],
+	.nav-line:has(.point[data-target='about']:hover) .edge[data-edge='about'] {
+		opacity: 1;
+	}
+
+	.nav-line:has(.nav-label[data-target='blogs']:hover) .edge[data-edge='blogs'],
+	.nav-line:has(.point[data-target='blogs']:hover) .edge[data-edge='blogs'] {
+		opacity: 1;
+	}
+
+	.nav-line:has(.nav-label[data-target='lab']:hover) .edge[data-edge='lab'],
+	.nav-line:has(.point[data-target='lab']:hover) .edge[data-edge='lab'] {
+		opacity: 1;
+	}
+
+	.nav-line:has(.nav-label[data-target='projects']:hover) .edge[data-edge='projects'],
+	.nav-line:has(.point[data-target='projects']:hover) .edge[data-edge='projects'] {
+		opacity: 1;
+	}
+</style>
