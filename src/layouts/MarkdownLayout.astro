@@ -11,13 +11,13 @@ interface Props {
 const { frontmatter, body } = Astro.props;
 
 const contentText = body?.trim().split(/\s+/).join(' ')!;
-const readingTime = getReadingTime(contentText)
+const readingTime = getReadingTime(contentText);
 ---
 
 <Layout pageTitle={frontmatter.title}>
 	<article class='content'>
-		<section class='info'>
-			<p>
+		<section class='meta'>
+			<p class='meta-content'>
 				{
 					frontmatter.pubDate.toLocaleDateString('en-CA', {
 						month: 'long',
@@ -27,7 +27,7 @@ const readingTime = getReadingTime(contentText)
 				}
 			</p>
 			<span>·</span>
-			<p>{readingTime.minutes} min read</p>
+			<p class='meta-content'>{readingTime.minutes} min read</p>
 		</section>
 		<h1 class='title'>{frontmatter.title}</h1>
 		<section class='tags'>
@@ -43,10 +43,11 @@ const readingTime = getReadingTime(contentText)
 	</article>
 </Layout>
 
-<style>
+<style is:global>
 	.content {
 		max-width: 768px;
 		margin: auto;
+		padding-bottom: 40px;
 	}
 
 	a {
@@ -59,13 +60,32 @@ const readingTime = getReadingTime(contentText)
 		margin: 0;
 	}
 
-	.title {
-		font-size: 3rem;
-		margin-bottom: 10px;
+	.content .title {
+		font-size: var(--text-heading);
+		margin-bottom: 0.4rem;
 	}
 
-	.info {
-		color: var(--color-shadow);
+	.content h1 {
+		font-size: var(--text-title);
+	}
+
+	.content h2 {
+		font-size: var(--text-lead);
+		margin-top: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	.content p {
+		font-size: var(--text-body);
+		line-height: 1.75;
+	}
+
+	.content .meta-content {
+		font-size: var(--text-meta);
+	}
+
+	.meta {
+		color: var(--color-muted);
 		margin-bottom: -10px;
 		display: flex;
 		align-items: center;
@@ -79,13 +99,13 @@ const readingTime = getReadingTime(contentText)
 		margin-bottom: 40px;
 	}
 
-	.tag {
+	.content .tag {
 		color: var(--color-text);
 		margin: 0.25em 0;
 		border: 2px solid var(--color-shadow);
 		border-radius: 0.5em;
 		padding: 5px 10px;
-		font-size: 0.9em;
+		font-size: var(--text-meta);
 		font-weight: bold;
 		background-color: var(--color-background-shadow);
 		transition:

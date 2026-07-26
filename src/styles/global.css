@@ -17,6 +17,47 @@
 	--heading-font: 'Space Grotesk', sans-serif;
 	--body-font: 'Inter', sans-serif;
 	--code-font: 'JetBrains Mono', monospace;
+
+	/* Display Typography */
+
+	/* Largest statements: hero, landing headlines */
+	--text-display: clamp(2.8rem, 5.5vw, 5.5rem);
+
+	/* Major headings: page titles, article titles */
+	--text-heading: clamp(2rem, 4vw, 3.5rem);
+
+	/* Section titles, project titles, experience titles */
+	--text-title: clamp(1.25rem, 1.8vw, 1.75rem);
+
+	/* Body Typography */
+
+	/* Intro paragraphs, lead text */
+	--text-lead: clamp(1.05rem, 1.3vw, 1.35rem);
+
+	/* Default reading text */
+	--text-body: clamp(0.95rem, 1.1vw, 1.15rem);
+
+	/* Secondary descriptions */
+	--text-body-small: clamp(0.85rem, 0.95vw, 1rem);
+
+	/* Interface Typography */
+
+	/* Navigation, tabs, menus */
+	--text-nav: clamp(0.65rem, 0.75vw, 0.8rem);
+
+	/* Labels, categories, eyebrow text */
+	--text-label: clamp(0.7rem, 0.9vw, 0.9rem);
+
+	/* Metadata: dates, reading time, tags */
+	--text-meta: clamp(0.75rem, 0.85vw, 0.95rem);
+
+	/* Tiny annotations, captions */
+	--text-caption: clamp(0.65rem, 0.7vw, 0.8rem);
+
+	/* UI Typography */
+
+	/* Buttons and controls */
+	--text-action: clamp(0.75rem, 0.8vw, 0.9rem);
 }
 
 html,
