@@ -13,13 +13,16 @@ import HomepageHeroText from "./HomepageHeroText.astro";
 <style>
   .homepage-hero {
     display: flex;
-    flex-direction: column;
-    justify-content: space-around;
+		justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 40px;
   }
 
-  @media screen and (min-width: 636px) {
+  @media screen and (max-width: 768px) {
     .homepage-hero {
-      flex-direction: row;
+      flex-direction: column;
+      text-align: left;
+      gap: 40px;
     }
   }
 </style>
