@@ -1,22 +1,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
 
 * {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 :root {
-  /* colors */
+	/* colors */
 	--color-text: #f5f7fa;
-	--color-background: #090A0C;
-  --color-background-shadow: #0d0f13;
-  --color-link: #1D6BFF;
-  --color-muted: #9AA1AD;
-  --color-shadow: #4b4b58;
+	--color-background: #090a0c;
+	--color-background-shadow: #0d0f13;
+	--color-link: #1d6bff;
+	--color-muted: #9aa1ad;
+	--color-shadow: #4b4b58;
 
-  /* fonts */
-  --heading-font: "Space Grotesk", sans-serif;
-  --body-font: "Inter", sans-serif;
-  --code-font: "JetBrains Mono", monospace;
+	/* fonts */
+	--heading-font: 'Space Grotesk', sans-serif;
+	--body-font: 'Inter', sans-serif;
+	--code-font: 'JetBrains Mono', monospace;
 }
 
 html,
@@ -28,9 +28,9 @@ body {
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  padding-inline: 30px;
+	display: flex;
+	flex-direction: column;
+	padding-inline: 30px;
 }
 
 h1,
@@ -39,17 +39,23 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--heading-font);
-  font-weight: 700;
+	font-family: var(--heading-font);
+	font-weight: 700;
 }
 
 body {
-  font-family: var(--body-font);
-  font-weight: 400;
-  color: var(--color-text);
+	font-family: var(--body-font);
+	font-weight: 400;
+	color: var(--color-text);
 }
 
 code,
 pre {
-  font-family: var(--code-font);
+	font-family: var(--code-font);
+}
+
+/* transition animation */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation-duration: 100ms;
 }
