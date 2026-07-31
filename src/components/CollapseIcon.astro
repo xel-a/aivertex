@@ -1,0 +1,42 @@
+---
+const { section } = Astro.props;
+---
+
+<div class='collapse-icon' title="Collapse all">
+	<svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 16 16'>
+		<path d='M0 0h16v16H0z' fill='none'></path>
+		<g fill='currentColor'>
+			<path
+				d='M14 4.27c.6.35 1 .99 1 1.73v5c0 2.21-1.79 4-4 4H6c-.74 0-1.38-.4-1.73-1H11c1.65 0 3-1.35 3-3zM9.5 7a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1z'
+			></path>
+			<path
+				fill-rule='evenodd'
+				d='M11 2c1.103 0 2 .897 2 2v7c0 1.103-.897 2-2 2H4c-1.103 0-2-.897-2-2V4c0-1.103.897-2 2-2zM4 3c-.551 0-1 .449-1 1v7c0 .552.449 1 1 1h7c.551 0 1-.448 1-1V4c0-.551-.449-1-1-1z'
+				clip-rule='evenodd'></path>
+		</g>
+	</svg>
+	<script is:inline define:vars={{ section }}>
+		document.addEventListener('astro:page-load', () => {
+			const sectionContainer = document.getElementById(section);
+      const collapseIcon = sectionContainer.querySelector('svg');
+      const detailContainers = sectionContainer.querySelectorAll('details');
+
+      collapseIcon.addEventListener('click', () => {
+        detailContainers.forEach(detail => {
+          detail.open = false;
+        })
+      })
+		});
+	</script>
+</div>
+
+<style is:global>
+	.collapse-icon {
+		cursor: pointer;
+    color: var(--color-shadow);
+	}
+
+  .collapse-icon:hover svg g {
+    fill: var(--color-muted);
+  }
+</style>
