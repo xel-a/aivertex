@@ -1,5 +1,5 @@
 ---
-import { navigation } from "../config/navigation";
+import { navigation } from '../config/navigation';
 
 const { current } = Astro.props;
 ---
@@ -33,28 +33,30 @@ const { current } = Astro.props;
 </div>
 
 <script>
-	const menu = document.getElementById('mobile-menu') as HTMLElement;
-	const toggle = document.getElementById('mobile-menu-toggle') as HTMLElement;
-	const panel = document.getElementById('mobile-nav') as HTMLElement;
-	const backdrop = document.getElementById('mobile-nav-backdrop') as HTMLElement;
+	document.addEventListener('astro:page-load', () => {
+		const menu = document.getElementById('mobile-menu') as HTMLElement;
+		const toggle = document.getElementById('mobile-menu-toggle') as HTMLElement;
+		const panel = document.getElementById('mobile-nav') as HTMLElement;
+		const backdrop = document.getElementById('mobile-nav-backdrop') as HTMLElement;
 
-	function setOpen(open: boolean) {
-		menu.classList.toggle('open', open);
-		toggle.setAttribute('aria-expanded', String(open));
-		panel.setAttribute('aria-hidden', String(!open));
-		document.body.style.overflow = open ? 'hidden' : '';
-	}
+		function setOpen(open: boolean) {
+			menu.classList.toggle('open', open);
+			toggle.setAttribute('aria-expanded', String(open));
+			panel.setAttribute('aria-hidden', String(!open));
+			document.body.style.overflow = open ? 'hidden' : '';
+		}
 
-	toggle.addEventListener('click', () => {
-		setOpen(!menu.classList.contains('open'));
-	});
+		toggle.addEventListener('click', () => {
+			setOpen(!menu.classList.contains('open'));
+		});
 
-	backdrop.addEventListener('click', () => {
-		setOpen(false);
-	});
+		backdrop.addEventListener('click', () => {
+			setOpen(false);
+		});
 
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape') setOpen(false);
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') setOpen(false);
+		});
 	});
 </script>
 
