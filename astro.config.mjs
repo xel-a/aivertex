@@ -2,10 +2,11 @@
 import { defineConfig } from 'astro/config';
 
 import cloudflare from "@astrojs/cloudflare";
+import { site } from './src/config/site';
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://aivertex.ca",
+  site: site.url,
   adapter: cloudflare(),
   server: {
     host: true
