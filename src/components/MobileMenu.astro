@@ -39,6 +39,8 @@ const { current } = Astro.props;
 		const panel = document.getElementById('mobile-nav') as HTMLElement;
 		const backdrop = document.getElementById('mobile-nav-backdrop') as HTMLElement;
 
+		if (!menu || !toggle || !panel || !backdrop) return;
+
 		function setOpen(open: boolean) {
 			menu.classList.toggle('open', open);
 			toggle.setAttribute('aria-expanded', String(open));

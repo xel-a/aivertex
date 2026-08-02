@@ -18,8 +18,13 @@ const { section } = Astro.props;
 	<script is:inline define:vars={{ section }}>
 		document.addEventListener('astro:page-load', () => {
 			const sectionContainer = document.getElementById(section);
-      const collapseIcon = sectionContainer.querySelector('svg');
-      const detailContainers = sectionContainer.querySelectorAll('details');
+
+			if (!sectionContainer) return;
+
+			const collapseIcon = sectionContainer.querySelector<SVGSVGElement>('svg');
+			const detailContainers = sectionContainer.querySelectorAll<HTMLDetailsElement>('details');
+
+			if (!collapseIcon || detailContainers.length === 0) return;
 
       collapseIcon.addEventListener('click', () => {
         detailContainers.forEach(detail => {

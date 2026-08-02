@@ -66,11 +66,12 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
 <script>
 	document.addEventListener('astro:page-load', () => {
 		const indicator = document.getElementById('indicator') as HTMLElement;
-		const currentPos = indicator.style.left;
-
 		const currentLabel = document.querySelector('.nav-label.current') as HTMLElement;
-
 		const targets = document.querySelectorAll('.nav-label[data-target], .point[data-target]');
+		
+		if (!indicator || !currentLabel || targets.length === 0) return;
+
+		const currentPos = indicator.style.left;
 
 		targets.forEach((target: any) => {
 			target.addEventListener('mouseenter', () => {
