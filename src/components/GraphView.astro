@@ -39,10 +39,6 @@
 			path: string;
 		}
 
-		function clamp(value: number, min: number, max: number) {
-			return Math.min(Math.max(value, min), max);
-		}
-
 		const rawNodes: RawNode[] = [
 			...navigation,
 			{ id: 'home', label: 'aivertex.ca', path: '/' },
@@ -60,6 +56,9 @@
 
 		const stage = document.getElementById('graph-stage') as HTMLElement;
 		const svg = document.querySelector('.graph-svg') as SVGAElement;
+
+		if (!stage || !svg) return;
+
 		const W = Number(stage.dataset.width),
 			H = Number(stage.dataset.height);
 
@@ -154,6 +153,10 @@
 			DAMPING = 0.85,
 			SLEEP_THRESHOLD = 0.02;
 		let running = false;
+
+		function clamp(value: number, min: number, max: number) {
+			return Math.min(Math.max(value, min), max);
+		}
 
 		function tick() {
 			for (let i = 0; i < nodes.length; i++)
@@ -322,7 +325,7 @@
 		width: 480px;
 		height: auto;
 		aspect-ratio: 480/400;
-    padding: 20px;
+		padding: 20px;
 	}
 
 	.graph-stage svg {
