@@ -1,23 +1,17 @@
 ---
+import { navigation } from '../config/navigation';
 export interface Props {
 	current: 'about' | 'blogs' | 'lab' | 'projects';
 }
 
 const { current } = Astro.props;
 
-const items = [
-	{ id: 'about', label: 'About', href: '/about' },
-	{ id: 'blogs', label: 'Blogs', href: '/blog' },
-	{ id: 'lab', label: 'Lab', href: '/lab' },
-	{ id: 'projects', label: 'Projects', href: '/projects' },
-] as const;
-
-const n = items.length;
+const n = navigation.length;
 const trackStart = 8;
 const trackEnd = 92;
 const step = (trackEnd - trackStart) / (n - 1);
-const points = items.map((item, i) => ({
-	...item,
+const points = navigation.map((navItem, i) => ({
+	...navItem,
 	x: trackStart + step * i,
 }));
 
@@ -45,7 +39,7 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
 		{
 			points.map((p) => (
 				<a
-					href={p.href}
+					href={p.path}
 					class={`nav-label ${p.id === current ? 'active current' : ''}`}
 					data-target={p.id}
 					data-pos={`${p.x}%`}
@@ -67,16 +61,38 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
 
 		<span id='indicator' class='indicator' style={{ left: `${currentPoint.x}%` }}></span>
 	</div>
-	<script>
-		import '../scripts/navline';
-	</script>
 </nav>
+
+<script>
+	const indicator = document.getElementById('indicator') as HTMLElement;
+	const currentPos = indicator.style.left;
+
+	const currentLabel = document.querySelector('.nav-label.current') as HTMLElement;
+
+	const targets = document.querySelectorAll('.nav-label[data-target], .point[data-target]');
+
+	targets.forEach((target: any) => {
+		target.addEventListener('mouseenter', () => {
+			indicator.style.left = target.dataset.pos;
+
+			// Only remove active if we're hovering a different page
+			if (target.dataset.target !== currentLabel.dataset.target) {
+				currentLabel.classList.remove('active');
+			}
+		});
+
+		target.addEventListener('mouseleave', () => {
+			indicator.style.left = currentPos;
+
+			currentLabel.classList.add('active');
+		});
+	});
+</script>
 
 <style>
 	.nav-line {
 		position: relative;
-		width: 100%;
-		max-width: 420px;
+		min-width: 420px;
 	}
 
 	.nav-labels {
