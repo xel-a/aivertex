@@ -39,6 +39,10 @@
 			path: string;
 		}
 
+		function clamp(value: number, min: number, max: number) {
+			return Math.min(Math.max(value, min), max);
+		}
+
 		const rawNodes: RawNode[] = [
 			...navigation,
 			{ id: 'home', label: 'aivertex.ca', path: '/' },
@@ -188,8 +192,8 @@
 			let totalMotion = 0;
 			nodes.forEach((n) => {
 				if (n.fx !== null && n.fy !== null) {
-					n.x = n.fx;
-					n.y = n.fy;
+					n.x = clamp(n.fx, n.r, W - n.r);
+					n.y = clamp(n.fy, n.r, H - n.r);
 					n.vx = 0;
 					n.vy = 0;
 					return;
@@ -198,6 +202,22 @@
 				n.vy *= DAMPING;
 				n.x += n.vx;
 				n.y += n.vy;
+
+				if (n.x < n.r) {
+					n.x = n.r;
+					n.vx = 0;
+				} else if (n.x > W - n.r) {
+					n.x = W - n.r;
+					n.vx = 0;
+				}
+				if (n.y < n.r) {
+					n.y = n.r;
+					n.vy = 0;
+				} else if (n.y > H - n.r) {
+					n.y = H - n.r;
+					n.vy = 0;
+				}
+
 				totalMotion += Math.abs(n.vx) + Math.abs(n.vy);
 			});
 			render();
@@ -223,9 +243,11 @@
 
 			function onMove(e: any) {
 				const p = toSvgPoint(e.clientX, e.clientY);
-				moved += Math.abs(p.x - (n.fx ?? n.x)) + Math.abs(p.y - (n.fy ?? n.y));
-				n.fx = p.x;
-				n.fy = p.y;
+				const clampedX = clamp(p.x, n.r, W - n.r); // ← new
+				const clampedY = clamp(p.y, n.r, H - n.r); // ← new
+				moved += Math.abs(clampedX - (n.fx ?? n.x)) + Math.abs(clampedY - (n.fy ?? n.y));
+				n.fx = clampedX; // ← was: n.fx = p.x
+				n.fy = clampedY;
 				wake();
 			}
 
@@ -244,8 +266,8 @@
 				dragging = true;
 				moved = 0;
 				const p = toSvgPoint(e.clientX, e.clientY);
-				n.fx = p.x;
-				n.fy = p.y;
+				n.fx = clamp(p.x, n.r, W - n.r);
+				n.fy = clamp(p.y, n.r, H - n.r);
 				circle.setPointerCapture(e.pointerId);
 				circle.addEventListener('pointermove', onMove);
 				circle.addEventListener('pointerup', onUp);
@@ -286,20 +308,21 @@
 
 <style is:global>
 	.graph-view {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 		background-color: var(--color-background-shadow);
 		padding: 10px;
-    user-select: none;
-    border: 1px solid var(--color-shadow);
-    border-radius: 10px;
+		user-select: none;
+		border: 1px solid var(--color-shadow);
+		border-radius: 10px;
 	}
 
 	.graph-stage {
-    width: 480px;
-    height: auto;
+		width: 480px;
+		height: auto;
 		aspect-ratio: 480/400;
+    padding: 20px;
 	}
 
 	.graph-stage svg {
@@ -367,7 +390,7 @@
 		text-align: center;
 	}
 
-  @media screen and (max-width: 768px) {
+	@media screen and (max-width: 768px) {
 		.graph-stage {
 			width: min(480px, 100%);
 		}
