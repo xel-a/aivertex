@@ -9,17 +9,19 @@ export const personSchema = {
 			'@id': `${site.url}/#person`,
 			name: site.author.name,
 			alternateName: site.author.alternateName,
-			url: site.url,
-			sameAs: [...social.map((socialLink) => socialLink.url)],
+			url: `${site.url}/about`,
+			email: social.find((socialLink) => socialLink.id === 'email')?.url,
+			sameAs: social.filter((socialLink) => socialLink.id !== 'email').map((socialLink) => socialLink.url),
 		},
 		{
-      '@type': "Website",
-      "@id": `${site.url}/#website`,
-      "url": site.url,
-      "name": site.name,
-      "author": {
-        "@id": `${site.url}/#person`
-      }
-    },
+			'@type': 'Website',
+			'@id': `${site.url}/#website`,
+			url: site.url,
+			name: site.name,
+			inLanguage: site.language,
+			author: {
+				'@id': `${site.url}/#person`,
+			},
+		},
 	],
 };
