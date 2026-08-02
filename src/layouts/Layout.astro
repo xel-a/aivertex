@@ -27,7 +27,7 @@ const { pageId, contentTitle } = Astro.props;
 		<title>
 			{generatePageTitle(pageId, contentTitle)}
 		</title>
-		<script type="application/json" set:html={JSON.stringify(personSchema)} />
+		<script type='application/ld+json' set:html={JSON.stringify(personSchema)} />
 	</head>
 	<body>
 		<Header pageId={pageId} pageTitle={generatePageTitle(pageId, contentTitle)} />
