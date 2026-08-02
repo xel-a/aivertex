@@ -3,19 +3,22 @@ import Layout from '../../layouts/Layout.astro';
 import { workHistory } from '../../data/work-history';
 import { skills } from '../../data/skills';
 import CollapseIcon from '../../components/CollapseIcon.astro';
+import { site } from '../../config/site';
+import { social } from '../../config/social';
 ---
 
-<Layout pageTitle='About'>
+<Layout pageId='about'>
 	<main>
 		<!-- Introduction -->
 		<section class='section intro'>
 			<p class='eyebrow'>Hello there! I am..</p>
-			<h1>Axel Rom Ignacio</h1>
+			<h1>{site.author.alternateName}</h1>
 			<p class='lead'>Learning. Building. Securing. One vertex at a time.</p>
 			<p class='body-text'>
-				aivertex is where my ideas and experiences meet &mdash; a running record of what I'm building, breaking, and learning along
-				the way. Based in Toronto, most weekends you'll find me building something that probably didn't need to exist, playing video
-				games, watching anime, or getting lost in a good movie.
+				I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is where I document what I'm
+				building, breaking, and learning &mdash; a running record of my projects, experiments, and lessons along the way. Based in
+				Toronto, I usually spend my weekends building something that probably didn't need to exist, playing video games, watching
+				anime, or getting lost in a good movie.
 			</p>
 		</section>
 
@@ -126,9 +129,13 @@ import CollapseIcon from '../../components/CollapseIcon.astro';
 				you want to chat about cybersecurity, or anything else — feel free to reach out!
 			</p>
 			<div class='contact-links'>
-				<a class='contact-link' href='mailto:axel.ignacio@aivertex.ca' target='_blank'>Email &nearr;</a>
-				<a class='contact-link' href='https://github.com/xel-a' target='_blank'>GitHub &nearr;</a>
-				<a class='contact-link' href='https://linkedin.com/in/axel-ignacio' target='_blank'>LinkedIn &nearr;</a>
+				{
+					social.map((socialLink) => (
+						<a class='contact-link' href={socialLink.url} target='_blank'>
+							{socialLink.label} &nearr;
+						</a>
+					))
+				}
 			</div>
 		</section>
 	</main>

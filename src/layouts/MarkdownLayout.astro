@@ -14,7 +14,7 @@ const contentText = body?.trim().split(/\s+/).join(' ')!;
 const readingTime = getReadingTime(contentText);
 ---
 
-<Layout pageTitle={frontmatter.title}>
+<Layout contentTitle={frontmatter.title}>
 	<article class='content'>
 		<section class='meta'>
 			<p class='meta-content'>

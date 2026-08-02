@@ -1,10 +1,15 @@
 ---
+import { type NavigationId } from '../config/navigation';
 import { site } from '../config/site';
 import MobileMenu from './MobileMenu.astro';
 import NavLine from './NavLine.astro';
 
-const { pageTitle } = Astro.props;
-const vertices = ['About', 'Blogs', 'Lab', 'Projects'];
+interface Props {
+	pageId?: NavigationId;
+	pageTitle: string;
+}
+
+const { pageId } = Astro.props;
 ---
 
 <header>
@@ -17,76 +22,76 @@ const vertices = ['About', 'Blogs', 'Lab', 'Projects'];
 			</g>
 			<circle cx='130' cy='130' r='9' fill='#1D6BFF'></circle>
 		</svg>
-		<h1 class='logo-title'>{site.title}</h1>
+		<h1 class='logo-title'>{site.domain}</h1>
 	</a>
 	{
-		vertices.includes(pageTitle) ? (
+		pageId ? (
 			<div class='navigation-menu'>
 				<div class='desktop-nav'>
-					<NavLine current={pageTitle.toLowerCase()} />
+					<NavLine current={pageId} />
 				</div>
 				<div class='mobile-nav'>
-					<MobileMenu current={pageTitle.toLowerCase()} />
+					<MobileMenu current={pageId} />
 				</div>
 			</div>
 		) : null
 	}
-</header>
 
-<style>
-	header {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	}
-	.aivertex-logo {
-		display: flex;
-		align-items: center;
-		cursor: pointer;
-		width: fit-content;
-		user-select: none;
-		text-decoration: none;
-	}
+	<style>
+		header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		.aivertex-logo {
+			display: flex;
+			align-items: center;
+			cursor: pointer;
+			width: fit-content;
+			user-select: none;
+			text-decoration: none;
+		}
 
-	.logo-title {
-		margin-left: -15px;
-		color: var(--color-text);
-		font-size: var(--text-lead);
-		transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
+		.logo-title {
+			margin-left: -15px;
+			color: var(--color-text);
+			font-size: var(--text-lead);
+			transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+		}
 
-	.icon {
-		width: 80px;
-		height: 80px;
-		margin-left: -30px;
-	}
-	.needle {
-		transform-origin: 130px 130px;
-		transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-	}
+		.icon {
+			width: 80px;
+			height: 80px;
+			margin-left: -30px;
+		}
+		.needle {
+			transform-origin: 130px 130px;
+			transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+		}
 
-	.aivertex-logo:hover .logo-title {
-		transform: translateY(-2px);
-	}
+		.aivertex-logo:hover .logo-title {
+			transform: translateY(-2px);
+		}
 
-	.aivertex-logo:hover .needle {
-		transform: rotate(18deg);
-	}
+		.aivertex-logo:hover .needle {
+			transform: rotate(18deg);
+		}
 
-	.desktop-nav {
-	}
-
-	.mobile-nav {
-		display: none;
-	}
-
-	@media screen and (max-width: 640px) {
 		.desktop-nav {
-			display: none;
 		}
 
 		.mobile-nav {
-			display: block;
+			display: none;
 		}
-	}
-</style>
+
+		@media screen and (max-width: 640px) {
+			.desktop-nav {
+				display: none;
+			}
+
+			.mobile-nav {
+				display: block;
+			}
+		}
+	</style>
+</header>

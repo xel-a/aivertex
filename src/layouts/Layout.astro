@@ -3,8 +3,16 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import { type NavigationId } from '../config/navigation';
+import { generatePageTitle } from '../utils/metadata';
+import { personSchema } from '../config/schema';
 
-const { pageTitle } = Astro.props;
+interface Props {
+	pageId?: NavigationId;
+	contentTitle?: string;
+}
+
+const { pageId, contentTitle } = Astro.props;
 ---
 
 <!doctype html>
@@ -16,10 +24,13 @@ const { pageTitle } = Astro.props;
 		<link rel='icon' href='/favicon.ico' />
 		<meta name='generator' content={Astro.generator} />
 		<ClientRouter />
-		<title>{pageTitle}</title>
+		<title>
+			{generatePageTitle(pageId, contentTitle)}
+		</title>
+		<script type="application/json" set:html={JSON.stringify(personSchema)} />
 	</head>
 	<body>
-		<Header pageTitle={pageTitle} />
+		<Header pageId={pageId} pageTitle={generatePageTitle(pageId, contentTitle)} />
 		<slot />
 		<Footer />
 	</body>
