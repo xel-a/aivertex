@@ -6,5 +6,8 @@ import cloudflare from "@astrojs/cloudflare";
 // https://astro.build/config
 export default defineConfig({
   site: "https://aivertex.ca",
-  adapter: cloudflare()
+  adapter: cloudflare(),
+  server: {
+    host: true
+  }
 });
