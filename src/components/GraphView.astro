@@ -1,0 +1,379 @@
+---
+
+---
+
+<div class='graph-view'>
+	<div class='graph-stage' id='graph-stage' data-width='480' data-height='400'>
+		<svg class='graph-svg' viewBox='0 0 480 400' xmlns='http://www.w3.org/2000/svg'></svg>
+	</div>
+	<div class='hint'>New here? Start with About. Otherwise, pick any vertex.</div>
+</div>
+
+<script>
+	import { navigate } from 'astro:transitions/client';
+	import { navigation } from '../config/navigation';
+
+	document.addEventListener('astro:page-load', () => {
+		interface RawNode {
+			id: string;
+			label: string;
+			path: string;
+		}
+
+		interface RawEdge {
+			source: string;
+			target: string;
+		}
+
+		interface Node {
+			x: number;
+			y: number;
+			vx: number;
+			vy: number;
+			fx: number | null;
+			fy: number | null;
+			degree: number;
+			r: number;
+			id: string;
+			label: string;
+			path: string;
+		}
+
+		const rawNodes: RawNode[] = [
+			...navigation,
+			{ id: 'home', label: 'aivertex.ca', path: '/' },
+			{ id: 'test-blog', label: 'Test blog', path: '/blogs/test-blog' },
+		];
+
+		const rawEdges: RawEdge[] = [
+			{ source: 'home', target: 'about' },
+			{ source: 'home', target: 'blogs' },
+			{ source: 'home', target: 'lab' },
+			{ source: 'home', target: 'projects' },
+			{ source: 'home', target: 'blogs' },
+			{ source: 'blogs', target: 'test-blog' },
+		];
+
+		const stage = document.getElementById('graph-stage') as HTMLElement;
+		const svg = document.querySelector('.graph-svg') as SVGAElement;
+		const W = Number(stage.dataset.width),
+			H = Number(stage.dataset.height);
+
+		const degreeCount = new Map();
+
+		rawEdges.forEach((e) => {
+			degreeCount.set(e.source, (degreeCount.get(e.source) || 0) + 1);
+			degreeCount.set(e.target, (degreeCount.get(e.target) || 0) + 1);
+		});
+
+		const nodes: Node[] = rawNodes.map((n, i) => {
+			const angle = (i / rawNodes.length) * Math.PI * 2;
+			const radius = Math.min(W, H) * 0.28;
+			const degree = degreeCount.get(n.id) || 0;
+			return {
+				...n,
+				x: W / 2 + Math.cos(angle) * radius + (Math.random() - 0.5) * 20,
+				y: H / 2 + Math.sin(angle) * radius + (Math.random() - 0.5) * 20,
+				vx: 0,
+				vy: 0,
+				fx: null,
+				fy: null,
+				degree,
+				r: 4 + Math.min(degree, 5) * 1.6,
+			};
+		});
+
+		const nodeById = new Map(nodes.map((n) => [n.id, n]));
+
+		const edges = rawEdges
+			.map((e) => ({ source: nodeById.get(e.source)!, target: nodeById.get(e.target)! }))
+			.filter((e) => e.source && e.target);
+
+		const neighbors = new Map();
+
+		nodes.forEach((n) => neighbors.set(n.id, new Set()));
+
+		edges.forEach((e) => {
+			neighbors.get(e.source.id).add(e.target.id);
+			neighbors.get(e.target.id).add(e.source.id);
+		});
+
+		const svgNS = 'http://www.w3.org/2000/svg';
+		const edgeEls = edges.map(() => {
+			const l = document.createElementNS(svgNS, 'line');
+			l.setAttribute('class', 'graph-edge');
+			svg.appendChild(l);
+			return l;
+		});
+		const nodeEls = nodes.map((n) => {
+			const c = document.createElementNS(svgNS, 'circle');
+			c.setAttribute('class', 'graph-node');
+			c.setAttribute('r', String(n.r));
+			svg.appendChild(c);
+			return c;
+		});
+		const labelEls = nodes.map((n) => {
+			const t = document.createElementNS(svgNS, 'text');
+			t.setAttribute('class', 'graph-label');
+			t.textContent = n.label;
+			svg.appendChild(t);
+			return t;
+		});
+
+		function labelOffset(n: Node) {
+			const anchor = n.x < W * 0.15 ? 'start' : n.x > W * 0.85 ? 'end' : 'middle';
+			const dx = anchor === 'middle' ? 0 : anchor === 'start' ? n.r + 6 : -(n.r + 6);
+			return { anchor, dx };
+		}
+
+		function render() {
+			edges.forEach((e, i) => {
+				edgeEls[i].setAttribute('x1', String(e.source.x));
+				edgeEls[i].setAttribute('y1', String(e.source.y));
+				edgeEls[i].setAttribute('x2', String(e.target.x));
+				edgeEls[i].setAttribute('y2', String(e.target.y));
+			});
+			nodes.forEach((n, i) => {
+				nodeEls[i].setAttribute('cx', String(n.x));
+				nodeEls[i].setAttribute('cy', String(n.y));
+				const { anchor, dx } = labelOffset(n);
+				labelEls[i].setAttribute('x', String(n.x + dx));
+				labelEls[i].setAttribute('y', String(n.y + n.r + 16));
+				labelEls[i].setAttribute('text-anchor', anchor);
+			});
+		}
+
+		const REPULSION = 900,
+			SPRING = 0.02,
+			REST_LENGTH = 90,
+			CENTER_PULL = 0.006,
+			DAMPING = 0.85,
+			SLEEP_THRESHOLD = 0.02;
+		let running = false;
+
+		function tick() {
+			for (let i = 0; i < nodes.length; i++)
+				for (let j = i + 1; j < nodes.length; j++) {
+					const a = nodes[i],
+						b = nodes[j];
+					let dx = a.x - b.x,
+						dy = a.y - b.y,
+						distSq = dx * dx + dy * dy;
+					if (distSq < 1) distSq = 1;
+					const dist = Math.sqrt(distSq),
+						force = REPULSION / distSq;
+					const fx = (dx / dist) * force,
+						fy = (dy / dist) * force;
+					a.vx += fx;
+					a.vy += fy;
+					b.vx -= fx;
+					b.vy -= fy;
+				}
+			edges.forEach((e) => {
+				const dx = e.target.x - e.source.x,
+					dy = e.target.y - e.source.y;
+				const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+				const force = (dist - REST_LENGTH) * SPRING;
+				const fx = (dx / dist) * force,
+					fy = (dy / dist) * force;
+				e.source.vx += fx;
+				e.source.vy += fy;
+				e.target.vx -= fx;
+				e.target.vy -= fy;
+			});
+			nodes.forEach((n) => {
+				n.vx += (W / 2 - n.x) * CENTER_PULL;
+				n.vy += (H / 2 - n.y) * CENTER_PULL;
+			});
+			let totalMotion = 0;
+			nodes.forEach((n) => {
+				if (n.fx !== null && n.fy !== null) {
+					n.x = n.fx;
+					n.y = n.fy;
+					n.vx = 0;
+					n.vy = 0;
+					return;
+				}
+				n.vx *= DAMPING;
+				n.vy *= DAMPING;
+				n.x += n.vx;
+				n.y += n.vy;
+				totalMotion += Math.abs(n.vx) + Math.abs(n.vy);
+			});
+			render();
+			if (totalMotion > SLEEP_THRESHOLD) requestAnimationFrame(tick);
+			else running = false;
+		}
+		function wake() {
+			if (!running) {
+				running = true;
+				requestAnimationFrame(tick);
+			}
+		}
+
+		function toSvgPoint(clientX: number, clientY: number) {
+			const rect = svg.getBoundingClientRect();
+			return { x: ((clientX - rect.left) / rect.width) * W, y: ((clientY - rect.top) / rect.height) * H };
+		}
+
+		nodes.forEach((n, i) => {
+			const circle = nodeEls[i];
+			let dragging = false,
+				moved = 0;
+
+			function onMove(e: any) {
+				const p = toSvgPoint(e.clientX, e.clientY);
+				moved += Math.abs(p.x - (n.fx ?? n.x)) + Math.abs(p.y - (n.fy ?? n.y));
+				n.fx = p.x;
+				n.fy = p.y;
+				wake();
+			}
+
+			function onUp(e: any) {
+				circle.releasePointerCapture(e.pointerId);
+				circle.removeEventListener('pointermove', onMove);
+				circle.removeEventListener('pointerup', onUp);
+				n.fx = null;
+				n.fy = null;
+				dragging = false;
+				wake();
+				if (moved < 4) navigate(n.path);
+			}
+
+			circle.addEventListener('pointerdown', (e) => {
+				dragging = true;
+				moved = 0;
+				const p = toSvgPoint(e.clientX, e.clientY);
+				n.fx = p.x;
+				n.fy = p.y;
+				circle.setPointerCapture(e.pointerId);
+				circle.addEventListener('pointermove', onMove);
+				circle.addEventListener('pointerup', onUp);
+			});
+
+			circle.addEventListener('pointerenter', () => {
+				if (dragging) return;
+				const connected = neighbors.get(n.id);
+				nodeEls.forEach((el, j) => {
+					const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
+					el.classList.toggle('highlight', rel);
+					el.classList.toggle('dim', !rel);
+				});
+				labelEls.forEach((el, j) => {
+					const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
+					el.classList.toggle('highlight', rel);
+					el.classList.toggle('dim', !rel);
+				});
+				edgeEls.forEach((el, j) => {
+					const rel = edges[j].source.id === n.id || edges[j].target.id === n.id;
+					el.classList.toggle('highlight', rel);
+					el.classList.toggle('dim', !rel);
+				});
+			});
+
+			circle.addEventListener('pointerleave', () => {
+				if (dragging) return;
+				nodeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+				labelEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+				edgeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+			});
+		});
+
+		render();
+		wake();
+	});
+</script>
+
+<style is:global>
+	.graph-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+		background-color: var(--color-background-shadow);
+		padding: 10px;
+    user-select: none;
+    border: 1px solid var(--color-shadow);
+    border-radius: 10px;
+	}
+
+	.graph-stage {
+    width: 480px;
+    height: auto;
+		aspect-ratio: 480/400;
+	}
+
+	.graph-stage svg {
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+	}
+
+	.graph-edge {
+		stroke: var(--color-shadow);
+		stroke-width: 1;
+		transition:
+			stroke 0.2s,
+			stroke-width 0.2s,
+			opacity 0.2s;
+	}
+
+	.graph-edge.highlight {
+		stroke: var(--color-link);
+		stroke-width: 1.4;
+	}
+
+	.graph-edge.dim {
+		opacity: 0.15;
+	}
+
+	.graph-node {
+		fill: var(--color-shadow);
+		cursor: pointer;
+		transition:
+			fill 0.2s,
+			opacity 0.2s;
+	}
+
+	.graph-node.highlight {
+		fill: var(--color-link);
+	}
+
+	.graph-node.dim {
+		opacity: 0.3;
+	}
+
+	.graph-label {
+		fill: var(--color-muted);
+		font-size: 12px;
+		font-weight: 600;
+		pointer-events: none;
+		user-select: none;
+		transition:
+			fill 0.2s,
+			opacity 0.2s;
+	}
+
+	.graph-label.highlight {
+		fill: var(--color-text);
+	}
+
+	.graph-label.dim {
+		opacity: 0.3;
+	}
+
+	.hint {
+		color: var(--color-shadow);
+		font-size: var(--text-meta);
+		text-align: center;
+	}
+
+  @media screen and (max-width: 768px) {
+		.graph-stage {
+			width: min(480px, 100%);
+		}
+
+		.graph-view {
+			margin-inline: auto;
+		}
+	}
+</style>
