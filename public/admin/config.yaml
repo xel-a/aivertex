@@ -1,37 +1,97 @@
 backend:
-    name: github
-    repo: xel-a/aivertex
-    branch: main
+  name: github
+  repo: xel-a/aivertex
+  branch: main
 
-media_folder: '/src/assets/images'
-public_folder: '/src/assets/images'
+media_folder: "/src/assets/images"
+public_folder: "/src/assets/images"
 
 collections:
-    - name: 'blog'
-      label: 'Blog Posts'
-      folder: 'src/content/blog'
-      create: true
-      slug: '{{slug}}'
-      extension: 'md'
-      format: 'frontmatter'
+  - name: "blog"
+    label: "Blogs"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    extension: "md"
+    format: "frontmatter"
 
-      fields:
-          - { label: 'Title', name: 'title', widget: 'string' }
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
 
-          - { label: 'Description', name: 'description', widget: 'text' }
+      - { label: "Description", name: "description", widget: "text" }
 
-          - { label: 'Publish Date', name: 'pubDate', widget: 'datetime' }
+      - { label: "Publish Date", name: "pubDate", widget: "datetime" }
 
-          - label: 'Author'
-            name: 'author'
-            widget: 'select' 
-            options:
-                - Axel Ignacio
+      - label: "Author"
+        name: "author"
+        widget: "select"
+        options:
+          - Axel Ignacio
 
-          - { label: 'Category', name: 'category', widget: 'text' }
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - "Cybersecurity"
+          - "Programming"
+          - "Finance"
+          - "Design"
+          - "Testing"
 
-          - { label: 'Tags', name: 'tags', widget: 'list' }
+      - { label: "Tags", name: "tags", widget: "list" }
 
-          - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
+      - { label: "Draft", name: "draft", widget: "boolean", default: false }
 
-          - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: "Updated Date", name: "updatedDate", widget: "datetime" }
+
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "lab"
+    label: "Lab"
+    folder: "src/content/labs"
+    create: true
+    slug: "{{parent}}/{{slug}}"
+    extension: "md"
+    format: "frontmatter"
+
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+
+      - { label: "Description", name: "description", widget: "text" }
+
+      - { label: "Publish Date", name: "pubDate", widget: "datetime" }
+
+      - label: "Author"
+        name: "author"
+        widget: "select"
+        options:
+          - Axel Ignacio
+
+      - label: "Category"
+        name: "category"
+        widget: "select"
+        options:
+          - "Cybersecurity"
+          - "Programming"
+          - "Finance"
+          - "Design"
+          - "Testing"
+
+      - { label: "Tags", name: "tags", widget: "list" }
+
+      - { label: "Parent", name: "parent", widget: "string" }
+
+      - label: "Status"
+        name: "status"
+        widget: "select"
+        options:
+          - "active"
+          - "paused"
+          - "completed"
+        default: "active"
+
+      - { label: "Updated Date", name: "updatedDate", widget: "datetime" }
+
+      - { label: "Body", name: "body", widget: "markdown" }
+
+  # To-do add projects config
