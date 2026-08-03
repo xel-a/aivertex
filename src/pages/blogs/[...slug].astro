@@ -1,7 +1,7 @@
 ---
 import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
-import { getBlogPosts } from '../../lib/blog';
 import { render } from 'astro:content';
+import { getBlogPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
 	const blogs = await getBlogPosts();

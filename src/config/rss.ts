@@ -1,8 +1,8 @@
 import { getCollection } from 'astro:content';
-import { getAllPosts } from '../lib/post';
+import { getAllContent } from '../lib/content';
 
 export async function getRSSItems() {
-	const posts = await getAllPosts();
+	const posts = await getAllContent();
 
 	return posts.map((post) => ({
 		title: post.data.title,
