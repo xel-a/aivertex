@@ -1,5 +1,5 @@
-import { navigation, type NavigationId } from '../config/navigation';
+import { navigation, type NodeId } from '../config/navigation';
 
-export function getNavInfo(pageId: NavigationId) {
+export function getNavInfo(pageId: NodeId) {
 	return navigation.find((navItem) => navItem.id === pageId);
 }

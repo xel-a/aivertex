@@ -1,8 +1,8 @@
-import type { NavigationId } from '../config/navigation';
+import type { NodeId } from '../config/navigation';
 import { site } from '../config/site';
 import { getNavInfo } from './navigation';
 
-export function generatePageTitle(pageId?: NavigationId, contentTitle?: string) {
+export function generatePageTitle(pageId?: NodeId, contentTitle?: string) {
 	if (contentTitle) {
 		return `${contentTitle} | ${site.name}`;
 	}

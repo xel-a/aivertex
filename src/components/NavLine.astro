@@ -1,7 +1,8 @@
 ---
-import { navigation } from '../config/navigation';
+import { navigation, type NodeId } from '../config/navigation';
+
 export interface Props {
-	current: 'about' | 'blogs' | 'lab' | 'projects';
+	current: NodeId;
 }
 
 const { current } = Astro.props;
@@ -68,7 +69,7 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
 		const indicator = document.getElementById('indicator') as HTMLElement;
 		const currentLabel = document.querySelector('.nav-label.current') as HTMLElement;
 		const targets = document.querySelectorAll('.nav-label[data-target], .point[data-target]');
-		
+
 		if (!indicator || !currentLabel || targets.length === 0) return;
 
 		const currentPos = indicator.style.left;

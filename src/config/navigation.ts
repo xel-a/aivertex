@@ -1,17 +1,56 @@
+type NodeId = 'home' | 'about' | 'blogs' | 'lab' | 'projects';
 
-type NavigationId = 'about' | 'blogs' | 'lab' | 'projects';
+type CollectionId = 'blog' | 'lab' | 'project';
 
-interface Navigation {
-	id: NavigationId;
+interface SiteNode {
+	id: NodeId;
 	label: string;
 	path: string;
+	parent?: NodeId;
+	collection?: CollectionId;
+	showInNav: boolean;
 }
 
-export const navigation = [
-	{ id: 'about', label: 'About', path: '/about' },
-	{ id: 'blogs', label: 'Blogs', path: '/blogs' },
-	{ id: 'lab', label: 'Lab', path: '/lab' },
-	{ id: 'projects', label: 'Projects', path: '/projects' },
-] as const satisfies readonly Navigation[];
+const siteNodes: SiteNode[] = [
+	{
+		id: 'home',
+		label: 'aivertex.ca',
+		path: '/',
+		showInNav: false,
+	},
+	{
+		id: 'about',
+		label: 'About',
+		path: '/about',
+		parent: 'home',
+		showInNav: true,
+	},
+	{
+		id: 'blogs',
+		label: 'Blogs',
+		path: '/blogs',
+		parent: 'home',
+		collection: 'blog',
+		showInNav: true,
+	},
+	{
+		id: 'lab',
+		label: 'Lab',
+		path: '/lab',
+		parent: 'home',
+		collection: 'lab',
+		showInNav: true,
+	},
+	{
+		id: 'projects',
+		label: 'Projects',
+		path: '/projects',
+		parent: 'home',
+		collection: 'project',
+		showInNav: true,
+	},
+];
 
-export type { NavigationId };
+const navigation = siteNodes.filter((node) => node.showInNav);
+
+export { type NodeId, siteNodes, navigation };
