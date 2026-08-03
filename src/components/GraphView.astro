@@ -1,125 +1,70 @@
 ---
+import { createNodesAndEdges } from '../lib/graph-view-helper';
 
+const { rawNodes, rawEdges } = await createNodesAndEdges();
 ---
 
 <div class='graph-view'>
-	<div class='graph-stage' id='graph-stage' data-width='480' data-height='400'>
+	<div
+		class='graph-stage'
+		id='graph-stage'
+		data-width='480'
+		data-height='400'
+		data-nodes={JSON.stringify(rawNodes)}
+		data-edges={JSON.stringify(rawEdges)}>
 		<svg class='graph-svg' viewBox='0 0 480 400' xmlns='http://www.w3.org/2000/svg'></svg>
+		<button class='graph-recenter' id='graph-recenter' aria-label='Recenter graph' title='Recenter'>
+			<svg viewBox='0 0 24 24' width='16' height='16'>
+				<circle cx='12' cy='12' r='2.5' fill='currentColor'></circle>
+				<path d='M12 2v5M12 17v5M2 12h5M17 12h5' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'></path>
+			</svg>
+		</button>
 	</div>
 	<div class='hint'>New here? Start with About. Otherwise, pick any vertex.</div>
 </div>
 
 <script>
 	import { navigate } from 'astro:transitions/client';
-	import { navigation } from '../config/navigation';
+	import { buildGraph, type Node } from '../lib/graph-view';
+	import type { RawEdge, RawNode } from '../lib/graph-view-helper';
 
 	document.addEventListener('astro:page-load', () => {
-		interface RawNode {
-			id: string;
-			label: string;
-			path: string;
-		}
-
-		interface RawEdge {
-			source: string;
-			target: string;
-		}
-
-		interface Node {
-			x: number;
-			y: number;
-			vx: number;
-			vy: number;
-			fx: number | null;
-			fy: number | null;
-			degree: number;
-			r: number;
-			id: string;
-			label: string;
-			path: string;
-		}
-
-		const rawNodes: RawNode[] = [
-			...navigation,
-			{ id: 'home', label: 'aivertex.ca', path: '/' },
-			{ id: 'test-blog', label: 'Test blog', path: '/blogs/test-blog' },
-		];
-
-		const rawEdges: RawEdge[] = [
-			{ source: 'home', target: 'about' },
-			{ source: 'home', target: 'blogs' },
-			{ source: 'home', target: 'lab' },
-			{ source: 'home', target: 'projects' },
-			{ source: 'home', target: 'blogs' },
-			{ source: 'blogs', target: 'test-blog' },
-		];
-
 		const stage = document.getElementById('graph-stage') as HTMLElement;
 		const svg = document.querySelector('.graph-svg') as SVGAElement;
 
 		if (!stage || !svg) return;
 
-		const W = Number(stage.dataset.width),
-			H = Number(stage.dataset.height);
+		const rawNodes = JSON.parse(stage.dataset.nodes!) as RawNode[];
+		const rawEdges = JSON.parse(stage.dataset.edges!) as RawEdge[];
 
-		const degreeCount = new Map();
-
-		rawEdges.forEach((e) => {
-			degreeCount.set(e.source, (degreeCount.get(e.source) || 0) + 1);
-			degreeCount.set(e.target, (degreeCount.get(e.target) || 0) + 1);
-		});
-
-		const nodes: Node[] = rawNodes.map((n, i) => {
-			const angle = (i / rawNodes.length) * Math.PI * 2;
-			const radius = Math.min(W, H) * 0.28;
-			const degree = degreeCount.get(n.id) || 0;
-			return {
-				...n,
-				x: W / 2 + Math.cos(angle) * radius + (Math.random() - 0.5) * 20,
-				y: H / 2 + Math.sin(angle) * radius + (Math.random() - 0.5) * 20,
-				vx: 0,
-				vy: 0,
-				fx: null,
-				fy: null,
-				degree,
-				r: 4 + Math.min(degree, 5) * 1.6,
-			};
-		});
-
-		const nodeById = new Map(nodes.map((n) => [n.id, n]));
-
-		const edges = rawEdges
-			.map((e) => ({ source: nodeById.get(e.source)!, target: nodeById.get(e.target)! }))
-			.filter((e) => e.source && e.target);
-
-		const neighbors = new Map();
-
-		nodes.forEach((n) => neighbors.set(n.id, new Set()));
-
-		edges.forEach((e) => {
-			neighbors.get(e.source.id).add(e.target.id);
-			neighbors.get(e.target.id).add(e.source.id);
-		});
+		const { nodes, edges, neighbors, W, H } = buildGraph(stage, rawNodes, rawEdges);
 
 		const svgNS = 'http://www.w3.org/2000/svg';
+
+		// everything zoomable/pannable lives inside this group; the outer
+		// svg's viewBox never changes, only this group's transform does
+		const viewport = document.createElementNS(svgNS, 'g');
+		viewport.setAttribute('id', 'graph-viewport');
+		svg.appendChild(viewport);
+
 		const edgeEls = edges.map(() => {
 			const l = document.createElementNS(svgNS, 'line');
 			l.setAttribute('class', 'graph-edge');
-			svg.appendChild(l);
+			viewport.appendChild(l);
 			return l;
 		});
 		const nodeEls = nodes.map((n) => {
 			const c = document.createElementNS(svgNS, 'circle');
 			c.setAttribute('class', 'graph-node');
 			c.setAttribute('r', String(n.r));
-			svg.appendChild(c);
+			viewport.appendChild(c);
 			return c;
 		});
 		const labelEls = nodes.map((n) => {
 			const t = document.createElementNS(svgNS, 'text');
 			t.setAttribute('class', 'graph-label');
 			t.textContent = n.label;
-			svg.appendChild(t);
+			viewport.appendChild(t);
 			return t;
 		});
 
@@ -195,8 +140,8 @@
 			let totalMotion = 0;
 			nodes.forEach((n) => {
 				if (n.fx !== null && n.fy !== null) {
-					n.x = clamp(n.fx, n.r, W - n.r);
-					n.y = clamp(n.fy, n.r, H - n.r);
+					n.x = n.fx;
+					n.y = n.fy;
 					n.vx = 0;
 					n.vy = 0;
 					return;
@@ -205,21 +150,6 @@
 				n.vy *= DAMPING;
 				n.x += n.vx;
 				n.y += n.vy;
-
-				if (n.x < n.r) {
-					n.x = n.r;
-					n.vx = 0;
-				} else if (n.x > W - n.r) {
-					n.x = W - n.r;
-					n.vx = 0;
-				}
-				if (n.y < n.r) {
-					n.y = n.r;
-					n.vy = 0;
-				} else if (n.y > H - n.r) {
-					n.y = H - n.r;
-					n.vy = 0;
-				}
 
 				totalMotion += Math.abs(n.vx) + Math.abs(n.vy);
 			});
@@ -239,6 +169,211 @@
 			return { x: ((clientX - rect.left) / rect.width) * W, y: ((clientY - rect.top) / rect.height) * H };
 		}
 
+		// --- zoom + pan ---
+		const MIN_SCALE = 0.5;
+		const MAX_SCALE = 3;
+		const LABEL_HIDE_THRESHOLD = 0.75;
+		let scale = 1;
+		let panX = 0;
+		let panY = 0;
+
+		function applyViewportTransform() {
+			viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
+			svg.classList.toggle('zoomed-out', scale < LABEL_HIDE_THRESHOLD);
+		}
+
+		// soft rubber-band: panning near "home" (0,0) is completely free, but the
+		// further you stray the more each extra pixel of movement is resisted —
+		// never a hard wall, just increasingly diminishing returns
+		const FREE_PAN_RADIUS = 300;
+		const PAN_RESISTANCE = 0.35;
+
+		function constrainPan(value: number) {
+			const absValue = Math.abs(value);
+			if (absValue <= FREE_PAN_RADIUS) return value;
+			const over = absValue - FREE_PAN_RADIUS;
+			const resisted = FREE_PAN_RADIUS + over * PAN_RESISTANCE;
+			return Math.sign(value) * resisted;
+		}
+
+		// zoom by `factor`, keeping the graph-space point currently under
+		// `viewBoxPoint` fixed in place on screen (the "zoom toward cursor" feel)
+		function zoomAt(viewBoxPoint: { x: number; y: number }, factor: number) {
+			const newScale = clamp(scale * factor, MIN_SCALE, MAX_SCALE);
+			const graphX = (viewBoxPoint.x - panX) / scale;
+			const graphY = (viewBoxPoint.y - panY) / scale;
+			panX = constrainPan(viewBoxPoint.x - graphX * newScale);
+			panY = constrainPan(viewBoxPoint.y - graphY * newScale);
+			scale = newScale;
+			applyViewportTransform();
+		}
+
+		stage.addEventListener(
+			'wheel',
+			(e) => {
+				e.preventDefault();
+				const cursorPoint = toSvgPoint(e.clientX, e.clientY);
+				const factor = Math.exp(-e.deltaY * 0.0015);
+				zoomAt(cursorPoint, factor);
+			},
+			{ passive: false },
+		);
+
+		// pinch-to-zoom + drag-to-pan: track every active pointer on the stage.
+		// two pointers → pinch. one pointer that started on empty space → pan.
+		// one pointer that started on a node → left alone (its own drag handler runs).
+		const activePointers = new Map<number, { x: number; y: number }>();
+		let pinchStartDist = 0;
+		let panning = false;
+		let lastPanPoint: { x: number; y: number } | null = null;
+
+		function pointerDistance(a: { x: number; y: number }, b: { x: number; y: number }) {
+			return Math.hypot(a.x - b.x, a.y - b.y);
+		}
+
+		function pointerMidpoint(a: { x: number; y: number }, b: { x: number; y: number }) {
+			return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+		}
+
+		// --- momentum: after releasing a pan, keep drifting and decelerate,
+		// like flicking a page in Obsidian ---
+		const FRICTION = 0.94;
+		const MOMENTUM_STOP_THRESHOLD = 0.02;
+		const STALE_VELOCITY_MS = 100;
+		let panVelX = 0;
+		let panVelY = 0;
+		let lastMoveTime = 0;
+		let momentumRunning = false;
+
+		function stopMomentum() {
+			momentumRunning = false;
+		}
+
+		function momentumStep() {
+			if (!momentumRunning) return;
+			panX = constrainPan(panX + panVelX);
+			panY = constrainPan(panY + panVelY);
+			applyViewportTransform();
+			panVelX *= FRICTION;
+			panVelY *= FRICTION;
+			if (Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD && Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD) {
+				momentumRunning = false;
+				return;
+			}
+			requestAnimationFrame(momentumStep);
+		}
+
+		function startMomentum() {
+			// if the pointer sat still for a bit before lifting, don't fling
+			// based on stale velocity from earlier movement
+			if (performance.now() - lastMoveTime > STALE_VELOCITY_MS) {
+				panVelX = 0;
+				panVelY = 0;
+			}
+			if (Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD && Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD) return;
+			momentumRunning = true;
+			requestAnimationFrame(momentumStep);
+		}
+
+		// recenter button: smoothly tween pan/scale back to the identity view
+		const recenterBtn = document.getElementById('graph-recenter');
+
+		function easeOutCubic(t: number) {
+			return 1 - Math.pow(1 - t, 3);
+		}
+
+		function recenter() {
+			stopMomentum();
+			const startPanX = panX;
+			const startPanY = panY;
+			const startScale = scale;
+			const duration = 450;
+			const startTime = performance.now();
+
+			function step(now: number) {
+				const t = Math.min((now - startTime) / duration, 1);
+				const eased = easeOutCubic(t);
+				panX = startPanX + (0 - startPanX) * eased;
+				panY = startPanY + (0 - startPanY) * eased;
+				scale = startScale + (1 - startScale) * eased;
+				applyViewportTransform();
+				if (t < 1) requestAnimationFrame(step);
+			}
+			requestAnimationFrame(step);
+		}
+
+		recenterBtn?.addEventListener('click', recenter);
+
+		stage.addEventListener('pointerdown', (e) => {
+			stopMomentum();
+			activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+			if (activePointers.size === 2) {
+				const [a, b] = [...activePointers.values()];
+				pinchStartDist = pointerDistance(a, b);
+				panning = false;
+				stage.setPointerCapture(e.pointerId);
+			} else if (activePointers.size === 1) {
+				const target = e.target as Element;
+				if (!target.closest('.graph-node') && !target.closest('.graph-recenter')) {
+					panning = true;
+					lastPanPoint = toSvgPoint(e.clientX, e.clientY);
+					panVelX = 0;
+					panVelY = 0;
+					lastMoveTime = performance.now();
+					stage.classList.add('panning');
+					stage.setPointerCapture(e.pointerId);
+				}
+			}
+		});
+
+		stage.addEventListener('pointermove', (e) => {
+			if (!activePointers.has(e.pointerId)) return;
+			activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+			if (activePointers.size === 2) {
+				e.preventDefault();
+				panning = false;
+				const [a, b] = [...activePointers.values()];
+				const dist = pointerDistance(a, b);
+				if (pinchStartDist > 0) {
+					const factor = dist / pinchStartDist;
+					const midpoint = pointerMidpoint(a, b);
+					zoomAt(toSvgPoint(midpoint.x, midpoint.y), factor);
+				}
+				pinchStartDist = dist;
+			} else if (panning && lastPanPoint) {
+				e.preventDefault();
+				const p = toSvgPoint(e.clientX, e.clientY);
+				const dx = p.x - lastPanPoint.x;
+				const dy = p.y - lastPanPoint.y;
+				panX = constrainPan(panX + dx);
+				panY = constrainPan(panY + dy);
+				// smooth the velocity sample so a single jittery event doesn't dominate the flick
+				panVelX = panVelX * 0.7 + dx * 0.3;
+				panVelY = panVelY * 0.7 + dy * 0.3;
+				lastMoveTime = performance.now();
+				lastPanPoint = p;
+				applyViewportTransform();
+			}
+		});
+
+		function releasePointer(e: PointerEvent) {
+			const wasPanning = panning;
+			activePointers.delete(e.pointerId);
+			if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+			if (activePointers.size < 2) pinchStartDist = 0;
+			if (activePointers.size === 0) {
+				panning = false;
+				lastPanPoint = null;
+				stage.classList.remove('panning');
+				if (wasPanning) startMomentum();
+			}
+		}
+
+		stage.addEventListener('pointerup', releasePointer);
+		stage.addEventListener('pointercancel', releasePointer);
+
 		nodes.forEach((n, i) => {
 			const circle = nodeEls[i];
 			let dragging = false,
@@ -246,11 +381,11 @@
 
 			function onMove(e: any) {
 				const p = toSvgPoint(e.clientX, e.clientY);
-				const clampedX = clamp(p.x, n.r, W - n.r); // ← new
-				const clampedY = clamp(p.y, n.r, H - n.r); // ← new
-				moved += Math.abs(clampedX - (n.fx ?? n.x)) + Math.abs(clampedY - (n.fy ?? n.y));
-				n.fx = clampedX; // ← was: n.fx = p.x
-				n.fy = clampedY;
+				const graphX = (p.x - panX) / scale;
+				const graphY = (p.y - panY) / scale;
+				moved += Math.abs(graphX - (n.fx ?? n.x)) + Math.abs(graphY - (n.fy ?? n.y));
+				n.fx = graphX;
+				n.fy = graphY;
 				wake();
 			}
 
@@ -266,11 +401,14 @@
 			}
 
 			circle.addEventListener('pointerdown', (e) => {
+				// let a two-finger pinch take priority over a single-node drag
+				if (activePointers.size >= 2) return;
+				stopMomentum();
 				dragging = true;
 				moved = 0;
 				const p = toSvgPoint(e.clientX, e.clientY);
-				n.fx = clamp(p.x, n.r, W - n.r);
-				n.fy = clamp(p.y, n.r, H - n.r);
+				n.fx = (p.x - panX) / scale;
+				n.fy = (p.y - panY) / scale;
 				circle.setPointerCapture(e.pointerId);
 				circle.addEventListener('pointermove', onMove);
 				circle.addEventListener('pointerup', onUp);
@@ -278,7 +416,7 @@
 
 			circle.addEventListener('pointerenter', () => {
 				if (dragging) return;
-				const connected = neighbors.get(n.id);
+				const connected = neighbors.get(n.id)!;
 				nodeEls.forEach((el, j) => {
 					const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
 					el.classList.toggle('highlight', rel);
@@ -304,6 +442,7 @@
 			});
 		});
 
+		applyViewportTransform();
 		render();
 		wake();
 	});
@@ -325,13 +464,44 @@
 		width: 480px;
 		height: auto;
 		aspect-ratio: 480/400;
-		padding: 20px;
+		touch-action: none;
+		overscroll-behavior: contain;
+		cursor: grab;
+		position: relative;
+	}
+
+	.graph-stage.panning {
+		cursor: grabbing;
 	}
 
 	.graph-stage svg {
 		width: 100%;
 		height: 100%;
-		overflow: visible;
+		overflow: hidden;
+	}
+
+	.graph-recenter {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--color-background-shadow);
+		border: 1px solid var(--color-shadow);
+		border-radius: 50%;
+		color: var(--color-muted);
+		cursor: pointer;
+		transition:
+			color 0.2s ease,
+			border-color 0.2s ease;
+	}
+
+	.graph-recenter:hover {
+		color: var(--color-link);
+		border-color: var(--color-link);
 	}
 
 	.graph-edge {
@@ -377,6 +547,10 @@
 		transition:
 			fill 0.2s,
 			opacity 0.2s;
+	}
+
+	.graph-svg.zoomed-out .graph-label {
+		opacity: 0;
 	}
 
 	.graph-label.highlight {
