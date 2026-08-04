@@ -188,12 +188,10 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 		const FREE_PAN_RADIUS = 300;
 		const PAN_RESISTANCE = 0.35;
 
-		function constrainPan(value: number) {
-			const absValue = Math.abs(value);
-			if (absValue <= FREE_PAN_RADIUS) return value;
-			const over = absValue - FREE_PAN_RADIUS;
-			const resisted = FREE_PAN_RADIUS + over * PAN_RESISTANCE;
-			return Math.sign(value) * resisted;
+		function applyPanDelta(current: number, delta: number) {
+			const effectiveRadius = FREE_PAN_RADIUS * Math.max(scale, 1);
+			const factor = Math.abs(current) > effectiveRadius ? PAN_RESISTANCE : 1;
+			return current + delta * factor;
 		}
 
 		// zoom by `factor`, keeping the graph-space point currently under
@@ -202,8 +200,8 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 			const newScale = clamp(scale * factor, MIN_SCALE, MAX_SCALE);
 			const graphX = (viewBoxPoint.x - panX) / scale;
 			const graphY = (viewBoxPoint.y - panY) / scale;
-			panX = constrainPan(viewBoxPoint.x - graphX * newScale);
-			panY = constrainPan(viewBoxPoint.y - graphY * newScale);
+			panX = viewBoxPoint.x - graphX * newScale;
+			panY = viewBoxPoint.y - graphY * newScale;
 			scale = newScale;
 			applyViewportTransform();
 		}
@@ -251,8 +249,8 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 
 		function momentumStep() {
 			if (!momentumRunning) return;
-			panX = constrainPan(panX + panVelX);
-			panY = constrainPan(panY + panVelY);
+			panX = applyPanDelta(panX, panVelX);
+			panY = applyPanDelta(panY, panVelY);
 			applyViewportTransform();
 			panVelX *= FRICTION;
 			panVelY *= FRICTION;
@@ -347,8 +345,8 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 				const p = toSvgPoint(e.clientX, e.clientY);
 				const dx = p.x - lastPanPoint.x;
 				const dy = p.y - lastPanPoint.y;
-				panX = constrainPan(panX + dx);
-				panY = constrainPan(panY + dy);
+				panX = applyPanDelta(panX, dx);
+				panY = applyPanDelta(panY, dy);
 				// smooth the velocity sample so a single jittery event doesn't dominate the flick
 				panVelX = panVelX * 0.7 + dx * 0.3;
 				panVelY = panVelY * 0.7 + dy * 0.3;
