@@ -1,22 +1,24 @@
-type NodeId = 'home' | 'about' | 'blogs' | 'lab' | 'projects';
+type NodeId = 'home' | 'about' | 'blogs' | 'lab' | 'projects' | '404';
 
 type CollectionId = 'blog' | 'lab' | 'project';
 
 interface SiteNode {
 	id: NodeId;
 	label: string;
-	path: string;
+	path?: string;
 	parent?: NodeId;
 	collection?: CollectionId;
 	showInNav: boolean;
+	kind: 'page' | 'fallback';
 }
 
 const siteNodes: SiteNode[] = [
 	{
 		id: 'home',
-		label: 'aivertex.ca',
+		label: 'AI Vertex',
 		path: '/',
-		showInNav: false,
+		showInNav: true,
+		kind: 'page',
 	},
 	{
 		id: 'about',
@@ -24,6 +26,7 @@ const siteNodes: SiteNode[] = [
 		path: '/about',
 		parent: 'home',
 		showInNav: true,
+		kind: 'page',
 	},
 	{
 		id: 'blogs',
@@ -32,6 +35,7 @@ const siteNodes: SiteNode[] = [
 		parent: 'home',
 		collection: 'blog',
 		showInNav: true,
+		kind: 'page',
 	},
 	{
 		id: 'lab',
@@ -40,6 +44,7 @@ const siteNodes: SiteNode[] = [
 		parent: 'home',
 		collection: 'lab',
 		showInNav: true,
+		kind: 'page',
 	},
 	{
 		id: 'projects',
@@ -48,9 +53,16 @@ const siteNodes: SiteNode[] = [
 		parent: 'home',
 		collection: 'project',
 		showInNav: true,
+		kind: 'page',
+	},
+	{
+		id: '404',
+		label: 'Vertex not found',
+		showInNav: false,
+		kind: 'fallback',
 	},
 ];
 
-const navigation = siteNodes.filter((node) => node.showInNav);
+const navigation = siteNodes.filter((node) => node.kind === 'page' && node.showInNav );
 
 export { type NodeId, siteNodes, navigation };

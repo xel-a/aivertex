@@ -1,4 +1,4 @@
-import { siteNodes } from '../config/navigation';
+import { navigation } from '../config/navigation';
 import { getAllContent } from './content';
 
 export interface RawNode {
@@ -18,11 +18,11 @@ export async function createNodesAndEdges() {
 	const rawNodes: RawNode[] = [];
 	const rawEdges: RawEdge[] = [];
 
-	for (const node of siteNodes) {
+	for (const node of navigation) {
 		rawNodes.push({
 			id: node.id,
 			label: node.label,
-			path: node.path,
+			path: node.path!,
 		});
 
 		if (node.parent) {

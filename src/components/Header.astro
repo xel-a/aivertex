@@ -1,14 +1,13 @@
 ---
-import { type NodeId } from '../config/navigation';
+import { siteNodes, type NodeId } from '../config/navigation';
 import { site } from '../config/site';
 import MobileMenu from './MobileMenu.astro';
 import NavLine from './NavLine.astro';
 
-interface Props {
-	pageId?: NodeId;
-}
-
 const { pageId } = Astro.props;
+
+const currentNode = siteNodes.find((node) => node.id === pageId)!;
+const showNavigationMenu = currentNode && currentNode.kind === 'page';
 ---
 
 <header>
@@ -24,7 +23,7 @@ const { pageId } = Astro.props;
 		<h1 class='logo-title'>{site.domain}</h1>
 	</a>
 	{
-		pageId ? (
+		showNavigationMenu ? (
 			<div class='navigation-menu'>
 				<div class='desktop-nav'>
 					<NavLine current={pageId} />
