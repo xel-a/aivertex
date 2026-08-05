@@ -17,8 +17,7 @@ import { social } from '../../config/social';
 			<p class='body-text'>
 				I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is where I document what I'm
 				building, breaking, and learning &mdash; a running record of my projects, experiments, and lessons along the way. Based in
-				Toronto, I usually spend my weekends building something that probably didn't need to exist, playing video games, watching
-				anime, or getting lost in a good movie.
+				Toronto, I usually spend my weekends building something that probably didn't need to exist, playing video games, or dozing off.
 			</p>
 		</section>
 
@@ -26,7 +25,7 @@ import { social } from '../../config/social';
 		<section class='section' id='vertices'>
 			<div class='section-header'>
 				<p class='eyebrow'>VERTICES</p>
-				<CollapseIcon section='vertices' />
+				<CollapseIcon />
 			</div>
 			<ul class='timeline'>
 				{
@@ -77,7 +76,7 @@ import { social } from '../../config/social';
 		<section class='section' id='edges'>
 			<div class='section-header'>
 				<p class='eyebrow'>EDGES</p>
-				<CollapseIcon section='edges' />
+				<CollapseIcon />
 			</div>
 			<div class='skill-content'>
 				{
@@ -110,19 +109,25 @@ import { social } from '../../config/social';
 
 		<!-- Projects -->
 		<section class='section'>
-			<p class='eyebrow'>ARTIFACTS</p>
+			<div class='section-header'>
+				<p class='eyebrow'>ARTIFACTS</p>
+			</div>
 			<p class='body-text'>Creating...</p>
 		</section>
 
 		<!-- Certificates -->
 		<section class='section milestones'>
-			<p class='eyebrow'>MILESTONES</p>
+			<div class='section-header'>
+				<p class='eyebrow'>MILESTONES</p>
+			</div>
 			<p class='body-text'>Compiling...</p>
 		</section>
 
 		<!-- Contact -->
 		<section class='section'>
-			<p class='eyebrow'>NETWORK</p>
+			<div class='section-header'>
+				<p class='eyebrow'>NETWORK</p>
+			</div>
 			<h2>Want to connect?</h2>
 			<p class='body-text'>
 				I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs, CTFs, and personal projects. If
@@ -154,11 +159,14 @@ import { social } from '../../config/social';
 
 	.section-header {
 		display: flex;
-		gap: 16px;
+		align-items: center;
+		margin-bottom: 10px;
+		height: 48px;
 	}
 
 	.section.intro {
 		border-top: none;
+		padding-top: 0;
 		padding-bottom: 68px;
 	}
 
@@ -166,14 +174,13 @@ import { social } from '../../config/social';
 		font-size: var(--text-label);
 		color: var(--color-link);
 		letter-spacing: 3px;
-		margin: 0 0 18px;
 	}
 
 	h1 {
 		font-size: var(--text-heading);
 		font-weight: 700;
 		letter-spacing: -0.01em;
-		margin: 0 0 20px;
+		margin: 20px 0 20px;
 	}
 
 	h2 {
