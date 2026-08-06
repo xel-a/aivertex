@@ -63,9 +63,11 @@
 html {
 	-webkit-tap-highlight-color: transparent;
 	scrollbar-gutter: stable;
+	scroll-behavior: smooth;
 }
 
-html, body {
+html,
+body {
 	margin: 0;
 	width: 100%;
 	height: 100%;
@@ -104,3 +106,34 @@ pre {
 ::view-transition-new(root) {
 	animation-duration: 100ms;
 }
+
+/* tags */
+
+.tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+.tag {
+		text-decoration: none;
+		color: var(--color-muted);
+		margin: 0.25em 0;
+		border: 2px solid var(--color-shadow);
+		border-radius: 0.5em;
+		padding: 5px 10px;
+		font-size: var(--text-meta);
+		font-weight: bold;
+		background-color: var(--color-background-shadow);
+		transition:
+			border-color 0.25s ease,
+			color 0.25s ease;
+		user-select: none;
+		cursor: pointer;
+		line-height: 1.75;
+	}
+
+	.tag:hover {
+		border-color: var(--color-link);
+		color: var(--color-link);
+	}

@@ -33,9 +33,7 @@ const readingTime = getReadingTime(contentText);
 		<section class='tags'>
 			{
 				frontmatter.tags.map((tag: string) => (
-					<p class='tag'>
-						<a href={`tags/${tag}`}>{tag}</a>
-					</p>
+					<a class="tag" href={`tags/${tag}`}>{tag}</a>
 				))
 			}
 		</section>
@@ -93,31 +91,6 @@ const readingTime = getReadingTime(contentText);
 	}
 
 	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
 		margin-bottom: 40px;
-	}
-
-	.content .tag {
-		color: var(--color-text);
-		margin: 0.25em 0;
-		border: 2px solid var(--color-shadow);
-		border-radius: 0.5em;
-		padding: 5px 10px;
-		font-size: var(--text-meta);
-		font-weight: bold;
-		background-color: var(--color-background-shadow);
-		transition:
-			border-color 0.6s ease,
-			color 0.6s ease,
-			transform 0.6s ease;
-		cursor: pointer;
-	}
-
-	.tag:hover {
-		border-color: var(--color-link);
-		color: var(--color-link);
-		transform: translateY(-5px);
 	}
 </style>
