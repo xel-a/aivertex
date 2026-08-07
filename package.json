@@ -11,7 +11,9 @@
     "deploy": "wrangler deploy",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-types": "wrangler types"
+    "generate-types": "wrangler types",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",
@@ -21,6 +23,10 @@
     "decap-cms-app": "^3.14.1"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "prettier": "^3.9.6",
+    "prettier-plugin-astro": "^0.14.1",
+    "typescript": "^6.0.3",
     "wrangler": "^4.114.0"
   }
 }
