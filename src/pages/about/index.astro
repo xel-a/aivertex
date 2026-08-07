@@ -5,6 +5,7 @@ import { skills } from '../../data/skills';
 import CollapseIcon from '../../components/CollapseIcon.astro';
 import { site } from '../../config/site';
 import { social } from '../../config/social';
+import CurrentTraversal from '../../components/CurrentTraversal.astro';
 ---
 
 <Layout pageId='about'>
@@ -12,19 +13,29 @@ import { social } from '../../config/social';
 		<!-- Introduction -->
 		<section class='section intro'>
 			<p class='eyebrow'>Hello there! I am..</p>
-			<h1>{site.author.alternateName}</h1>
+			<h1 class='page-hero'>{site.author.alternateName}</h1>
 			<p class='lead'>Learning. Building. Securing. One vertex at a time.</p>
 			<p class='body-text'>
-				I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is where I document what I'm
-				building, breaking, and learning &mdash; a running record of my projects, experiments, and lessons along the way. Based in
-				Toronto, I usually spend my weekends building something that probably didn't need to exist, playing video games, or dozing off.
+				I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is
+				where I document what I'm building, breaking, and learning &mdash; a running record of my
+				projects, experiments, and lessons along the way. Based in Toronto, I usually spend my
+				weekends building something that probably didn't need to exist, playing video games, or
+				dozing off.
 			</p>
+		</section>
+
+		<!-- Currently learning -->
+		<section class='section' id='current-traversal'>
+			<div class='section-header'>
+				<h2 class='section-title'>CURRENT TRAVERSAL</h2>
+			</div>
+			<CurrentTraversal variant='full' />
 		</section>
 
 		<!-- Experience -->
 		<section class='section' id='vertices'>
 			<div class='section-header'>
-				<p class='eyebrow'>VERTICES</p>
+				<h2 class='section-title'>VERTICES</h2>
 				<CollapseIcon />
 			</div>
 			<ul class='timeline'>
@@ -75,7 +86,7 @@ import { social } from '../../config/social';
 		<!-- Skills -->
 		<section class='section' id='edges'>
 			<div class='section-header'>
-				<p class='eyebrow'>EDGES</p>
+				<h2 class='section-title'>EDGES</h2>
 				<CollapseIcon />
 			</div>
 			<div class='skill-content'>
@@ -88,7 +99,11 @@ import { social } from '../../config/social';
 										<p class='tag-category'>{skill.label}</p>
 										<span class='tag-category-count'>[ {skill.tags.length} ]</span>
 									</div>
-									<svg xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 24 24'>
+									<svg
+										xmlns='http://www.w3.org/2000/svg'
+										width='1em'
+										height='1em'
+										viewBox='0 0 24 24'>
 										<rect class='plus-vertical' x='11' y='5' width='2' height='14' rx='1' />
 										<rect class='plus-horizontal' x='5' y='11' width='14' height='2' rx='1' />
 									</svg>
@@ -110,7 +125,7 @@ import { social } from '../../config/social';
 		<!-- Projects -->
 		<section class='section'>
 			<div class='section-header'>
-				<p class='eyebrow'>ARTIFACTS</p>
+				<h2 class='section-title'>ARTIFACTS</h2>
 			</div>
 			<p class='body-text'>Creating...</p>
 		</section>
@@ -118,7 +133,7 @@ import { social } from '../../config/social';
 		<!-- Certificates -->
 		<section class='section milestones'>
 			<div class='section-header'>
-				<p class='eyebrow'>MILESTONES</p>
+				<h2 class='section-title'>MILESTONES</h2>
 			</div>
 			<p class='body-text'>Compiling...</p>
 		</section>
@@ -126,12 +141,13 @@ import { social } from '../../config/social';
 		<!-- Contact -->
 		<section class='section'>
 			<div class='section-header'>
-				<p class='eyebrow'>NETWORK</p>
+				<h2 class='section-title'>NETWORK</h2>
 			</div>
-			<h2>Want to connect?</h2>
+			<h3>Want to connect?</h3>
 			<p class='body-text'>
-				I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs, CTFs, and personal projects. If
-				you want to chat about cybersecurity, or anything else — feel free to reach out!
+				I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs,
+				CTFs, and personal projects. If you want to chat about cybersecurity, or anything else —
+				feel free to reach out!
 			</p>
 			<div class='contact-links'>
 				{
@@ -152,6 +168,12 @@ import { social } from '../../config/social';
 		margin: 0 auto;
 	}
 
+	.page-hero {
+		font-size: var(--text-display);
+		letter-spacing: -0.01em;
+		margin: 20px 0 20px;
+	}
+
 	.section {
 		padding: 56px 0;
 		border-top: 1px solid var(--color-shadow);
@@ -162,6 +184,10 @@ import { social } from '../../config/social';
 		align-items: center;
 		margin-bottom: 10px;
 		height: 48px;
+	}
+
+	.section-title {
+		font-size: var(--text-title);
 	}
 
 	.section.intro {
@@ -176,22 +202,8 @@ import { social } from '../../config/social';
 		letter-spacing: 3px;
 	}
 
-	h1 {
-		font-size: var(--text-heading);
-		font-weight: 700;
-		letter-spacing: -0.01em;
-		margin: 20px 0 20px;
-	}
-
-	h2 {
-		font-size: var(--text-lead);
-		font-weight: 700;
-		margin: 0 0 14px;
-	}
-
 	h3 {
 		font-size: var(--text-body);
-		font-weight: 700;
 		margin: 0 0 4px;
 	}
 
@@ -436,36 +448,11 @@ import { social } from '../../config/social';
 	}
 
 	.tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 10px;
 		margin-bottom: 30px;
 	}
 
 	.skill-details:last-of-type .tags {
 		margin-bottom: 0;
-	}
-
-	.tag {
-		text-decoration: none;
-		color: var(--color-muted);
-		margin: 0.25em 0;
-		border: 2px solid var(--color-shadow);
-		border-radius: 0.5em;
-		padding: 5px 10px;
-		font-size: var(--text-meta);
-		font-weight: bold;
-		background-color: var(--color-background-shadow);
-		transition:
-			border-color 0.6s ease,
-			color 0.6s ease;
-		user-select: none;
-		cursor: pointer;
-	}
-
-	.tag:hover {
-		border-color: var(--color-link);
-		color: var(--color-link);
 	}
 
 	/* Contact */

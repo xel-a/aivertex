@@ -1,0 +1,232 @@
+---
+import { traversalNodes, getProgress } from '../data/current-traversal';
+import { slugify } from '../utils/strings';
+import { formatDate } from '../utils/date';
+
+interface Props {
+	variant: 'full' | 'compact';
+}
+
+const { variant } = Astro.props;
+const firstTraversalNode = traversalNodes[0];
+---
+
+{
+	variant === 'compact' ? (
+		<div class='compact-info'>
+			<p class='description'>
+				I am currently preparing for <span>{firstTraversalNode.title}</span> &mdash;{' '}
+				<span>{firstTraversalNode.subtitle}</span>
+			</p>
+			<a href='about#current-traversal' class='view-full-info'>
+				View info &nearr;
+			</a>
+		</div>
+	) : (
+		<div class='full-info'>
+			{traversalNodes.map((node) => {
+				const countCompletedTopics = node.topics.filter(topic => topic.completed).length;
+				const totalNumberOfTopics = node.topics.length;
+				const progress = getProgress(node);
+				return (
+					<div class='traversal-node'>
+						<div class='section node-header'>
+							<h3 class='node-title'>{node.title}</h3>
+							<p class='node-subtitle'>{node.subtitle}</p>
+						</div>
+						<div class='section node-status'>
+							<div class='status-header'>
+								<h4>Traversal Progress</h4>
+								<span class='progress-value'>{countCompletedTopics} / {totalNumberOfTopics} edges traversed</span>
+							</div>
+							<div
+								class='progress-track'
+								role='progressbar'
+								aria-valuenow={progress}
+								aria-valuemin={0}
+								aria-valuemax={100}
+								aria-label={`${node.title} progress`}>
+								<div class='progress-fill' style={{ width: `${progress}%` }} />
+								<span class='progress-dot' style={{ left: `${progress}%` }} />
+							</div>
+						</div>
+						<div class='section node-topics'>
+							<div class='section-heading'>
+								<h4>Active Edges</h4>
+								<div class='section-legend'>
+									<p class="legend-completed">Traversed</p>
+									<p class="legend-started">In Progress</p>
+									<p class="legend-not-started">Not Started</p>
+								</div>
+							</div>
+							<ul class='topics'>
+								{node.topics.map((topic) => (
+									<li>
+										<a
+											class='topic'
+											href={`tags/${slugify(topic.keyword)}`}
+											title={topic.description}
+											data-started={topic.started}
+											data-completed={topic.completed}>
+											{topic.keyword}
+											<span> &nearr;</span>
+										</a>
+									</li>
+								))}
+							</ul>
+						</div>
+						<div class='section node-timeframe'>
+							<h4>Target</h4>
+							<p>Completion date: {formatDate(node.completionDate, 'short')}</p>
+						</div>
+					</div>
+				);
+			})}
+		</div>
+	)
+}
+
+<style>
+	.compact-info {
+		color: var(--color-muted);
+	}
+
+	.view-full-info {
+		text-decoration: none;
+		color: var(--color-link);
+		border-bottom: 1px solid transparent;
+		transition: border-color 0.2s ease;
+	}
+
+	.view-full-info:hover {
+		border-color: var(--color-link);
+	}
+
+	.section:not(:last-child) {
+		margin-bottom: 40px;
+	}
+
+	.node-title {
+		margin-bottom: 0;
+	}
+
+	.node-subtitle {
+		margin-top: 10px;
+		color: var(--color-link);
+	}
+
+	.traversal-node:not(:last-child) {
+		padding-bottom: 40px;
+		margin-bottom: 40px;
+		border-bottom: 1px solid var(--color-shadow);
+	}
+
+	.status-header {
+		display: flex;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 12px;
+	}
+
+	.status-header h4 {
+		margin: 0;
+	}
+
+	.progress-value {
+		color: var(--color-muted);
+		font-size: 0.9rem;
+	}
+	.progress-track {
+		position: relative;
+		height: 2px;
+		background: var(--color-shadow);
+		border-radius: 1px;
+	}
+
+	.progress-fill {
+		height: 100%;
+		background: var(--color-link);
+		border-radius: 1px;
+		transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+	}
+
+	.progress-dot {
+		position: absolute;
+		top: 50%;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: var(--color-link);
+		transform: translate(-50%, -50%);
+		transition: left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+		box-shadow: 0 0 0 4px var(--color-background-shadow);
+	}
+
+	.section-heading {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.section-legend {
+		display: flex;
+		gap: 20px;
+		font-size: var(--text-meta);
+		color: var(--color-muted);
+	}
+
+	.topics {
+		list-style: none;
+		padding: 0;
+		margin-top: 0;
+	}
+
+	.topic::before, .legend-not-started::before, .legend-started::before, .legend-completed::before {
+		content: '';
+		display: inline-block;
+		width: 0.6rem;
+		height: 0.6rem;
+		border: 1.5px solid currentColor;
+		border-radius: 50%;
+		margin-right: 10px;
+	}
+
+	.topic[data-started='true']:not([data-completed=true])::before, .legend-started::before {
+		background: linear-gradient(to right, currentColor 50%, transparent 50%);
+	}
+
+	.topic[data-completed='true']::before, .legend-completed::before {
+		content: '✓';
+		border: none;
+		width: auto;
+		height: auto;
+	}
+
+	.topic {
+		text-decoration: none;
+		color: var(--color-text);
+		transition: 
+			color 0.25s ease,
+			font-weight 0.25s ease;
+	}
+
+	.topic:hover {
+		color: var(--color-link);
+		font-weight: bold;
+	}
+
+	@media screen and (max-width: 768px) {
+		.section-heading {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		.section-heading h4 {
+			margin-bottom: 0;
+		}
+
+		.topics {
+			margin-top: 10px;
+		}
+	}
+</style>
