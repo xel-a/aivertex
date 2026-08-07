@@ -1,83 +1,83 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 :root {
-	/* colors */
-	--color-text: #f5f7fa;
-	--color-background: #090a0c;
-	--color-background-shadow: #0d0f13;
-	--color-link: #1d6bff;
-	--color-muted: #9aa1ad;
-	--color-shadow: #4b4b58;
+  /* colors */
+  --color-text: #f5f7fa;
+  --color-background: #090a0c;
+  --color-background-shadow: #0d0f13;
+  --color-link: #1d6bff;
+  --color-muted: #9aa1ad;
+  --color-shadow: #4b4b58;
 
-	/* fonts */
-	--heading-font: 'Space Grotesk', sans-serif;
-	--body-font: 'Inter', sans-serif;
-	--code-font: 'JetBrains Mono', monospace;
+  /* fonts */
+  --heading-font: 'Space Grotesk', sans-serif;
+  --body-font: 'Inter', sans-serif;
+  --code-font: 'JetBrains Mono', monospace;
 
-	/* Display Typography */
+  /* Display Typography */
 
-	/* Largest statements: hero, landing headlines */
-	--text-display: clamp(2.8rem, 5.5vw, 5.5rem);
+  /* Largest statements: hero, landing headlines */
+  --text-display: clamp(2.8rem, 5.5vw, 5.5rem);
 
-	/* Major headings: page titles, article titles */
-	--text-heading: clamp(2rem, 4vw, 3.5rem);
+  /* Major headings: page titles, article titles */
+  --text-heading: clamp(2rem, 4vw, 3.5rem);
 
-	/* Section titles, project titles, experience titles */
-	--text-title: clamp(1.25rem, 1.8vw, 1.75rem);
+  /* Section titles, project titles, experience titles */
+  --text-title: clamp(1.25rem, 1.8vw, 1.75rem);
 
-	/* Body Typography */
+  /* Body Typography */
 
-	/* Intro paragraphs, lead text */
-	--text-lead: clamp(1.05rem, 1.3vw, 1.35rem);
+  /* Intro paragraphs, lead text */
+  --text-lead: clamp(1.05rem, 1.3vw, 1.35rem);
 
-	/* Default reading text */
-	--text-body: clamp(0.95rem, 1.1vw, 1.15rem);
+  /* Default reading text */
+  --text-body: clamp(0.95rem, 1.1vw, 1.15rem);
 
-	/* Secondary descriptions */
-	--text-body-small: clamp(0.85rem, 0.95vw, 1rem);
+  /* Secondary descriptions */
+  --text-body-small: clamp(0.85rem, 0.95vw, 1rem);
 
-	/* Interface Typography */
+  /* Interface Typography */
 
-	/* Navigation, tabs, menus */
-	--text-nav: clamp(0.65rem, 0.75vw, 0.8rem);
+  /* Navigation, tabs, menus */
+  --text-nav: clamp(0.65rem, 0.75vw, 0.8rem);
 
-	/* Labels, categories, eyebrow text */
-	--text-label: clamp(0.7rem, 0.9vw, 0.9rem);
+  /* Labels, categories, eyebrow text */
+  --text-label: clamp(0.7rem, 0.9vw, 0.9rem);
 
-	/* Metadata: dates, reading time, tags */
-	--text-meta: clamp(0.75rem, 0.85vw, 0.95rem);
+  /* Metadata: dates, reading time, tags */
+  --text-meta: clamp(0.75rem, 0.85vw, 0.95rem);
 
-	/* Tiny annotations, captions */
-	--text-caption: clamp(0.65rem, 0.7vw, 0.8rem);
+  /* Tiny annotations, captions */
+  --text-caption: clamp(0.65rem, 0.7vw, 0.8rem);
 
-	/* UI Typography */
+  /* UI Typography */
 
-	/* Buttons and controls */
-	--text-action: clamp(0.75rem, 0.8vw, 0.9rem);
+  /* Buttons and controls */
+  --text-action: clamp(0.75rem, 0.8vw, 0.9rem);
 }
 
 html {
-	-webkit-tap-highlight-color: transparent;
-	scrollbar-gutter: stable;
-	scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
 }
 
 html,
 body {
-	margin: 0;
-	width: 100%;
-	height: 100%;
-	background-color: var(--color-background);
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-background);
 }
 
 body {
-	display: flex;
-	flex-direction: column;
-	padding-inline: 30px;
+  display: flex;
+  flex-direction: column;
+  padding-inline: 30px;
 }
 
 h1,
@@ -86,54 +86,54 @@ h3,
 h4,
 h5,
 h6 {
-	font-family: var(--heading-font);
-	font-weight: 700;
+  font-family: var(--heading-font);
+  font-weight: 700;
 }
 
 body {
-	font-family: var(--body-font);
-	font-weight: 400;
-	color: var(--color-text);
+  font-family: var(--body-font);
+  font-weight: 400;
+  color: var(--color-text);
 }
 
 code,
 pre {
-	font-family: var(--code-font);
+  font-family: var(--code-font);
 }
 
 /* transition animation */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-	animation-duration: 100ms;
+  animation-duration: 100ms;
 }
 
 /* tags */
 
 .tags {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .tag {
-		text-decoration: none;
-		color: var(--color-muted);
-		margin: 0.25em 0;
-		border: 2px solid var(--color-shadow);
-		border-radius: 0.5em;
-		padding: 5px 10px;
-		font-size: var(--text-meta);
-		font-weight: bold;
-		background-color: var(--color-background-shadow);
-		transition:
-			border-color 0.25s ease,
-			color 0.25s ease;
-		user-select: none;
-		cursor: pointer;
-		line-height: 1.75;
-	}
+  text-decoration: none;
+  color: var(--color-muted);
+  margin: 0.25em 0;
+  border: 2px solid var(--color-shadow);
+  border-radius: 0.5em;
+  padding: 5px 10px;
+  font-size: var(--text-meta);
+  font-weight: bold;
+  background-color: var(--color-background-shadow);
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+  user-select: none;
+  cursor: pointer;
+  line-height: 1.75;
+}
 
-	.tag:hover {
-		border-color: var(--color-link);
-		color: var(--color-link);
-	}
+.tag:hover {
+  border-color: var(--color-link);
+  color: var(--color-link);
+}

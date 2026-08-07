@@ -2,48 +2,54 @@
 
 ---
 
-<div class='collapse-icon-container' title='Collapse all'>
-	<svg id='collapse-icon' xmlns='http://www.w3.org/2000/svg' width='1em' height='1em' viewBox='0 0 16 16'>
-		<path d='M0 0h16v16H0z' fill='none'></path>
-		<g fill='currentColor'>
-			<path
-				d='M14 4.27c.6.35 1 .99 1 1.73v5c0 2.21-1.79 4-4 4H6c-.74 0-1.38-.4-1.73-1H11c1.65 0 3-1.35 3-3zM9.5 7a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1z'
-			></path>
-			<path
-				fill-rule='evenodd'
-				d='M11 2c1.103 0 2 .897 2 2v7c0 1.103-.897 2-2 2H4c-1.103 0-2-.897-2-2V4c0-1.103.897-2 2-2zM4 3c-.551 0-1 .449-1 1v7c0 .552.449 1 1 1h7c.551 0 1-.448 1-1V4c0-.551-.449-1-1-1z'
-				clip-rule='evenodd'></path>
-		</g>
-	</svg>
+<div class="collapse-icon-container" title="Collapse all">
+  <svg
+    id="collapse-icon"
+    xmlns="http://www.w3.org/2000/svg"
+    width="1em"
+    height="1em"
+    viewBox="0 0 16 16"
+  >
+    <path d="M0 0h16v16H0z" fill="none"></path>
+    <g fill="currentColor">
+      <path
+        d="M14 4.27c.6.35 1 .99 1 1.73v5c0 2.21-1.79 4-4 4H6c-.74 0-1.38-.4-1.73-1H11c1.65 0 3-1.35 3-3zM9.5 7a.5.5 0 0 1 0 1h-4a.5.5 0 0 1 0-1z"
+      ></path>
+      <path
+        fill-rule="evenodd"
+        d="M11 2c1.103 0 2 .897 2 2v7c0 1.103-.897 2-2 2H4c-1.103 0-2-.897-2-2V4c0-1.103.897-2 2-2zM4 3c-.551 0-1 .449-1 1v7c0 .552.449 1 1 1h7c.551 0 1-.448 1-1V4c0-.551-.449-1-1-1z"
+        clip-rule="evenodd"></path>
+    </g>
+  </svg>
 </div>
 
 <script>
-	document.addEventListener('astro:page-load', () => {
-		const collapseIcons = document.querySelectorAll<SVGElement>('#collapse-icon');
+  document.addEventListener('astro:page-load', () => {
+    const collapseIcons = document.querySelectorAll<SVGElement>('#collapse-icon');
 
-		collapseIcons.forEach((collapseIcon) => {
-			const section = collapseIcon.closest('section') as HTMLElement;
-			const allDetails = section.querySelectorAll<HTMLDetailsElement>('details');
+    collapseIcons.forEach((collapseIcon) => {
+      const section = collapseIcon.closest('section') as HTMLElement;
+      const allDetails = section.querySelectorAll<HTMLDetailsElement>('details');
 
-			collapseIcon.addEventListener('click', () => {
-				allDetails.forEach((detail) => {
-					detail.open = false;
-				})
-			})
-		});
-	});
+      collapseIcon.addEventListener('click', () => {
+        allDetails.forEach((detail) => {
+          detail.open = false;
+        });
+      });
+    });
+  });
 </script>
 
 <style is:global>
-	.collapse-icon-container {
-		display:flex;
-		justify-content: center;
-		cursor: pointer;
-		color: var(--color-shadow);
-		width: 48px;
-	}
+  .collapse-icon-container {
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-shadow);
+    width: 48px;
+  }
 
-	.collapse-icon-container:hover #collapse-icon g {
-		fill: var(--color-muted);
-	}
+  .collapse-icon-container:hover #collapse-icon g {
+    fill: var(--color-muted);
+  }
 </style>

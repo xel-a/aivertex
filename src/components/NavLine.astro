@@ -2,7 +2,7 @@
 import { navigation, type NodeId } from '../config/navigation';
 
 export interface Props {
-	current: NodeId;
+  current: NodeId;
 }
 
 const { current } = Astro.props;
@@ -12,8 +12,8 @@ const trackStart = 8;
 const trackEnd = 92;
 const step = (trackEnd - trackStart) / (n - 1);
 const points = navigation.map((navItem, i) => ({
-	...navItem,
-	x: trackStart + step * i,
+  ...navItem,
+  x: trackStart + step * i,
 }));
 
 const trackLeft = points[0].x;
@@ -25,170 +25,178 @@ const currentPoint = points.find((p) => p.id === current)!;
 const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`]));
 ---
 
-<nav class='nav-line' aria-label='Site navigation' style={cssVars}>
-	<div class='nav-labels'>
-		{
-			points.map((p) => (
-				<a
-					href={p.path}
-					class={`nav-label ${p.id === current ? 'active current' : ''}`}
-					data-target={p.id}
-					data-pos={`${p.x}%`}
-					style={{ '--pos': `${p.x}%` }}>
-					{p.label}
-				</a>
-			))
-		}
-	</div>
+<nav class="nav-line" aria-label="Site navigation" style={cssVars}>
+  <div class="nav-labels">
+    {
+      points.map((p) => (
+        <a
+          href={p.path}
+          class={`nav-label ${p.id === current ? 'active current' : ''}`}
+          data-target={p.id}
+          data-pos={`${p.x}%`}
+          style={{ '--pos': `${p.x}%` }}
+        >
+          {p.label}
+        </a>
+      ))
+    }
+  </div>
 
-	<div class='nav-track-row'>
-		<div class='track' style={{ left: `${trackLeft}%`, width: `${trackWidth}%` }}></div>
-		{
-			points
-				.filter((p) => p.id !== current)
-				.map((p) => <span class='point' data-target={p.id} data-pos={`${p.x}%`} style={{ '--pos': `${p.x}%` }} />)
-		}
+  <div class="nav-track-row">
+    <div class="track" style={{ left: `${trackLeft}%`, width: `${trackWidth}%` }}></div>
+    {
+      points
+        .filter((p) => p.id !== current)
+        .map((p) => (
+          <span
+            class="point"
+            data-target={p.id}
+            data-pos={`${p.x}%`}
+            style={{ '--pos': `${p.x}%` }}
+          />
+        ))
+    }
 
-		<span id='indicator' class='indicator' style={{ left: `${currentPoint.x}%` }}></span>
-		<span id='hover-dot' class='hover-dot' style={{ left: `${currentPoint.x}%` }}></span>
-	</div>
+    <span id="indicator" class="indicator" style={{ left: `${currentPoint.x}%` }}></span>
+    <span id="hover-dot" class="hover-dot" style={{ left: `${currentPoint.x}%` }}></span>
+  </div>
 </nav>
 
 <script>
-	document.addEventListener('astro:page-load', () => {
-		const indicator = document.getElementById('indicator') as HTMLElement;
-		const hoverDot = document.getElementById('hover-dot') as HTMLElement;
-		const currentLabel = document.querySelector('.nav-label.current') as HTMLElement;
-		const targets = document.querySelectorAll('.nav-label[data-target], .point[data-target]');
+  document.addEventListener('astro:page-load', () => {
+    const indicator = document.getElementById('indicator') as HTMLElement;
+    const hoverDot = document.getElementById('hover-dot') as HTMLElement;
+    const currentLabel = document.querySelector('.nav-label.current') as HTMLElement;
+    const targets = document.querySelectorAll('.nav-label[data-target], .point[data-target]');
 
-		if (!indicator || !hoverDot || !currentLabel || targets.length === 0) return;
+    if (!indicator || !hoverDot || !currentLabel || targets.length === 0) return;
 
-		const currentPos = indicator.style.left;
+    const currentPos = indicator.style.left;
 
-		targets.forEach((target: any) => {
-			target.addEventListener('mouseenter', () => {
-				hoverDot.style.left = target.dataset.pos;
-				hoverDot.style.opacity = '1';
+    targets.forEach((target: any) => {
+      target.addEventListener('mouseenter', () => {
+        hoverDot.style.left = target.dataset.pos;
+        hoverDot.style.opacity = '1';
 
-				// Only remove active if we're hovering a different page
-				if (target.dataset.target !== currentLabel.dataset.target) {
-					currentLabel.classList.remove('active');
-					indicator.classList.add('dimmed');
-				}
-			});
+        // Only remove active if we're hovering a different page
+        if (target.dataset.target !== currentLabel.dataset.target) {
+          currentLabel.classList.remove('active');
+          indicator.classList.add('dimmed');
+        }
+      });
 
-			target.addEventListener('mouseleave', () => {
-				hoverDot.style.left = currentPos;
-				hoverDot.style.opacity = '0';
+      target.addEventListener('mouseleave', () => {
+        hoverDot.style.left = currentPos;
+        hoverDot.style.opacity = '0';
 
-				currentLabel.classList.add('active');
-				indicator.classList.remove('dimmed');
-			});
-		});
-	});
+        currentLabel.classList.add('active');
+        indicator.classList.remove('dimmed');
+      });
+    });
+  });
 </script>
 
 <style>
-	.nav-line {
-		position: relative;
-		min-width: 420px;
-	}
+  .nav-line {
+    position: relative;
+    min-width: 420px;
+  }
 
-	.nav-labels {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		height: 28px;
-		margin-bottom: 8px;
-	}
+  .nav-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 28px;
+    margin-bottom: 8px;
+  }
 
-	.nav-label {
-		flex: 1;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 100%;
-		color: var(--color-muted);
-		text-decoration: none;
-		font-weight: bold;
-		font-size: var(--text-nav);
-		letter-spacing: 1.5px;
-		text-transform: uppercase;
-		white-space: nowrap;
-		transition: color 0.2s ease;
-		cursor: pointer;
-	}
+  .nav-label {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--color-muted);
+    text-decoration: none;
+    font-weight: bold;
+    font-size: var(--text-nav);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+    cursor: pointer;
+  }
 
-	.nav-label:hover {
-		color: var(--color-link);
-	}
+  .nav-label:hover {
+    color: var(--color-link);
+  }
 
-	.nav-label.active {
-		color: var(--color-link);
-	}
+  .nav-label.active {
+    color: var(--color-link);
+  }
 
-	.nav-track-row {
-		position: relative;
-		height: 8px;
-	}
+  .nav-track-row {
+    position: relative;
+    height: 8px;
+  }
 
-	.track {
-		position: absolute;
-		top: 50%;
-		transform: translateY(-50%);
-		height: 1px;
-		background: var(--color-shadow);
-	}
+  .track {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 1px;
+    background: var(--color-shadow);
+  }
 
-	.point {
-		position: absolute;
-		top: 50%;
-		left: var(--pos);
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: var(--color-shadow);
-		transform: translate(-50%, -50%);
-		z-index: 1;
-		transition:
-			left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-			width 0.25s ease,
-			height 0.25s ease,
-			background 0.25s ease;
-		pointer-events: none;
-	}
+  .point {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-shadow);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    transition:
+      left 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      width 0.25s ease,
+      height 0.25s ease,
+      background 0.25s ease;
+    pointer-events: none;
+  }
 
-	.indicator {
-		position: absolute;
-		top: 50%;
-		left: var(--pos);
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: var(--color-link);
-		transform: translate(-50%, -50%);
-		z-index: 2;
-		transition: background 0.25s ease;
-	}
+  .indicator {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-link);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    transition: background 0.25s ease;
+  }
 
-	.indicator.dimmed {
-		background: var(--color-shadow);
-	}
+  .indicator.dimmed {
+    background: var(--color-shadow);
+  }
 
-	.hover-dot {
-		position: absolute;
-		top: 50%;
-		left: var(--pos);
-		width: 10px;
-		height: 10px;
-		border-radius: 50%;
-		background: var(--color-link);
-		transform: translate(-50%, -50%);
-		z-index: 3;
-		opacity: 0;
-		pointer-events: none;
-		transition:
-			left 0.55s cubic-bezier(0.4, 0, 0.2, 1),
-			opacity 0.25s ease;
-	}
+  .hover-dot {
+    position: absolute;
+    top: 50%;
+    left: var(--pos);
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-link);
+    transform: translate(-50%, -50%);
+    z-index: 3;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      left 0.55s cubic-bezier(0.4, 0, 0.2, 1),
+      opacity 0.25s ease;
+  }
 </style>

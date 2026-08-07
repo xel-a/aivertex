@@ -4,11 +4,11 @@ import { render } from 'astro:content';
 import { getBlogPosts } from '../../lib/content';
 
 export async function getStaticPaths() {
-	const blogs = await getBlogPosts();
-	return blogs.map((blog) => ({
-		params: { slug: blog.id },
-		props: { blog },
-	}));
+  const blogs = await getBlogPosts();
+  return blogs.map((blog) => ({
+    params: { slug: blog.id },
+    props: { blog },
+  }));
 }
 
 const { blog } = Astro.props;
@@ -16,5 +16,5 @@ const { Content } = await render(blog);
 ---
 
 <MarkdownLayout frontmatter={blog.data} body={blog.body}>
-	<Content />
+  <Content />
 </MarkdownLayout>

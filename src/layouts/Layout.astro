@@ -8,30 +8,30 @@ import { generatePageTitle } from '../utils/metadata';
 import { personSchema } from '../config/schema';
 
 interface Props {
-	pageId?: NodeId;
-	contentTitle?: string;
+  pageId?: NodeId;
+  contentTitle?: string;
 }
 
 const { pageId, contentTitle } = Astro.props;
 ---
 
 <!doctype html>
-<html lang='en'>
-	<head>
-		<meta charset='utf-8' />
-		<meta name='viewport' content='width=device-width' />
-		<link rel='icon' type='image/svg+xml' href='/favicon.svg' />
-		<link rel='icon' href='/favicon.ico' />
-		<meta name='generator' content={Astro.generator} />
-		<ClientRouter />
-		<title>
-			{generatePageTitle(pageId, contentTitle)}
-		</title>
-		<script type='application/ld+json' set:html={JSON.stringify(personSchema)} />
-	</head>
-	<body>
-		<Header pageId={pageId} />
-		<slot />
-		<Footer />
-	</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="generator" content={Astro.generator} />
+    <ClientRouter />
+    <title>
+      {generatePageTitle(pageId, contentTitle)}
+    </title>
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  </head>
+  <body>
+    <Header pageId={pageId} />
+    <slot />
+    <Footer />
+  </body>
 </html>

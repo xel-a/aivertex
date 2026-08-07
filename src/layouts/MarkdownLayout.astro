@@ -4,8 +4,8 @@ import Layout from './Layout.astro';
 import { getReadingTime } from '../utils/reading-time';
 
 interface Props {
-	frontmatter: CollectionEntry<'blog'>['data'];
-	body: CollectionEntry<'blog'>['body'];
+  frontmatter: CollectionEntry<'blog'>['data'];
+  body: CollectionEntry<'blog'>['body'];
 }
 
 const { frontmatter, body } = Astro.props;
@@ -15,82 +15,84 @@ const readingTime = getReadingTime(contentText);
 ---
 
 <Layout contentTitle={frontmatter.title}>
-	<article class='content'>
-		<section class='meta'>
-			<p class='meta-content'>
-				{
-					frontmatter.pubDate.toLocaleDateString('en-CA', {
-						month: 'long',
-						day: 'numeric',
-						year: 'numeric',
-					})
-				}
-			</p>
-			<span>·</span>
-			<p class='meta-content'>{readingTime.minutes} min read</p>
-		</section>
-		<h1 class='title'>{frontmatter.title}</h1>
-		<section class='tags'>
-			{
-				frontmatter.tags.map((tag: string) => (
-					<a class="tag" href={`tags/${tag}`}>{tag}</a>
-				))
-			}
-		</section>
-		<slot />
-	</article>
+  <article class="content">
+    <section class="meta">
+      <p class="meta-content">
+        {
+          frontmatter.pubDate.toLocaleDateString('en-CA', {
+            month: 'long',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        }
+      </p>
+      <span>·</span>
+      <p class="meta-content">{readingTime.minutes} min read</p>
+    </section>
+    <h1 class="title">{frontmatter.title}</h1>
+    <section class="tags">
+      {
+        frontmatter.tags.map((tag: string) => (
+          <a class="tag" href={`tags/${tag}`}>
+            {tag}
+          </a>
+        ))
+      }
+    </section>
+    <slot />
+  </article>
 </Layout>
 
 <style is:global>
-	.content {
-		max-width: 768px;
-		margin: auto;
-		padding-bottom: 40px;
-	}
+  .content {
+    max-width: 768px;
+    margin: auto;
+    padding-bottom: 40px;
+  }
 
-	a {
-		color: unset;
-		text-decoration: none;
-	}
+  a {
+    color: unset;
+    text-decoration: none;
+  }
 
-	.title,
-	.date {
-		margin: 0;
-	}
+  .title,
+  .date {
+    margin: 0;
+  }
 
-	.content .title {
-		font-size: var(--text-heading);
-		margin-bottom: 0.4rem;
-	}
+  .content .title {
+    font-size: var(--text-heading);
+    margin-bottom: 0.4rem;
+  }
 
-	.content h1 {
-		font-size: var(--text-title);
-	}
+  .content h1 {
+    font-size: var(--text-title);
+  }
 
-	.content h2 {
-		font-size: var(--text-lead);
-		margin-top: 3rem;
-		margin-bottom: 1rem;
-	}
+  .content h2 {
+    font-size: var(--text-lead);
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
 
-	.content p {
-		font-size: var(--text-body);
-		line-height: 1.75;
-	}
+  .content p {
+    font-size: var(--text-body);
+    line-height: 1.75;
+  }
 
-	.content .meta-content {
-		font-size: var(--text-meta);
-	}
+  .content .meta-content {
+    font-size: var(--text-meta);
+  }
 
-	.meta {
-		color: var(--color-muted);
-		margin-bottom: -10px;
-		display: flex;
-		align-items: center;
-		gap: 10px;
-	}
+  .meta {
+    color: var(--color-muted);
+    margin-bottom: -10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
 
-	.tags {
-		margin-bottom: 40px;
-	}
+  .tags {
+    margin-bottom: 40px;
+  }
 </style>

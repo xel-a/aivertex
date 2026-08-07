@@ -4,179 +4,186 @@ import { navigation } from '../config/navigation';
 const { current } = Astro.props;
 ---
 
-<div class='mobile-menu' id='mobile-menu'>
-	<button
-		class='mobile-menu-toggle'
-		id='mobile-menu-toggle'
-		aria-expanded='false'
-		aria-controls='mobile-nav'
-		aria-label='Toggle navigation'>
-		<svg class='mobile-menu-burger' xmlns='http://www.w3.org/2000/svg' width='2em' height='2em' viewBox='0 0 50 50'>
-			<path d='M0 0h50v50H0z' fill='none'></path>
-			<g fill='none' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'>
-				<path class='top-line' d='M6.25 12.5h25'></path>
-				<path class='middle-line' d='M6.25 25h37.5'></path>
-				<path class='bottom-line' d='M18.75 37.5h25'></path>
-			</g>
-		</svg>
-	</button>
-	<div class='mobile-nav-backdrop' id='mobile-nav-backdrop'></div>
-	<nav class='mobile-nav' id='mobile-nav' aria-hidden='true'>
-		{
-			navigation.map((navItem) => (
-				<a href={navItem.path} class={`menu-item ${current === navItem.id ? 'active' : ''}`}>
-					{navItem.label}
-				</a>
-			))
-		}
-	</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <button
+    class="mobile-menu-toggle"
+    id="mobile-menu-toggle"
+    aria-expanded="false"
+    aria-controls="mobile-nav"
+    aria-label="Toggle navigation"
+  >
+    <svg
+      class="mobile-menu-burger"
+      xmlns="http://www.w3.org/2000/svg"
+      width="2em"
+      height="2em"
+      viewBox="0 0 50 50"
+    >
+      <path d="M0 0h50v50H0z" fill="none"></path>
+      <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+        <path class="top-line" d="M6.25 12.5h25"></path>
+        <path class="middle-line" d="M6.25 25h37.5"></path>
+        <path class="bottom-line" d="M18.75 37.5h25"></path>
+      </g>
+    </svg>
+  </button>
+  <div class="mobile-nav-backdrop" id="mobile-nav-backdrop"></div>
+  <nav class="mobile-nav" id="mobile-nav" aria-hidden="true">
+    {
+      navigation.map((navItem) => (
+        <a href={navItem.path} class={`menu-item ${current === navItem.id ? 'active' : ''}`}>
+          {navItem.label}
+        </a>
+      ))
+    }
+  </nav>
 </div>
 
 <script>
-	document.addEventListener('astro:page-load', () => {
-		const menu = document.getElementById('mobile-menu') as HTMLElement;
-		const toggle = document.getElementById('mobile-menu-toggle') as HTMLElement;
-		const panel = document.getElementById('mobile-nav') as HTMLElement;
-		const backdrop = document.getElementById('mobile-nav-backdrop') as HTMLElement;
+  document.addEventListener('astro:page-load', () => {
+    const menu = document.getElementById('mobile-menu') as HTMLElement;
+    const toggle = document.getElementById('mobile-menu-toggle') as HTMLElement;
+    const panel = document.getElementById('mobile-nav') as HTMLElement;
+    const backdrop = document.getElementById('mobile-nav-backdrop') as HTMLElement;
 
-		if (!menu || !toggle || !panel || !backdrop) return;
+    if (!menu || !toggle || !panel || !backdrop) return;
 
-		function setOpen(open: boolean) {
-			menu.classList.toggle('open', open);
-			toggle.setAttribute('aria-expanded', String(open));
-			panel.setAttribute('aria-hidden', String(!open));
-			document.body.style.overflow = open ? 'hidden' : '';
-		}
+    function setOpen(open: boolean) {
+      menu.classList.toggle('open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.setAttribute('aria-hidden', String(!open));
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
 
-		toggle.addEventListener('click', () => {
-			setOpen(!menu.classList.contains('open'));
-		});
+    toggle.addEventListener('click', () => {
+      setOpen(!menu.classList.contains('open'));
+    });
 
-		backdrop.addEventListener('click', () => {
-			setOpen(false);
-		});
+    backdrop.addEventListener('click', () => {
+      setOpen(false);
+    });
 
-		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Escape') setOpen(false);
-		});
-	});
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  });
 </script>
 
 <style>
-	.mobile-menu-toggle {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		width: 48px;
-		height: 48px;
-		cursor: pointer;
-		background: none;
-		border: none;
-		padding: 0;
-		position: relative;
-		z-index: 60;
-	}
+  .mobile-menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+    position: relative;
+    z-index: 60;
+  }
 
-	.mobile-menu-burger g {
-		transform-box: view-box;
-	}
+  .mobile-menu-burger g {
+    transform-box: view-box;
+  }
 
-	.top-line,
-	.middle-line,
-	.bottom-line {
-		transition:
-			transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 0.25s ease,
-			stroke 0.25s ease;
-	}
+  .top-line,
+  .middle-line,
+  .bottom-line {
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.25s ease,
+      stroke 0.25s ease;
+  }
 
-	.middle-line {
-		stroke: var(--color-shadow);
-		transform-origin: 25px 25px;
-	}
+  .middle-line {
+    stroke: var(--color-shadow);
+    transform-origin: 25px 25px;
+  }
 
-	.top-line {
-		transform-origin: 18.75px 12.5px;
-	}
+  .top-line {
+    transform-origin: 18.75px 12.5px;
+  }
 
-	.bottom-line {
-		transform-origin: 31.25px 37.5px;
-	}
+  .bottom-line {
+    transform-origin: 31.25px 37.5px;
+  }
 
-	.top-line,
-	.bottom-line {
-		stroke: var(--color-link);
-	}
+  .top-line,
+  .bottom-line {
+    stroke: var(--color-link);
+  }
 
-	/* Burger */
-	.mobile-menu.open .top-line {
-		transform: translate(6.25px, 12.5px) rotate(45deg);
-	}
+  /* Burger */
+  .mobile-menu.open .top-line {
+    transform: translate(6.25px, 12.5px) rotate(45deg);
+  }
 
-	.mobile-menu.open .bottom-line {
-		transform: translate(-6.25px, -12.5px) rotate(-45deg);
-	}
+  .mobile-menu.open .bottom-line {
+    transform: translate(-6.25px, -12.5px) rotate(-45deg);
+  }
 
-	.mobile-menu.open .middle-line {
-		opacity: 0;
-		transform: scaleX(0);
-	}
+  .mobile-menu.open .middle-line {
+    opacity: 0;
+    transform: scaleX(0);
+  }
 
-	/* Backdrop */
-	.mobile-nav-backdrop {
-		position: fixed;
-		inset: 0;
-		background: var(--color-background);
-		opacity: 0;
-		pointer-events: none;
-		transition: opacity 0.3s ease;
-		z-index: 40;
-	}
+  /* Backdrop */
+  .mobile-nav-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--color-background);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 40;
+  }
 
-	.mobile-menu.open .mobile-nav-backdrop {
-		opacity: 0.97;
-		pointer-events: auto;
-	}
+  .mobile-menu.open .mobile-nav-backdrop {
+    opacity: 0.97;
+    pointer-events: auto;
+  }
 
-	/* Navigation */
-	.mobile-nav {
-		display: flex;
-		flex-direction: column;
-		position: fixed;
-		width: fit-content;
-		height: fit-content;
-		margin: auto;
-		inset: 0;
-		z-index: 50;
-		opacity: 0;
-		pointer-events: none;
-	}
+  /* Navigation */
+  .mobile-nav {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: fit-content;
+    height: fit-content;
+    margin: auto;
+    inset: 0;
+    z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+  }
 
-	.mobile-menu.open .mobile-nav {
-		opacity: 1;
-		pointer-events: auto;
-	}
+  .mobile-menu.open .mobile-nav {
+    opacity: 1;
+    pointer-events: auto;
+  }
 
-	.menu-item {
-		text-decoration: none;
-		transform: translateY(-6px);
-		transition:
-			transform 0.4s ease,
-			color 0.2s ease;
-		padding-inline: 20px;
-		color: var(--color-muted);
-		font-size: 1.7rem;
-		font-weight: 700;
-		letter-spacing: 2px;
-		line-height: 1.75;
-	}
+  .menu-item {
+    text-decoration: none;
+    transform: translateY(-6px);
+    transition:
+      transform 0.4s ease,
+      color 0.2s ease;
+    padding-inline: 20px;
+    color: var(--color-muted);
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    line-height: 1.75;
+  }
 
-	.mobile-menu.open .menu-item {
-		transform: translateY(0);
-	}
+  .mobile-menu.open .menu-item {
+    transform: translateY(0);
+  }
 
-	.menu-item.active {
-		color: var(--color-text);
-		border-left: 3px solid var(--color-link);
-	}
+  .menu-item.active {
+    color: var(--color-text);
+    border-left: 3px solid var(--color-link);
+  }
 </style>

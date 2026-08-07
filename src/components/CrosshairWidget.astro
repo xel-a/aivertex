@@ -2,296 +2,296 @@
 
 ---
 
-<div class='crosshair-widget'>
-	<div class='stage' id='stage'>
-		<svg viewBox='0 0 360 300' xmlns='http://www.w3.org/2000/svg'>
-			<line class='diag' id='d1' x1='-12' y1='150' x2='372' y2='150' data-angle='38.66'></line>
-			<line class='diag' id='d2' x1='-12' y1='150' x2='372' y2='150' data-angle='-38.66'></line>
-			<line class='axis' id='axis' x1='30' y1='150' x2='330' y2='150'></line>
+<div class="crosshair-widget">
+  <div class="stage" id="stage">
+    <svg viewBox="0 0 360 300" xmlns="http://www.w3.org/2000/svg">
+      <line class="diag" id="d1" x1="-12" y1="150" x2="372" y2="150" data-angle="38.66"></line>
+      <line class="diag" id="d2" x1="-12" y1="150" x2="372" y2="150" data-angle="-38.66"></line>
+      <line class="axis" id="axis" x1="30" y1="150" x2="330" y2="150"></line>
 
-			<line class='diag-highlight' id='hAbout' x1='180' y1='150' x2='30' y2='30'></line>
-			<line class='diag-highlight' id='hBlog' x1='180' y1='150' x2='330' y2='30'></line>
-			<line class='diag-highlight' id='hContact' x1='180' y1='150' x2='330' y2='270'></line>
-			<line class='diag-highlight' id='hLab' x1='180' y1='150' x2='30' y2='270'></line>
+      <line class="diag-highlight" id="hAbout" x1="180" y1="150" x2="30" y2="30"></line>
+      <line class="diag-highlight" id="hBlog" x1="180" y1="150" x2="330" y2="30"></line>
+      <line class="diag-highlight" id="hContact" x1="180" y1="150" x2="330" y2="270"></line>
+      <line class="diag-highlight" id="hLab" x1="180" y1="150" x2="30" y2="270"></line>
 
-			<circle cx='180' cy='150' r='4' class='glow'></circle>
-			<circle cx='180' cy='150' r='2.5' class='dot-core'></circle>
+      <circle cx="180" cy="150" r="4" class="glow"></circle>
+      <circle cx="180" cy="150" r="2.5" class="dot-core"></circle>
 
-			<a href='/about'>
-				<text class='label' id='lAbout' x='30' y='22' text-anchor='start'>ABOUT</text>
-				<rect class='hit' x='20' y='10' width='80' height='24'></rect>
-			</a>
-			<a href='/blog'>
-				<text class='label' id='lBlog' x='330' y='22' text-anchor='end'>BLOGS</text>
-				<rect class='hit' x='270' y='10' width='70' height='24'></rect>
-			</a>
-			<a href='/lab'>
-				<text class='label' id='lContact' x='330' y='285' text-anchor='end'>LAB</text>
-				<rect class='hit' x='270' y='264' width='70' height='24'></rect>
-			</a>
-			<a href='/projects'>
-				<text class='label' id='lLab' x='30' y='285' text-anchor='start'>PROJECTS</text>
-				<rect class='hit' x='20' y='264' width='80' height='24'></rect>
-			</a>
-		</svg>
-		<p class='hint'>New here? Start with About. Otherwise, pick any vertex.</p>
-	</div>
+      <a href="/about">
+        <text class="label" id="lAbout" x="30" y="22" text-anchor="start">ABOUT</text>
+        <rect class="hit" x="20" y="10" width="80" height="24"></rect>
+      </a>
+      <a href="/blog">
+        <text class="label" id="lBlog" x="330" y="22" text-anchor="end">BLOGS</text>
+        <rect class="hit" x="270" y="10" width="70" height="24"></rect>
+      </a>
+      <a href="/lab">
+        <text class="label" id="lContact" x="330" y="285" text-anchor="end">LAB</text>
+        <rect class="hit" x="270" y="264" width="70" height="24"></rect>
+      </a>
+      <a href="/projects">
+        <text class="label" id="lLab" x="30" y="285" text-anchor="start">PROJECTS</text>
+        <rect class="hit" x="20" y="264" width="80" height="24"></rect>
+      </a>
+    </svg>
+    <p class="hint">New here? Start with About. Otherwise, pick any vertex.</p>
+  </div>
 </div>
 
 <script>
-	document.addEventListener('astro:page-load', () => {
-		const stage = document.getElementById('stage') as HTMLElement;
-		const svg = stage.querySelector('svg') as SVGElement;
+  document.addEventListener('astro:page-load', () => {
+    const stage = document.getElementById('stage') as HTMLElement;
+    const svg = stage.querySelector('svg') as SVGElement;
 
-		const axis = document.querySelector<SVGLineElement>('.axis')!;
-		const axisLength = axis.getTotalLength();
+    const axis = document.querySelector<SVGLineElement>('.axis')!;
+    const axisLength = axis.getTotalLength();
 
-		axis.style.transition = 'none';
-		axis.style.strokeDasharray = `${axisLength}`;
-		axis.style.strokeDashoffset = `${axisLength}`;
-		axis.getBoundingClientRect();
-		axis.style.transition = '';
+    axis.style.transition = 'none';
+    axis.style.strokeDasharray = `${axisLength}`;
+    axis.style.strokeDashoffset = `${axisLength}`;
+    axis.getBoundingClientRect();
+    axis.style.transition = '';
 
-		const diags = [
-			{ el: document.getElementById('d1'), delay: 0 },
-			{ el: document.getElementById('d2'), delay: 150 },
-		];
+    const diags = [
+      { el: document.getElementById('d1'), delay: 0 },
+      { el: document.getElementById('d2'), delay: 150 },
+    ];
 
-		const DIAG_ROTATE_DURATION = 500;
-		const AXIS_DRAW_DURATION = 300;
+    const DIAG_ROTATE_DURATION = 500;
+    const AXIS_DRAW_DURATION = 300;
 
-		const lastDiagDelay = Math.max(...diags.map((d) => d.delay));
-		const axisStart = lastDiagDelay + DIAG_ROTATE_DURATION;
-		const loadedAt = axisStart + AXIS_DRAW_DURATION;
+    const lastDiagDelay = Math.max(...diags.map((d) => d.delay));
+    const axisStart = lastDiagDelay + DIAG_ROTATE_DURATION;
+    const loadedAt = axisStart + AXIS_DRAW_DURATION;
 
-		requestAnimationFrame(() => {
-			diags.forEach(({ el, delay }) => {
-				setTimeout(() => {
-					el!.style.transform = `rotate(${el!.dataset.angle}deg)`;
-				}, delay);
-			});
-			setTimeout(() => {
-				axis.style.strokeDashoffset = `0`;
-			}, axisStart);
-			setTimeout(() => {
-				svg.classList.add('loaded');
-			}, loadedAt);
-		});
+    requestAnimationFrame(() => {
+      diags.forEach(({ el, delay }) => {
+        setTimeout(() => {
+          el!.style.transform = `rotate(${el!.dataset.angle}deg)`;
+        }, delay);
+      });
+      setTimeout(() => {
+        axis.style.strokeDashoffset = `0`;
+      }, axisStart);
+      setTimeout(() => {
+        svg.classList.add('loaded');
+      }, loadedAt);
+    });
 
-		// --- cursor parallax ---
-		stage.addEventListener('mousemove', (e) => {
-			const rect = stage.getBoundingClientRect();
-			const x = (e.clientX - rect.left) / rect.width - 0.5;
-			const y = (e.clientY - rect.top) / rect.height - 0.5;
-			svg.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
-		});
-		stage.addEventListener('mouseleave', () => {
-			svg.style.transform = 'rotateY(0deg) rotateX(0deg)';
-		});
+    // --- cursor parallax ---
+    stage.addEventListener('mousemove', (e) => {
+      const rect = stage.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      svg.style.transform = `rotateY(${x * 8}deg) rotateX(${-y * 8}deg)`;
+    });
+    stage.addEventListener('mouseleave', () => {
+      svg.style.transform = 'rotateY(0deg) rotateX(0deg)';
+    });
 
-		// --- dot position helper ---
-		type Point = { x: number; y: number };
+    // --- dot position helper ---
+    type Point = { x: number; y: number };
 
-		const glow = document.querySelector<SVGCircleElement>('.glow')!;
-		const dotCore = document.querySelector<SVGCircleElement>('.dot-core')!;
-		const CENTER: Point = { x: 180, y: 150 };
+    const glow = document.querySelector<SVGCircleElement>('.glow')!;
+    const dotCore = document.querySelector<SVGCircleElement>('.dot-core')!;
+    const CENTER: Point = { x: 180, y: 150 };
 
-		function setDotPosition(p: Point) {
-			glow.setAttribute('cx', `${p.x}`);
-			glow.setAttribute('cy', `${p.y}`);
-			dotCore.setAttribute('cx', `${p.x}`);
-			dotCore.setAttribute('cy', `${p.y}`);
-		}
+    function setDotPosition(p: Point) {
+      glow.setAttribute('cx', `${p.x}`);
+      glow.setAttribute('cy', `${p.y}`);
+      dotCore.setAttribute('cx', `${p.x}`);
+      dotCore.setAttribute('cy', `${p.y}`);
+    }
 
-		const highlightLengths = new Map<SVGLineElement, number>();
-		document.querySelectorAll<SVGLineElement>('.diag-highlight').forEach((el) => {
-			const len = el.getTotalLength();
-			highlightLengths.set(el, len);
-			el.style.transition = 'none';
-			el.style.strokeDasharray = `${len}`;
-			el.style.strokeDashoffset = `${len}`;
-			el.getBoundingClientRect();
-			el.style.transition = '';
-		});
+    const highlightLengths = new Map<SVGLineElement, number>();
+    document.querySelectorAll<SVGLineElement>('.diag-highlight').forEach((el) => {
+      const len = el.getTotalLength();
+      highlightLengths.set(el, len);
+      el.style.transition = 'none';
+      el.style.strokeDasharray = `${len}`;
+      el.style.strokeDashoffset = `${len}`;
+      el.getBoundingClientRect();
+      el.style.transition = '';
+    });
 
-		// --- hover-to-highlight (only the center-to-corner half) + dot travels there ---
-		function link(labelId: string, highlightId: string, target: Point) {
-			const label = document.getElementById(labelId);
-			if (!label) return;
-			const highlight = document.getElementById(highlightId) as SVGLineElement | null;
-			const hit = label.nextElementSibling;
-			const elements: Element[] = hit ? [label, hit] : [label];
+    // --- hover-to-highlight (only the center-to-corner half) + dot travels there ---
+    function link(labelId: string, highlightId: string, target: Point) {
+      const label = document.getElementById(labelId);
+      if (!label) return;
+      const highlight = document.getElementById(highlightId) as SVGLineElement | null;
+      const hit = label.nextElementSibling;
+      const elements: Element[] = hit ? [label, hit] : [label];
 
-			elements.forEach((el: Element) => {
-				el.addEventListener('mouseenter', () => {
-					label.classList.add('active');
-					highlight?.classList.add('active');
-					if (highlight) highlight.style.strokeDashoffset = '0';
-					setDotPosition(target);
-				});
-				el.addEventListener('mouseleave', () => {
-					label.classList.remove('active');
-					highlight?.classList.remove('active');
-					if (highlight) highlight.style.strokeDashoffset = `${highlightLengths.get(highlight)}`;
-					setDotPosition(CENTER);
-				});
-			});
-		}
+      elements.forEach((el: Element) => {
+        el.addEventListener('mouseenter', () => {
+          label.classList.add('active');
+          highlight?.classList.add('active');
+          if (highlight) highlight.style.strokeDashoffset = '0';
+          setDotPosition(target);
+        });
+        el.addEventListener('mouseleave', () => {
+          label.classList.remove('active');
+          highlight?.classList.remove('active');
+          if (highlight) highlight.style.strokeDashoffset = `${highlightLengths.get(highlight)}`;
+          setDotPosition(CENTER);
+        });
+      });
+    }
 
-		link('lAbout', 'hAbout', { x: 30, y: 30 });
-		link('lBlog', 'hBlog', { x: 330, y: 30 });
-		link('lContact', 'hContact', { x: 330, y: 270 });
-		link('lLab', 'hLab', { x: 30, y: 270 });
-	});
+    link('lAbout', 'hAbout', { x: 30, y: 30 });
+    link('lBlog', 'hBlog', { x: 330, y: 30 });
+    link('lContact', 'hContact', { x: 330, y: 270 });
+    link('lLab', 'hLab', { x: 30, y: 270 });
+  });
 </script>
 
 <style>
-	* {
-		user-select: none;
-	}
+  * {
+    user-select: none;
+  }
 
-	svg {
-		background-color: var(--color-background-shadow);
-		border: 1px solid var(--color-shadow);
-		border-radius: 10px;
-		width: 100%;
-		height: 100%;
-		transition: transform 0.15s ease-out;
-		pointer-events: none;
-	}
+  svg {
+    background-color: var(--color-background-shadow);
+    border: 1px solid var(--color-shadow);
+    border-radius: 10px;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.15s ease-out;
+    pointer-events: none;
+  }
 
-	svg.loaded {
-		pointer-events: all;
-	}
+  svg.loaded {
+    pointer-events: all;
+  }
 
-	.hint {
-		color: var(--color-muted);
-		font-size: var(--text-body);
-	}
+  .hint {
+    color: var(--color-muted);
+    font-size: var(--text-body);
+  }
 
-	.stage {
-		width: 480px;
-		aspect-ratio: 480 / 400;
-		height: auto;
-		perspective: 900px;
-	}
+  .stage {
+    width: 480px;
+    aspect-ratio: 480 / 400;
+    height: auto;
+    perspective: 900px;
+  }
 
-	.diag {
-		stroke: var(--color-shadow);
-		stroke-width: 1;
-		transform-origin: 180px 150px;
-		transform: rotate(0deg);
-		transition:
-			stroke 0.3s ease,
-			stroke-width 0.3s ease,
-			transform 1s cubic-bezier(0.22, 1, 0.36, 1);
-	}
+  .diag {
+    stroke: var(--color-shadow);
+    stroke-width: 1;
+    transform-origin: 180px 150px;
+    transform: rotate(0deg);
+    transition:
+      stroke 0.3s ease,
+      stroke-width 0.3s ease,
+      transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-	.axis {
-		stroke: var(--color-link);
-		stroke-width: 1;
-		transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
-	}
+  .axis {
+    stroke: var(--color-link);
+    stroke-width: 1;
+    transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-	.glow {
-		animation: pulse 2.5s ease-out infinite;
-		animation-play-state: paused;
-		opacity: 0;
-		transition: opacity 0.4s ease;
-		transform-origin: 180px 150px;
-		fill: var(--color-link);
-		fill-opacity: 0.5;
-		transition:
-			cx 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-			cy 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 0.4s ease;
-	}
+  .glow {
+    animation: pulse 2.5s ease-out infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    transform-origin: 180px 150px;
+    fill: var(--color-link);
+    fill-opacity: 0.5;
+    transition:
+      cx 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      cy 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.4s ease;
+  }
 
-	.dot-core {
-		opacity: 0;
-		transform: scale(0);
-		transform-origin: 180px 150px;
-		transition:
-			cx 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-			cy 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-			opacity 0.4s ease,
-			transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-		fill: var(--color-link);
-	}
+  .dot-core {
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: 180px 150px;
+    transition:
+      cx 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      cy 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    fill: var(--color-link);
+  }
 
-	.loaded .glow {
-		opacity: 1;
-		animation-play-state: running;
-	}
+  .loaded .glow {
+    opacity: 1;
+    animation-play-state: running;
+  }
 
-	.loaded .dot-core {
-		opacity: 1;
-		transform: scale(1);
-	}
+  .loaded .dot-core {
+    opacity: 1;
+    transform: scale(1);
+  }
 
-	@keyframes pulse {
-		0% {
-			r: 4;
-			opacity: 1;
-		}
+  @keyframes pulse {
+    0% {
+      r: 4;
+      opacity: 1;
+    }
 
-		100% {
-			r: 20;
-			opacity: 0;
-		}
-	}
+    100% {
+      r: 20;
+      opacity: 0;
+    }
+  }
 
-	svg a {
-		font-size: 12px;
-	}
+  svg a {
+    font-size: 12px;
+  }
 
-	.label {
-		fill: var(--color-muted);
-		letter-spacing: 2px;
-		cursor: pointer;
-		opacity: 0;
-		transition:
-			fill 0.3s ease,
-			opacity 0.6s ease;
-	}
+  .label {
+    fill: var(--color-muted);
+    letter-spacing: 2px;
+    cursor: pointer;
+    opacity: 0;
+    transition:
+      fill 0.3s ease,
+      opacity 0.6s ease;
+  }
 
-	.loaded .label {
-		opacity: 1;
-		display: block;
-	}
+  .loaded .label {
+    opacity: 1;
+    display: block;
+  }
 
-	.hit {
-		fill: transparent;
-		cursor: pointer;
-	}
+  .hit {
+    fill: transparent;
+    cursor: pointer;
+  }
 
-	.loaded .coord {
-		opacity: 1;
-	}
+  .loaded .coord {
+    opacity: 1;
+  }
 
-	.label.active {
-		stroke: var(--color-link);
-	}
+  .label.active {
+    stroke: var(--color-link);
+  }
 
-	.diag-highlight {
-		opacity: 0;
-		stroke: var(--color-link);
-		stroke-width: 1.5;
-		pointer-events: none;
-		transition: stroke-dashoffset 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-	}
+  .diag-highlight {
+    opacity: 0;
+    stroke: var(--color-link);
+    stroke-width: 1.5;
+    pointer-events: none;
+    transition: stroke-dashoffset 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
 
-	.diag-highlight.active {
-		opacity: 1;
-	}
+  .diag-highlight.active {
+    opacity: 1;
+  }
 
-	@media screen and (max-width: 768px) {
-		.stage {
-			width: min(480px, 100%);
-		}
+  @media screen and (max-width: 768px) {
+    .stage {
+      width: min(480px, 100%);
+    }
 
-		.crosshair-widget {
-			margin-inline: auto;
-		}
-	}
+    .crosshair-widget {
+      margin-inline: auto;
+    }
+  }
 </style>

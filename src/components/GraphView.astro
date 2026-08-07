@@ -4,576 +4,591 @@ import { createNodesAndEdges } from '../lib/graph-view-helper';
 const { rawNodes, rawEdges } = await createNodesAndEdges();
 ---
 
-<div class='graph-view'>
-	<div
-		class='graph-stage'
-		id='graph-stage'
-		data-width='480'
-		data-height='400'
-		data-nodes={JSON.stringify(rawNodes)}
-		data-edges={JSON.stringify(rawEdges)}>
-		<svg class='graph-svg' viewBox='0 0 480 400' xmlns='http://www.w3.org/2000/svg'></svg>
-		<button class='graph-recenter' id='graph-recenter' aria-label='Recenter graph' title='Recenter'>
-			<svg viewBox='0 0 24 24' width='16' height='16'>
-				<circle cx='12' cy='12' r='2.5' fill='currentColor'></circle>
-				<path d='M12 2v5M12 17v5M2 12h5M17 12h5' stroke='currentColor' stroke-width='1.6' stroke-linecap='round'></path>
-			</svg>
-		</button>
-	</div>
-	<div class='hint'>New here? Start with About. Otherwise, pick any vertex.</div>
+<div class="graph-view">
+  <div
+    class="graph-stage"
+    id="graph-stage"
+    data-width="480"
+    data-height="400"
+    data-nodes={JSON.stringify(rawNodes)}
+    data-edges={JSON.stringify(rawEdges)}
+  >
+    <svg class="graph-svg" viewBox="0 0 480 400" xmlns="http://www.w3.org/2000/svg"></svg>
+    <button class="graph-recenter" id="graph-recenter" aria-label="Recenter graph" title="Recenter">
+      <svg viewBox="0 0 24 24" width="16" height="16">
+        <circle cx="12" cy="12" r="2.5" fill="currentColor"></circle>
+        <path
+          d="M12 2v5M12 17v5M2 12h5M17 12h5"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+  <div class="hint">New here? Start with About. Otherwise, pick any vertex.</div>
 </div>
 
 <script>
-	import { navigate } from 'astro:transitions/client';
-	import { buildGraph, type Node } from '../lib/graph-view';
-	import type { RawEdge, RawNode } from '../lib/graph-view-helper';
+  import { navigate } from 'astro:transitions/client';
+  import { buildGraph, type Node } from '../lib/graph-view';
+  import type { RawEdge, RawNode } from '../lib/graph-view-helper';
 
-	document.addEventListener('astro:page-load', () => {
-		const stage = document.getElementById('graph-stage') as HTMLElement;
-		const svg = document.querySelector('.graph-svg') as SVGAElement;
+  document.addEventListener('astro:page-load', () => {
+    const stage = document.getElementById('graph-stage') as HTMLElement;
+    const svg = document.querySelector('.graph-svg') as SVGAElement;
 
-		if (!stage || !svg) return;
+    if (!stage || !svg) return;
 
-		const rawNodes = JSON.parse(stage.dataset.nodes!) as RawNode[];
-		const rawEdges = JSON.parse(stage.dataset.edges!) as RawEdge[];
+    const rawNodes = JSON.parse(stage.dataset.nodes!) as RawNode[];
+    const rawEdges = JSON.parse(stage.dataset.edges!) as RawEdge[];
 
-		const { nodes, edges, neighbors, W, H } = buildGraph(stage, rawNodes, rawEdges);
+    const { nodes, edges, neighbors, W, H } = buildGraph(stage, rawNodes, rawEdges);
 
-		const svgNS = 'http://www.w3.org/2000/svg';
+    const svgNS = 'http://www.w3.org/2000/svg';
 
-		// everything zoomable/pannable lives inside this group; the outer
-		// svg's viewBox never changes, only this group's transform does
-		const viewport = document.createElementNS(svgNS, 'g');
-		viewport.setAttribute('id', 'graph-viewport');
-		svg.appendChild(viewport);
+    // everything zoomable/pannable lives inside this group; the outer
+    // svg's viewBox never changes, only this group's transform does
+    const viewport = document.createElementNS(svgNS, 'g');
+    viewport.setAttribute('id', 'graph-viewport');
+    svg.appendChild(viewport);
 
-		const edgeEls = edges.map(() => {
-			const l = document.createElementNS(svgNS, 'line');
-			l.setAttribute('class', 'graph-edge');
-			viewport.appendChild(l);
-			return l;
-		});
-		const nodeEls = nodes.map((n) => {
-			const c = document.createElementNS(svgNS, 'circle');
-			c.setAttribute('class', 'graph-node');
-			c.setAttribute('r', String(n.r));
-			viewport.appendChild(c);
-			return c;
-		});
-		const labelEls = nodes.map((n) => {
-			const t = document.createElementNS(svgNS, 'text');
-			t.setAttribute('class', 'graph-label');
-			t.textContent = n.label;
-			viewport.appendChild(t);
-			return t;
-		});
+    const edgeEls = edges.map(() => {
+      const l = document.createElementNS(svgNS, 'line');
+      l.setAttribute('class', 'graph-edge');
+      viewport.appendChild(l);
+      return l;
+    });
+    const nodeEls = nodes.map((n) => {
+      const c = document.createElementNS(svgNS, 'circle');
+      c.setAttribute('class', 'graph-node');
+      c.setAttribute('r', String(n.r));
+      viewport.appendChild(c);
+      return c;
+    });
+    const labelEls = nodes.map((n) => {
+      const t = document.createElementNS(svgNS, 'text');
+      t.setAttribute('class', 'graph-label');
+      t.textContent = n.label;
+      viewport.appendChild(t);
+      return t;
+    });
 
-		function labelOffset(n: Node) {
-			const anchor = n.x < W * 0.15 ? 'start' : n.x > W * 0.85 ? 'end' : 'middle';
-			const dx = anchor === 'middle' ? 0 : anchor === 'start' ? n.r + 6 : -(n.r + 6);
-			return { anchor, dx };
-		}
+    function labelOffset(n: Node) {
+      const anchor = n.x < W * 0.15 ? 'start' : n.x > W * 0.85 ? 'end' : 'middle';
+      const dx = anchor === 'middle' ? 0 : anchor === 'start' ? n.r + 6 : -(n.r + 6);
+      return { anchor, dx };
+    }
 
-		function render() {
-			edges.forEach((e, i) => {
-				edgeEls[i].setAttribute('x1', String(e.source.x));
-				edgeEls[i].setAttribute('y1', String(e.source.y));
-				edgeEls[i].setAttribute('x2', String(e.target.x));
-				edgeEls[i].setAttribute('y2', String(e.target.y));
-			});
-			nodes.forEach((n, i) => {
-				nodeEls[i].setAttribute('cx', String(n.x));
-				nodeEls[i].setAttribute('cy', String(n.y));
-				const { anchor, dx } = labelOffset(n);
-				labelEls[i].setAttribute('x', String(n.x + dx));
-				labelEls[i].setAttribute('y', String(n.y + n.r + 16));
-				labelEls[i].setAttribute('text-anchor', anchor);
-			});
-		}
+    function render() {
+      edges.forEach((e, i) => {
+        edgeEls[i].setAttribute('x1', String(e.source.x));
+        edgeEls[i].setAttribute('y1', String(e.source.y));
+        edgeEls[i].setAttribute('x2', String(e.target.x));
+        edgeEls[i].setAttribute('y2', String(e.target.y));
+      });
+      nodes.forEach((n, i) => {
+        nodeEls[i].setAttribute('cx', String(n.x));
+        nodeEls[i].setAttribute('cy', String(n.y));
+        const { anchor, dx } = labelOffset(n);
+        labelEls[i].setAttribute('x', String(n.x + dx));
+        labelEls[i].setAttribute('y', String(n.y + n.r + 16));
+        labelEls[i].setAttribute('text-anchor', anchor);
+      });
+    }
 
-		const REPULSION = 900,
-			SPRING = 0.02,
-			REST_LENGTH = 90,
-			CENTER_PULL = 0.006,
-			DAMPING = 0.85,
-			SLEEP_THRESHOLD = 0.02;
-		let running = false;
+    const REPULSION = 900,
+      SPRING = 0.02,
+      REST_LENGTH = 90,
+      CENTER_PULL = 0.006,
+      DAMPING = 0.85,
+      SLEEP_THRESHOLD = 0.02;
+    let running = false;
 
-		function clamp(value: number, min: number, max: number) {
-			return Math.min(Math.max(value, min), max);
-		}
+    function clamp(value: number, min: number, max: number) {
+      return Math.min(Math.max(value, min), max);
+    }
 
-		function tick() {
-			for (let i = 0; i < nodes.length; i++)
-				for (let j = i + 1; j < nodes.length; j++) {
-					const a = nodes[i],
-						b = nodes[j];
-					let dx = a.x - b.x,
-						dy = a.y - b.y,
-						distSq = dx * dx + dy * dy;
-					if (distSq < 1) distSq = 1;
-					const dist = Math.sqrt(distSq),
-						force = REPULSION / distSq;
-					const fx = (dx / dist) * force,
-						fy = (dy / dist) * force;
-					a.vx += fx;
-					a.vy += fy;
-					b.vx -= fx;
-					b.vy -= fy;
-				}
-			edges.forEach((e) => {
-				const dx = e.target.x - e.source.x,
-					dy = e.target.y - e.source.y;
-				const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
-				const force = (dist - REST_LENGTH) * SPRING;
-				const fx = (dx / dist) * force,
-					fy = (dy / dist) * force;
-				e.source.vx += fx;
-				e.source.vy += fy;
-				e.target.vx -= fx;
-				e.target.vy -= fy;
-			});
-			nodes.forEach((n) => {
-				n.vx += (W / 2 - n.x) * CENTER_PULL;
-				n.vy += (H / 2 - n.y) * CENTER_PULL;
-			});
-			let totalMotion = 0;
-			nodes.forEach((n) => {
-				if (n.fx !== null && n.fy !== null) {
-					n.x = n.fx;
-					n.y = n.fy;
-					n.vx = 0;
-					n.vy = 0;
-					return;
-				}
-				n.vx *= DAMPING;
-				n.vy *= DAMPING;
-				n.x += n.vx;
-				n.y += n.vy;
+    function tick() {
+      for (let i = 0; i < nodes.length; i++)
+        for (let j = i + 1; j < nodes.length; j++) {
+          const a = nodes[i],
+            b = nodes[j];
+          let dx = a.x - b.x,
+            dy = a.y - b.y,
+            distSq = dx * dx + dy * dy;
+          if (distSq < 1) distSq = 1;
+          const dist = Math.sqrt(distSq),
+            force = REPULSION / distSq;
+          const fx = (dx / dist) * force,
+            fy = (dy / dist) * force;
+          a.vx += fx;
+          a.vy += fy;
+          b.vx -= fx;
+          b.vy -= fy;
+        }
+      edges.forEach((e) => {
+        const dx = e.target.x - e.source.x,
+          dy = e.target.y - e.source.y;
+        const dist = Math.max(Math.sqrt(dx * dx + dy * dy), 1);
+        const force = (dist - REST_LENGTH) * SPRING;
+        const fx = (dx / dist) * force,
+          fy = (dy / dist) * force;
+        e.source.vx += fx;
+        e.source.vy += fy;
+        e.target.vx -= fx;
+        e.target.vy -= fy;
+      });
+      nodes.forEach((n) => {
+        n.vx += (W / 2 - n.x) * CENTER_PULL;
+        n.vy += (H / 2 - n.y) * CENTER_PULL;
+      });
+      let totalMotion = 0;
+      nodes.forEach((n) => {
+        if (n.fx !== null && n.fy !== null) {
+          n.x = n.fx;
+          n.y = n.fy;
+          n.vx = 0;
+          n.vy = 0;
+          return;
+        }
+        n.vx *= DAMPING;
+        n.vy *= DAMPING;
+        n.x += n.vx;
+        n.y += n.vy;
 
-				totalMotion += Math.abs(n.vx) + Math.abs(n.vy);
-			});
-			render();
-			if (totalMotion > SLEEP_THRESHOLD) requestAnimationFrame(tick);
-			else running = false;
-		}
-		function wake() {
-			if (!running) {
-				running = true;
-				requestAnimationFrame(tick);
-			}
-		}
+        totalMotion += Math.abs(n.vx) + Math.abs(n.vy);
+      });
+      render();
+      if (totalMotion > SLEEP_THRESHOLD) requestAnimationFrame(tick);
+      else running = false;
+    }
+    function wake() {
+      if (!running) {
+        running = true;
+        requestAnimationFrame(tick);
+      }
+    }
 
-		function toSvgPoint(clientX: number, clientY: number) {
-			const rect = svg.getBoundingClientRect();
-			return { x: ((clientX - rect.left) / rect.width) * W, y: ((clientY - rect.top) / rect.height) * H };
-		}
+    function toSvgPoint(clientX: number, clientY: number) {
+      const rect = svg.getBoundingClientRect();
+      return {
+        x: ((clientX - rect.left) / rect.width) * W,
+        y: ((clientY - rect.top) / rect.height) * H,
+      };
+    }
 
-		// --- zoom + pan ---
-		const MIN_SCALE = 0.5;
-		const MAX_SCALE = 3;
-		const LABEL_HIDE_THRESHOLD = 0.75;
-		let scale = 1;
-		let panX = 0;
-		let panY = 0;
+    // --- zoom + pan ---
+    const MIN_SCALE = 0.5;
+    const MAX_SCALE = 3;
+    const LABEL_HIDE_THRESHOLD = 0.75;
+    let scale = 1;
+    let panX = 0;
+    let panY = 0;
 
-		function applyViewportTransform() {
-			viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
-			svg.classList.toggle('zoomed-out', scale < LABEL_HIDE_THRESHOLD);
-		}
+    function applyViewportTransform() {
+      viewport.setAttribute('transform', `translate(${panX} ${panY}) scale(${scale})`);
+      svg.classList.toggle('zoomed-out', scale < LABEL_HIDE_THRESHOLD);
+    }
 
-		// soft rubber-band: panning near "home" (0,0) is completely free, but the
-		// further you stray the more each extra pixel of movement is resisted —
-		// never a hard wall, just increasingly diminishing returns
-		const FREE_PAN_RADIUS = 300;
-		const PAN_RESISTANCE = 0.35;
+    // soft rubber-band: panning near "home" (0,0) is completely free, but the
+    // further you stray the more each extra pixel of movement is resisted —
+    // never a hard wall, just increasingly diminishing returns
+    const FREE_PAN_RADIUS = 300;
+    const PAN_RESISTANCE = 0.35;
 
-		function applyPanDelta(current: number, delta: number) {
-			const effectiveRadius = FREE_PAN_RADIUS * Math.max(scale, 1);
-			const factor = Math.abs(current) > effectiveRadius ? PAN_RESISTANCE : 1;
-			return current + delta * factor;
-		}
+    function applyPanDelta(current: number, delta: number) {
+      const effectiveRadius = FREE_PAN_RADIUS * Math.max(scale, 1);
+      const factor = Math.abs(current) > effectiveRadius ? PAN_RESISTANCE : 1;
+      return current + delta * factor;
+    }
 
-		// zoom by `factor`, keeping the graph-space point currently under
-		// `viewBoxPoint` fixed in place on screen (the "zoom toward cursor" feel)
-		function zoomAt(viewBoxPoint: { x: number; y: number }, factor: number) {
-			const newScale = clamp(scale * factor, MIN_SCALE, MAX_SCALE);
-			const graphX = (viewBoxPoint.x - panX) / scale;
-			const graphY = (viewBoxPoint.y - panY) / scale;
-			panX = viewBoxPoint.x - graphX * newScale;
-			panY = viewBoxPoint.y - graphY * newScale;
-			scale = newScale;
-			applyViewportTransform();
-		}
+    // zoom by `factor`, keeping the graph-space point currently under
+    // `viewBoxPoint` fixed in place on screen (the "zoom toward cursor" feel)
+    function zoomAt(viewBoxPoint: { x: number; y: number }, factor: number) {
+      const newScale = clamp(scale * factor, MIN_SCALE, MAX_SCALE);
+      const graphX = (viewBoxPoint.x - panX) / scale;
+      const graphY = (viewBoxPoint.y - panY) / scale;
+      panX = viewBoxPoint.x - graphX * newScale;
+      panY = viewBoxPoint.y - graphY * newScale;
+      scale = newScale;
+      applyViewportTransform();
+    }
 
-		stage.addEventListener(
-			'wheel',
-			(e) => {
-				e.preventDefault();
-				const cursorPoint = toSvgPoint(e.clientX, e.clientY);
-				const factor = Math.exp(-e.deltaY * 0.0015);
-				zoomAt(cursorPoint, factor);
-			},
-			{ passive: false },
-		);
+    stage.addEventListener(
+      'wheel',
+      (e) => {
+        e.preventDefault();
+        const cursorPoint = toSvgPoint(e.clientX, e.clientY);
+        const factor = Math.exp(-e.deltaY * 0.0015);
+        zoomAt(cursorPoint, factor);
+      },
+      { passive: false }
+    );
 
-		// pinch-to-zoom + drag-to-pan: track every active pointer on the stage.
-		// two pointers → pinch. one pointer that started on empty space → pan.
-		// one pointer that started on a node → left alone (its own drag handler runs).
-		const activePointers = new Map<number, { x: number; y: number }>();
-		let pinchStartDist = 0;
-		let panning = false;
-		let lastPanPoint: { x: number; y: number } | null = null;
+    // pinch-to-zoom + drag-to-pan: track every active pointer on the stage.
+    // two pointers → pinch. one pointer that started on empty space → pan.
+    // one pointer that started on a node → left alone (its own drag handler runs).
+    const activePointers = new Map<number, { x: number; y: number }>();
+    let pinchStartDist = 0;
+    let panning = false;
+    let lastPanPoint: { x: number; y: number } | null = null;
 
-		function pointerDistance(a: { x: number; y: number }, b: { x: number; y: number }) {
-			return Math.hypot(a.x - b.x, a.y - b.y);
-		}
+    function pointerDistance(a: { x: number; y: number }, b: { x: number; y: number }) {
+      return Math.hypot(a.x - b.x, a.y - b.y);
+    }
 
-		function pointerMidpoint(a: { x: number; y: number }, b: { x: number; y: number }) {
-			return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-		}
+    function pointerMidpoint(a: { x: number; y: number }, b: { x: number; y: number }) {
+      return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
+    }
 
-		// --- momentum: after releasing a pan, keep drifting and decelerate,
-		// like flicking a page in Obsidian ---
-		const FRICTION = 0.94;
-		const MOMENTUM_STOP_THRESHOLD = 0.02;
-		const STALE_VELOCITY_MS = 100;
-		let panVelX = 0;
-		let panVelY = 0;
-		let lastMoveTime = 0;
-		let momentumRunning = false;
+    // --- momentum: after releasing a pan, keep drifting and decelerate,
+    // like flicking a page in Obsidian ---
+    const FRICTION = 0.94;
+    const MOMENTUM_STOP_THRESHOLD = 0.02;
+    const STALE_VELOCITY_MS = 100;
+    let panVelX = 0;
+    let panVelY = 0;
+    let lastMoveTime = 0;
+    let momentumRunning = false;
 
-		function stopMomentum() {
-			momentumRunning = false;
-		}
+    function stopMomentum() {
+      momentumRunning = false;
+    }
 
-		function momentumStep() {
-			if (!momentumRunning) return;
-			panX = applyPanDelta(panX, panVelX);
-			panY = applyPanDelta(panY, panVelY);
-			applyViewportTransform();
-			panVelX *= FRICTION;
-			panVelY *= FRICTION;
-			if (Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD && Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD) {
-				momentumRunning = false;
-				return;
-			}
-			requestAnimationFrame(momentumStep);
-		}
+    function momentumStep() {
+      if (!momentumRunning) return;
+      panX = applyPanDelta(panX, panVelX);
+      panY = applyPanDelta(panY, panVelY);
+      applyViewportTransform();
+      panVelX *= FRICTION;
+      panVelY *= FRICTION;
+      if (
+        Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD &&
+        Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD
+      ) {
+        momentumRunning = false;
+        return;
+      }
+      requestAnimationFrame(momentumStep);
+    }
 
-		function startMomentum() {
-			// if the pointer sat still for a bit before lifting, don't fling
-			// based on stale velocity from earlier movement
-			if (performance.now() - lastMoveTime > STALE_VELOCITY_MS) {
-				panVelX = 0;
-				panVelY = 0;
-			}
-			if (Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD && Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD) return;
-			momentumRunning = true;
-			requestAnimationFrame(momentumStep);
-		}
+    function startMomentum() {
+      // if the pointer sat still for a bit before lifting, don't fling
+      // based on stale velocity from earlier movement
+      if (performance.now() - lastMoveTime > STALE_VELOCITY_MS) {
+        panVelX = 0;
+        panVelY = 0;
+      }
+      if (
+        Math.abs(panVelX) < MOMENTUM_STOP_THRESHOLD &&
+        Math.abs(panVelY) < MOMENTUM_STOP_THRESHOLD
+      )
+        return;
+      momentumRunning = true;
+      requestAnimationFrame(momentumStep);
+    }
 
-		// recenter button: smoothly tween pan/scale back to the identity view
-		const recenterBtn = document.getElementById('graph-recenter');
+    // recenter button: smoothly tween pan/scale back to the identity view
+    const recenterBtn = document.getElementById('graph-recenter');
 
-		function easeOutCubic(t: number) {
-			return 1 - Math.pow(1 - t, 3);
-		}
+    function easeOutCubic(t: number) {
+      return 1 - Math.pow(1 - t, 3);
+    }
 
-		function recenter() {
-			stopMomentum();
-			const startPanX = panX;
-			const startPanY = panY;
-			const startScale = scale;
-			const duration = 450;
-			const startTime = performance.now();
+    function recenter() {
+      stopMomentum();
+      const startPanX = panX;
+      const startPanY = panY;
+      const startScale = scale;
+      const duration = 450;
+      const startTime = performance.now();
 
-			function step(now: number) {
-				const t = Math.min((now - startTime) / duration, 1);
-				const eased = easeOutCubic(t);
-				panX = startPanX + (0 - startPanX) * eased;
-				panY = startPanY + (0 - startPanY) * eased;
-				scale = startScale + (1 - startScale) * eased;
-				applyViewportTransform();
-				if (t < 1) requestAnimationFrame(step);
-			}
-			requestAnimationFrame(step);
-		}
+      function step(now: number) {
+        const t = Math.min((now - startTime) / duration, 1);
+        const eased = easeOutCubic(t);
+        panX = startPanX + (0 - startPanX) * eased;
+        panY = startPanY + (0 - startPanY) * eased;
+        scale = startScale + (1 - startScale) * eased;
+        applyViewportTransform();
+        if (t < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
 
-		recenterBtn?.addEventListener('click', recenter);
+    recenterBtn?.addEventListener('click', recenter);
 
-		stage.addEventListener('pointerdown', (e) => {
-			stopMomentum();
-			activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    stage.addEventListener('pointerdown', (e) => {
+      stopMomentum();
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-			if (activePointers.size === 2) {
-				const [a, b] = [...activePointers.values()];
-				pinchStartDist = pointerDistance(a, b);
-				panning = false;
-				stage.setPointerCapture(e.pointerId);
-			} else if (activePointers.size === 1) {
-				const target = e.target as Element;
-				if (!target.closest('.graph-node') && !target.closest('.graph-recenter')) {
-					panning = true;
-					lastPanPoint = toSvgPoint(e.clientX, e.clientY);
-					panVelX = 0;
-					panVelY = 0;
-					lastMoveTime = performance.now();
-					stage.classList.add('panning');
-					stage.setPointerCapture(e.pointerId);
-				}
-			}
-		});
+      if (activePointers.size === 2) {
+        const [a, b] = [...activePointers.values()];
+        pinchStartDist = pointerDistance(a, b);
+        panning = false;
+        stage.setPointerCapture(e.pointerId);
+      } else if (activePointers.size === 1) {
+        const target = e.target as Element;
+        if (!target.closest('.graph-node') && !target.closest('.graph-recenter')) {
+          panning = true;
+          lastPanPoint = toSvgPoint(e.clientX, e.clientY);
+          panVelX = 0;
+          panVelY = 0;
+          lastMoveTime = performance.now();
+          stage.classList.add('panning');
+          stage.setPointerCapture(e.pointerId);
+        }
+      }
+    });
 
-		stage.addEventListener('pointermove', (e) => {
-			if (!activePointers.has(e.pointerId)) return;
-			activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    stage.addEventListener('pointermove', (e) => {
+      if (!activePointers.has(e.pointerId)) return;
+      activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
 
-			if (activePointers.size === 2) {
-				e.preventDefault();
-				panning = false;
-				const [a, b] = [...activePointers.values()];
-				const dist = pointerDistance(a, b);
-				if (pinchStartDist > 0) {
-					const factor = dist / pinchStartDist;
-					const midpoint = pointerMidpoint(a, b);
-					zoomAt(toSvgPoint(midpoint.x, midpoint.y), factor);
-				}
-				pinchStartDist = dist;
-			} else if (panning && lastPanPoint) {
-				e.preventDefault();
-				const p = toSvgPoint(e.clientX, e.clientY);
-				const dx = p.x - lastPanPoint.x;
-				const dy = p.y - lastPanPoint.y;
-				panX = applyPanDelta(panX, dx);
-				panY = applyPanDelta(panY, dy);
-				// smooth the velocity sample so a single jittery event doesn't dominate the flick
-				panVelX = panVelX * 0.7 + dx * 0.3;
-				panVelY = panVelY * 0.7 + dy * 0.3;
-				lastMoveTime = performance.now();
-				lastPanPoint = p;
-				applyViewportTransform();
-			}
-		});
+      if (activePointers.size === 2) {
+        e.preventDefault();
+        panning = false;
+        const [a, b] = [...activePointers.values()];
+        const dist = pointerDistance(a, b);
+        if (pinchStartDist > 0) {
+          const factor = dist / pinchStartDist;
+          const midpoint = pointerMidpoint(a, b);
+          zoomAt(toSvgPoint(midpoint.x, midpoint.y), factor);
+        }
+        pinchStartDist = dist;
+      } else if (panning && lastPanPoint) {
+        e.preventDefault();
+        const p = toSvgPoint(e.clientX, e.clientY);
+        const dx = p.x - lastPanPoint.x;
+        const dy = p.y - lastPanPoint.y;
+        panX = applyPanDelta(panX, dx);
+        panY = applyPanDelta(panY, dy);
+        // smooth the velocity sample so a single jittery event doesn't dominate the flick
+        panVelX = panVelX * 0.7 + dx * 0.3;
+        panVelY = panVelY * 0.7 + dy * 0.3;
+        lastMoveTime = performance.now();
+        lastPanPoint = p;
+        applyViewportTransform();
+      }
+    });
 
-		function releasePointer(e: PointerEvent) {
-			const wasPanning = panning;
-			activePointers.delete(e.pointerId);
-			if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
-			if (activePointers.size < 2) pinchStartDist = 0;
-			if (activePointers.size === 0) {
-				panning = false;
-				lastPanPoint = null;
-				stage.classList.remove('panning');
-				if (wasPanning) startMomentum();
-			}
-		}
+    function releasePointer(e: PointerEvent) {
+      const wasPanning = panning;
+      activePointers.delete(e.pointerId);
+      if (stage.hasPointerCapture(e.pointerId)) stage.releasePointerCapture(e.pointerId);
+      if (activePointers.size < 2) pinchStartDist = 0;
+      if (activePointers.size === 0) {
+        panning = false;
+        lastPanPoint = null;
+        stage.classList.remove('panning');
+        if (wasPanning) startMomentum();
+      }
+    }
 
-		stage.addEventListener('pointerup', releasePointer);
-		stage.addEventListener('pointercancel', releasePointer);
+    stage.addEventListener('pointerup', releasePointer);
+    stage.addEventListener('pointercancel', releasePointer);
 
-		nodes.forEach((n, i) => {
-			const circle = nodeEls[i];
-			let dragging = false,
-				moved = 0;
+    nodes.forEach((n, i) => {
+      const circle = nodeEls[i];
+      let dragging = false,
+        moved = 0;
 
-			function onMove(e: any) {
-				const p = toSvgPoint(e.clientX, e.clientY);
-				const graphX = (p.x - panX) / scale;
-				const graphY = (p.y - panY) / scale;
-				moved += Math.abs(graphX - (n.fx ?? n.x)) + Math.abs(graphY - (n.fy ?? n.y));
-				n.fx = graphX;
-				n.fy = graphY;
-				wake();
-			}
+      function onMove(e: any) {
+        const p = toSvgPoint(e.clientX, e.clientY);
+        const graphX = (p.x - panX) / scale;
+        const graphY = (p.y - panY) / scale;
+        moved += Math.abs(graphX - (n.fx ?? n.x)) + Math.abs(graphY - (n.fy ?? n.y));
+        n.fx = graphX;
+        n.fy = graphY;
+        wake();
+      }
 
-			function onUp(e: any) {
-				circle.releasePointerCapture(e.pointerId);
-				circle.removeEventListener('pointermove', onMove);
-				circle.removeEventListener('pointerup', onUp);
-				n.fx = null;
-				n.fy = null;
-				dragging = false;
-				wake();
-				if (moved < 4) navigate(n.path);
-			}
+      function onUp(e: any) {
+        circle.releasePointerCapture(e.pointerId);
+        circle.removeEventListener('pointermove', onMove);
+        circle.removeEventListener('pointerup', onUp);
+        n.fx = null;
+        n.fy = null;
+        dragging = false;
+        wake();
+        if (moved < 4) navigate(n.path);
+      }
 
-			circle.addEventListener('pointerdown', (e) => {
-				// let a two-finger pinch take priority over a single-node drag
-				if (activePointers.size >= 2) return;
-				stopMomentum();
-				dragging = true;
-				moved = 0;
-				const p = toSvgPoint(e.clientX, e.clientY);
-				n.fx = (p.x - panX) / scale;
-				n.fy = (p.y - panY) / scale;
-				circle.setPointerCapture(e.pointerId);
-				circle.addEventListener('pointermove', onMove);
-				circle.addEventListener('pointerup', onUp);
-			});
+      circle.addEventListener('pointerdown', (e) => {
+        // let a two-finger pinch take priority over a single-node drag
+        if (activePointers.size >= 2) return;
+        stopMomentum();
+        dragging = true;
+        moved = 0;
+        const p = toSvgPoint(e.clientX, e.clientY);
+        n.fx = (p.x - panX) / scale;
+        n.fy = (p.y - panY) / scale;
+        circle.setPointerCapture(e.pointerId);
+        circle.addEventListener('pointermove', onMove);
+        circle.addEventListener('pointerup', onUp);
+      });
 
-			circle.addEventListener('pointerenter', () => {
-				if (dragging) return;
-				const connected = neighbors.get(n.id)!;
-				nodeEls.forEach((el, j) => {
-					const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
-					el.classList.toggle('highlight', rel);
-					el.classList.toggle('dim', !rel);
-				});
-				labelEls.forEach((el, j) => {
-					const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
-					el.classList.toggle('highlight', rel);
-					el.classList.toggle('dim', !rel);
-				});
-				edgeEls.forEach((el, j) => {
-					const rel = edges[j].source.id === n.id || edges[j].target.id === n.id;
-					el.classList.toggle('highlight', rel);
-					el.classList.toggle('dim', !rel);
-				});
-			});
+      circle.addEventListener('pointerenter', () => {
+        if (dragging) return;
+        const connected = neighbors.get(n.id)!;
+        nodeEls.forEach((el, j) => {
+          const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
+          el.classList.toggle('highlight', rel);
+          el.classList.toggle('dim', !rel);
+        });
+        labelEls.forEach((el, j) => {
+          const rel = nodes[j].id === n.id || connected.has(nodes[j].id);
+          el.classList.toggle('highlight', rel);
+          el.classList.toggle('dim', !rel);
+        });
+        edgeEls.forEach((el, j) => {
+          const rel = edges[j].source.id === n.id || edges[j].target.id === n.id;
+          el.classList.toggle('highlight', rel);
+          el.classList.toggle('dim', !rel);
+        });
+      });
 
-			circle.addEventListener('pointerleave', () => {
-				if (dragging) return;
-				nodeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
-				labelEls.forEach((el) => el.classList.remove('highlight', 'dim'));
-				edgeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
-			});
-		});
+      circle.addEventListener('pointerleave', () => {
+        if (dragging) return;
+        nodeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+        labelEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+        edgeEls.forEach((el) => el.classList.remove('highlight', 'dim'));
+      });
+    });
 
-		applyViewportTransform();
-		render();
-		wake();
-	});
+    applyViewportTransform();
+    render();
+    wake();
+  });
 </script>
 
 <style is:global>
-	.graph-view {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		background-color: var(--color-background-shadow);
-		padding: 10px;
-		user-select: none;
-		border: 1px solid var(--color-shadow);
-		border-radius: 10px;
-		max-height: fit-content;
-	}
+  .graph-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--color-background-shadow);
+    padding: 10px;
+    user-select: none;
+    border: 1px solid var(--color-shadow);
+    border-radius: 10px;
+    max-height: fit-content;
+  }
 
-	.graph-stage {
-		width: 480px;
-		height: auto;
-		aspect-ratio: 480/400;
-		touch-action: none;
-		overscroll-behavior: contain;
-		cursor: grab;
-		position: relative;
-	}
+  .graph-stage {
+    width: 480px;
+    height: auto;
+    aspect-ratio: 480/400;
+    touch-action: none;
+    overscroll-behavior: contain;
+    cursor: grab;
+    position: relative;
+  }
 
-	.graph-stage.panning {
-		cursor: grabbing;
-	}
+  .graph-stage.panning {
+    cursor: grabbing;
+  }
 
-	.graph-stage svg {
-		width: 100%;
-		height: 100%;
-		overflow: hidden;
-	}
+  .graph-stage svg {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 
-	.graph-recenter {
-		position: absolute;
-		bottom: 10px;
-		right: 10px;
-		width: 30px;
-		height: 30px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		background: var(--color-background-shadow);
-		border: 1px solid var(--color-shadow);
-		border-radius: 50%;
-		color: var(--color-muted);
-		cursor: pointer;
-		transition:
-			color 0.2s ease,
-			border-color 0.2s ease;
-	}
+  .graph-recenter {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background-shadow);
+    border: 1px solid var(--color-shadow);
+    border-radius: 50%;
+    color: var(--color-muted);
+    cursor: pointer;
+    transition:
+      color 0.2s ease,
+      border-color 0.2s ease;
+  }
 
-	.graph-recenter:hover {
-		color: var(--color-link);
-		border-color: var(--color-link);
-	}
+  .graph-recenter:hover {
+    color: var(--color-link);
+    border-color: var(--color-link);
+  }
 
-	.graph-edge {
-		stroke: var(--color-shadow);
-		stroke-width: 1;
-		transition:
-			stroke 0.2s,
-			stroke-width 0.2s,
-			opacity 0.2s;
-	}
+  .graph-edge {
+    stroke: var(--color-shadow);
+    stroke-width: 1;
+    transition:
+      stroke 0.2s,
+      stroke-width 0.2s,
+      opacity 0.2s;
+  }
 
-	.graph-edge.highlight {
-		stroke: var(--color-link);
-		stroke-width: 1.4;
-	}
+  .graph-edge.highlight {
+    stroke: var(--color-link);
+    stroke-width: 1.4;
+  }
 
-	.graph-edge.dim {
-		opacity: 0.15;
-	}
+  .graph-edge.dim {
+    opacity: 0.15;
+  }
 
-	.graph-node {
-		fill: var(--color-shadow);
-		cursor: pointer;
-		transition:
-			fill 0.2s,
-			opacity 0.2s;
-	}
+  .graph-node {
+    fill: var(--color-shadow);
+    cursor: pointer;
+    transition:
+      fill 0.2s,
+      opacity 0.2s;
+  }
 
-	.graph-node.highlight {
-		fill: var(--color-link);
-	}
+  .graph-node.highlight {
+    fill: var(--color-link);
+  }
 
-	.graph-node.dim {
-		opacity: 0.3;
-	}
+  .graph-node.dim {
+    opacity: 0.3;
+  }
 
-	.graph-label {
-		fill: var(--color-muted);
-		font-size: 12px;
-		font-weight: 600;
-		pointer-events: none;
-		user-select: none;
-		transition:
-			fill 0.2s,
-			opacity 0.2s;
-	}
+  .graph-label {
+    fill: var(--color-muted);
+    font-size: 12px;
+    font-weight: 600;
+    pointer-events: none;
+    user-select: none;
+    transition:
+      fill 0.2s,
+      opacity 0.2s;
+  }
 
-	.graph-svg.zoomed-out .graph-label {
-		opacity: 0;
-	}
+  .graph-svg.zoomed-out .graph-label {
+    opacity: 0;
+  }
 
-	.graph-label.highlight {
-		fill: var(--color-text);
-	}
+  .graph-label.highlight {
+    fill: var(--color-text);
+  }
 
-	.graph-label.dim {
-		opacity: 0.3;
-	}
+  .graph-label.dim {
+    opacity: 0.3;
+  }
 
-	.hint {
-		color: var(--color-shadow);
-		font-size: var(--text-meta);
-		text-align: center;
-		padding-top: 10px;
-	}
+  .hint {
+    color: var(--color-shadow);
+    font-size: var(--text-meta);
+    text-align: center;
+    padding-top: 10px;
+  }
 
-	@media screen and (max-width: 768px) {
-		.graph-stage {
-			width: min(480px, 100%);
-		}
+  @media screen and (max-width: 768px) {
+    .graph-stage {
+      width: min(480px, 100%);
+    }
 
-		.graph-view {
-			margin-inline: auto;
-		}
-	}
+    .graph-view {
+      margin-inline: auto;
+    }
+  }
 </style>
