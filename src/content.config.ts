@@ -6,12 +6,11 @@ import { authors, categories, status } from './config/content';
 const contentPattern = '**/[^_]*.md';
 const common = {
   title: z.string(),
-  pubDate: z.coerce.date(),
-  description: z.string(),
+  description: z.string().optional(),
   author: z.enum(authors),
   category: z.enum(categories),
   tags: z.array(z.string()).default([]),
-  updatedDate: z.coerce.date().optional(),
+  draft: z.boolean().default(false),
 };
 
 const blog = defineCollection({
@@ -21,7 +20,8 @@ const blog = defineCollection({
   }),
   schema: z.object({
     ...common,
-    draft: z.boolean().default(false),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
   }),
 });
 
@@ -32,10 +32,26 @@ const lab = defineCollection({
   }),
   schema: z.object({
     ...common,
-    status: z.enum(status),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    status: z.enum(status).optional(),
   }),
 });
 
-// To-do add project collection
+const projects = defineCollection({
+  loader: glob({
+    pattern: contentPattern,
+    base: 'src/content/projects',
+  }),
+  schema: z.object({
+    ...common,
+    links: z
+      .object({
+        site: z.url().optional(),
+        repository: z.url().optional(),
+      })
+      .optional(),
+  }),
+});
 
-export const collections = { blog, lab };
+export const collections = { blog, lab, projects };
