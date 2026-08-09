@@ -1,5 +1,5 @@
 ---
-import { createNodesAndEdges } from '../lib/graph-view-helper';
+import { createNodesAndEdges } from '../../lib/graph-view-helper';
 
 const { rawNodes, rawEdges } = await createNodesAndEdges();
 ---
@@ -30,8 +30,8 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 
 <script>
   import { navigate } from 'astro:transitions/client';
-  import { buildGraph, type Node } from '../lib/graph-view';
-  import type { RawEdge, RawNode } from '../lib/graph-view-helper';
+  import { buildGraph, type Node } from '../../lib/graph-view';
+  import type { RawEdge, RawNode } from '../../lib/graph-view-helper';
 
   document.addEventListener('astro:page-load', () => {
     const stage = document.getElementById('graph-stage') as HTMLElement;

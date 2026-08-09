@@ -2,478 +2,479 @@
 import Layout from '../../layouts/Layout.astro';
 import { workHistory } from '../../data/work-history';
 import { skills } from '../../data/skills';
-import CollapseIcon from '../../components/CollapseIcon.astro';
+import CollapseIcon from '../../components/common/CollapseIcon.astro';
 import { site } from '../../config/site';
 import { social } from '../../config/social';
-import CurrentTraversal from '../../components/CurrentTraversal.astro';
+import CurrentTraversal from '../../components/about/CurrentTraversal.astro';
 import { projects } from '../../data/projects';
-import ArtifactCard from '../../components/ArtifactCard.astro';
+import ArtifactCard from '../../components/about/ArtifactCard.astro';
 
-const projectsCount = projects.length;
 const projectLimit = 2;
 ---
 
-<Layout pageId='about'>
-	<main>
-		<!-- Introduction -->
-		<section class='section intro'>
-			<p class='eyebrow'>Hello there! I am..</p>
-			<h1 class='page-hero'>{site.author.alternateName}</h1>
-			<p class='lead'>Learning. Building. Securing. One vertex at a time.</p>
-			<p class='body-text'>
-				I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is
-				where I document what I'm building, breaking, and learning &mdash; a running record of my
-				projects, experiments, and lessons along the way. Based in Toronto, I usually spend my
-				weekends building something that probably didn't need to exist, playing video games, or
-				dozing off.
-			</p>
-		</section>
+<Layout pageId="about">
+  <main>
+    <!-- Introduction -->
+    <section class="section intro">
+      <p class="eyebrow">Hello there! I am..</p>
+      <h1 class="page-hero">{site.author.alternateName}</h1>
+      <p class="lead">Learning. Building. Securing. One vertex at a time.</p>
+      <p class="body-text">
+        I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is
+        where I document what I'm building, breaking, and learning &mdash; a running record of my
+        projects, experiments, and lessons along the way. Based in Toronto, I usually spend my
+        weekends building something that probably didn't need to exist, playing video games, or
+        dozing off.
+      </p>
+    </section>
 
-		<!-- Currently learning -->
-		<section class='section' id='current-traversal'>
-			<div class='section-header'>
-				<h2 class='section-title'>CURRENT TRAVERSAL</h2>
-			</div>
-			<CurrentTraversal variant='full' />
-		</section>
+    <!-- Currently learning -->
+    <section class="section" id="current-traversal">
+      <div class="section-header">
+        <h2 class="section-title">CURRENT TRAVERSAL</h2>
+      </div>
+      <CurrentTraversal variant="full" />
+    </section>
 
-		<!-- Experience -->
-		<section class='section' id='vertices'>
-			<div class='section-header'>
-				<h2 class='section-title'>VERTICES</h2>
-				<CollapseIcon />
-			</div>
-			<ul class='timeline'>
-				{
-					workHistory.map((job) => (
-						<li class='timeline-item'>
-							<div class='timeline-marker-col'>
-								<span class='timeline-dot' />
-								<span class='timeline-line' />
-							</div>
-							<details class='timeline-job-details'>
-								<summary class='timeline-job-summary'>
-									<div class='timeline-job-row'>
-										<div class='timeline-job-info'>
-											<h3 class='timeline-job-title'>{job.title}</h3>
-											<p class='timeline-company'>{job.company}</p>
-										</div>
-										<div class='timeline-job-meta'>
-											<span class='timeline-job-period'>{job.period}</span>
-											<p class='timeline-company-location'>{job.location}</p>
-										</div>
-									</div>
-									<svg
-										class='timeline-expand-chevron'
-										xmlns='http://www.w3.org/2000/svg'
-										width='1em'
-										height='1em'
-										viewBox='0 0 24 24'>
-										<path d='M0 0h24v24H0z' fill='none' />
-										<path
-											fill='currentColor'
-											d='M18.53 9.53a.75.75 0 0 0 0-1.06H5.47a.75.75 0 0 0 0 1.06l6 6a.75.75 0 0 0 1.06 0z'
-										/>
-									</svg>
-								</summary>
-								<ul class='timeline-job-description'>
-									{job.description.map((line) => (
-										<li class='timeline-jdescription-item'>{line}</li>
-									))}
-								</ul>
-							</details>
-						</li>
-					))
-				}
-			</ul>
-		</section>
+    <!-- Experience -->
+    <section class="section" id="vertices">
+      <div class="section-header">
+        <h2 class="section-title">VERTICES</h2>
+        <CollapseIcon />
+      </div>
+      <ul class="timeline">
+        {
+          workHistory.map((job) => (
+            <li class="timeline-item">
+              <div class="timeline-marker-col">
+                <span class="timeline-dot" />
+                <span class="timeline-line" />
+              </div>
+              <details class="timeline-job-details">
+                <summary class="timeline-job-summary">
+                  <div class="timeline-job-row">
+                    <div class="timeline-job-info">
+                      <h3 class="timeline-job-title">{job.title}</h3>
+                      <p class="timeline-company">{job.company}</p>
+                    </div>
+                    <div class="timeline-job-meta">
+                      <span class="timeline-job-period">{job.period}</span>
+                      <p class="timeline-company-location">{job.location}</p>
+                    </div>
+                  </div>
+                  <svg
+                    class="timeline-expand-chevron"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      fill="currentColor"
+                      d="M18.53 9.53a.75.75 0 0 0 0-1.06H5.47a.75.75 0 0 0 0 1.06l6 6a.75.75 0 0 0 1.06 0z"
+                    />
+                  </svg>
+                </summary>
+                <ul class="timeline-job-description">
+                  {job.description.map((line) => (
+                    <li class="timeline-jdescription-item">{line}</li>
+                  ))}
+                </ul>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
 
-		<!-- Skills -->
-		<section class='section' id='edges'>
-			<div class='section-header'>
-				<h2 class='section-title'>EDGES</h2>
-				<CollapseIcon />
-			</div>
-			<div class='skill-content'>
-				{
-					skills.map((skill) => (
-						<details class='skill-details'>
-							<summary class='skill-summary'>
-								<div class='skill-summary-content'>
-									<div class='skill-content-label'>
-										<h3 class='tag-category'>{skill.label}</h3>
-										<span class='tag-category-count'>[ {skill.tags.length} ]</span>
-									</div>
-									<svg
-										xmlns='http://www.w3.org/2000/svg'
-										width='1em'
-										height='1em'
-										viewBox='0 0 24 24'>
-										<rect class='plus-vertical' x='11' y='5' width='2' height='14' rx='1' />
-										<rect class='plus-horizontal' x='5' y='11' width='14' height='2' rx='1' />
-									</svg>
-								</div>
-							</summary>
-							<div class='tags'>
-								{skill.tags.map((tag) => (
-									<a href={`/tags/${tag}`} class='tag'>
-										{tag}
-									</a>
-								))}
-							</div>
-						</details>
-					))
-				}
-			</div>
-		</section>
+    <!-- Skills -->
+    <section class="section" id="edges">
+      <div class="section-header">
+        <h2 class="section-title">EDGES</h2>
+        <CollapseIcon />
+      </div>
+      <div class="skill-content">
+        {
+          skills.map((skill) => (
+            <details class="skill-details">
+              <summary class="skill-summary">
+                <div class="skill-summary-content">
+                  <div class="skill-content-label">
+                    <h3 class="tag-category">{skill.label}</h3>
+                    <span class="tag-category-count">[ {skill.tags.length} ]</span>
+                  </div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="1em"
+                    height="1em"
+                    viewBox="0 0 24 24"
+                  >
+                    <rect class="plus-vertical" x="11" y="5" width="2" height="14" rx="1" />
+                    <rect class="plus-horizontal" x="5" y="11" width="14" height="2" rx="1" />
+                  </svg>
+                </div>
+              </summary>
+              <div class="tags">
+                {skill.tags.map((tag) => (
+                  <a href={`/tags/${tag}`} class="tag">
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </section>
 
-		<!-- Projects -->
-		<section class='section'>
-			<div class='section-header'>
-				<h2 class='section-title'>ARTIFACTS</h2>
-			</div>
-			<div class='artifacts'>
-				{
-					projects.map((project, i) =>
-						i < projectLimit ? <ArtifactCard project={project} /> : null
-					)
-				}
+    <!-- Projects -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">ARTIFACTS</h2>
+      </div>
+      <div class="artifacts">
+        {
+          projects.map((project, i) =>
+            i < projectLimit ? <ArtifactCard project={project} /> : null
+          )
+        }
 
         <a href="/projects" class="view-all-artifacts">View all projects &nearr;</a>
-			</div>
-		</section>
+      </div>
+    </section>
 
-		<!-- Certificates -->
-		<section class='section milestones'>
-			<div class='section-header'>
-				<h2 class='section-title'>MILESTONES</h2>
-			</div>
-			<p class='body-text'>Compiling...</p>
-		</section>
+    <!-- Certificates -->
+    <section class="section milestones">
+      <div class="section-header">
+        <h2 class="section-title">MILESTONES</h2>
+      </div>
+      <p class="body-text">Compiling...</p>
+    </section>
 
-		<!-- Contact -->
-		<section class='section'>
-			<div class='section-header'>
-				<h2 class='section-title'>NETWORK</h2>
-			</div>
-			<h3>Want to connect?</h3>
-			<p class='body-text'>
-				I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs,
-				CTFs, and personal projects. If you want to chat about cybersecurity, or anything else —
-				feel free to reach out!
-			</p>
-			<div class='contact-links'>
-				{
-					social.map((socialLink) => (
-						<a class='contact-link' href={socialLink.url} target='_blank'>
-							{socialLink.label} &nearr;
-						</a>
-					))
-				}
-			</div>
-		</section>
-	</main>
+    <!-- Contact -->
+    <section class="section">
+      <div class="section-header">
+        <h2 class="section-title">NETWORK</h2>
+      </div>
+      <h3>Want to connect?</h3>
+      <p class="body-text">
+        I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs,
+        CTFs, and personal projects. If you want to chat about cybersecurity, or anything else —
+        feel free to reach out!
+      </p>
+      <div class="contact-links">
+        {
+          social.map((socialLink) => (
+            <a class="contact-link" href={socialLink.url} target="_blank">
+              {socialLink.label} &nearr;
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </main>
 </Layout>
 
 <style>
-	main {
-		max-width: 768px;
-		margin: 0 auto;
-	}
+  main {
+    max-width: 768px;
+    margin: 0 auto;
+  }
 
-	.page-hero {
-		font-size: var(--text-display);
-		letter-spacing: -0.01em;
-		margin: 20px 0 20px;
-	}
+  .page-hero {
+    font-size: var(--text-display);
+    letter-spacing: -0.01em;
+    margin: 20px 0 20px;
+  }
 
-	.section {
-		padding: 56px 0;
-		border-top: 1px solid var(--color-shadow);
-	}
+  .section {
+    padding: 56px 0;
+    border-top: 1px solid var(--color-shadow);
+  }
 
-	.section-header {
-		display: flex;
-		align-items: center;
-		margin-bottom: 10px;
-		height: 48px;
-	}
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    height: 48px;
+  }
 
-	.section-title {
-		font-size: var(--text-title);
-	}
+  .section-title {
+    font-size: var(--text-title);
+  }
 
-	.section.intro {
-		border-top: none;
-		padding-top: 0;
-		padding-bottom: 68px;
-	}
+  .section.intro {
+    border-top: none;
+    padding-top: 0;
+    padding-bottom: 68px;
+  }
 
-	.eyebrow {
-		font-size: var(--text-label);
-		color: var(--color-link);
-		letter-spacing: 3px;
-	}
+  .eyebrow {
+    font-size: var(--text-label);
+    color: var(--color-link);
+    letter-spacing: 3px;
+  }
 
-	.lead {
-		font-size: var(--text-lead);
-		line-height: 1.6;
-		margin: 0 0 20px;
-	}
+  .lead {
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
 
-	.body-text {
-		font-size: var(--text-body-small);
-		color: var(--color-muted);
-	}
+  .body-text {
+    font-size: var(--text-body-small);
+    color: var(--color-muted);
+  }
 
-	.intro .body-text {
-		margin: 0;
-	}
+  .intro .body-text {
+    margin: 0;
+  }
 
-	/* Vertices */
+  /* Vertices */
 
-	.timeline-job-description {
-		margin: 0;
-		padding: 10px;
-		list-style: disc;
-	}
+  .timeline-job-description {
+    margin: 0;
+    padding: 10px;
+    list-style: disc;
+  }
 
-	.timeline-jdescription-item {
-		color: var(--color-muted);
-		font-size: var(--text-body-small);
-		line-height: 1.75;
-	}
+  .timeline-jdescription-item {
+    color: var(--color-muted);
+    font-size: var(--text-body-small);
+    line-height: 1.75;
+  }
 
-	/* Experience timeline */
-	.timeline {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		display: flex;
-		flex-direction: column;
-	}
+  /* Experience timeline */
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
 
-	.timeline-item {
-		display: flex;
-		gap: 18px;
-		align-items: stretch;
-	}
+  .timeline-item {
+    display: flex;
+    gap: 18px;
+    align-items: stretch;
+  }
 
-	.timeline-job-details {
-		position: relative;
-		flex: 1;
-		margin-bottom: 18px;
-		padding-top: 5px;
-		padding-inline: 10px;
-		transition: background-color 0.5s ease;
-		border: 1px solid transparent;
-		border-radius: 5px;
-	}
+  .timeline-job-details {
+    position: relative;
+    flex: 1;
+    margin-bottom: 18px;
+    padding-top: 5px;
+    padding-inline: 10px;
+    transition: background-color 0.5s ease;
+    border: 1px solid transparent;
+    border-radius: 5px;
+  }
 
-	.timeline-job-details[open] .timeline-job-description {
-		animation: fadeDown 250ms ease;
-	}
+  .timeline-job-details[open] .timeline-job-description {
+    animation: fadeDown 250ms ease;
+  }
 
-	@keyframes fadeDown {
-		from {
-			opacity: 0;
-			transform: translateY(-8px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
-	.timeline-job-summary {
-		list-style: none;
-		cursor: pointer;
-	}
+  .timeline-job-summary {
+    list-style: none;
+    cursor: pointer;
+  }
 
-	.timeline-job-details:hover {
-		background-color: var(--color-background-shadow);
-		border-color: var(--color-shadow);
-	}
+  .timeline-job-details:hover {
+    background-color: var(--color-background-shadow);
+    border-color: var(--color-shadow);
+  }
 
-	.timeline-expand-chevron {
-		position: absolute;
-		top: 100%;
-		left: 50%;
-		transform: scaleY(0);
-		color: var(--color-shadow);
-	}
+  .timeline-expand-chevron {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: scaleY(0);
+    color: var(--color-shadow);
+  }
 
-	.timeline-job-details:hover .timeline-expand-chevron {
-		transform: scaleY(1);
-	}
+  .timeline-job-details:hover .timeline-expand-chevron {
+    transform: scaleY(1);
+  }
 
-	.timeline-job-details[open]:hover .timeline-expand-chevron {
-		transform: rotate(180deg) scale(1);
-	}
+  .timeline-job-details[open]:hover .timeline-expand-chevron {
+    transform: rotate(180deg) scale(1);
+  }
 
-	.timeline-item:last-child .timeline-job-details {
-		margin-bottom: 0;
-	}
+  .timeline-item:last-child .timeline-job-details {
+    margin-bottom: 0;
+  }
 
-	.timeline-marker-col {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 8px;
-		margin-top: 5px;
-		margin-bottom: -5px;
-		flex-shrink: 0;
-	}
+  .timeline-marker-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 8px;
+    margin-top: 5px;
+    margin-bottom: -5px;
+    flex-shrink: 0;
+  }
 
-	.timeline-dot {
-		width: 8px;
-		height: 8px;
-		border-radius: 50%;
-		background: var(--color-link);
-		margin-block: 7px;
-		flex-shrink: 0;
-	}
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-link);
+    margin-block: 7px;
+    flex-shrink: 0;
+  }
 
-	.timeline-item:not(:first-of-type) .timeline-dot {
-		background-color: var(--color-shadow);
-	}
-	.timeline-line {
-		flex: 1;
-		width: 1px;
-		background: var(--color-shadow);
-	}
+  .timeline-item:not(:first-of-type) .timeline-dot {
+    background-color: var(--color-shadow);
+  }
+  .timeline-line {
+    flex: 1;
+    width: 1px;
+    background: var(--color-shadow);
+  }
 
-	.timeline-job-row {
-		display: flex;
-		align-items: baseline;
-		justify-content: space-between;
-		gap: 16px;
-	}
+  .timeline-job-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
 
-	.timeline-job-info {
-		flex: 1;
-	}
+  .timeline-job-info {
+    flex: 1;
+  }
 
-	.timeline-job-meta {
-		width: auto;
-		text-align: right;
-		margin-inline: auto;
-	}
+  .timeline-job-meta {
+    width: auto;
+    text-align: right;
+    margin-inline: auto;
+  }
 
-	.timeline-job-title {
-		margin: 0 0 4px;
-	}
+  .timeline-job-title {
+    margin: 0 0 4px;
+  }
 
-	.timeline-job-period {
-		color: var(--color-muted);
-		font-size: var(--text-meta);
-		letter-spacing: 1px;
-		white-space: nowrap;
-	}
+  .timeline-job-period {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
 
-	.timeline-company {
-		color: var(--color-link);
-		font-size: var(--text-body-small);
-		font-weight: bold;
-		margin: 0 0 10px;
-	}
+  .timeline-company {
+    color: var(--color-link);
+    font-size: var(--text-body-small);
+    font-weight: bold;
+    margin: 0 0 10px;
+  }
 
-	.timeline-company-location {
-		color: var(--color-muted);
-		font-size: var(--text-meta);
-		margin: 0 0 10px;
-	}
+  .timeline-company-location {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+    margin: 0 0 10px;
+  }
 
-	/* Edges */
-	.skill-content {
-		display: flex;
-		flex-direction: column;
-	}
+  /* Edges */
+  .skill-content {
+    display: flex;
+    flex-direction: column;
+  }
 
-	.skill-details {
-		cursor: pointer;
-		display: flex;
-		flex-direction: column;
-		padding-inline: 10px;
-	}
+  .skill-details {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 10px;
+  }
 
-	.skill-details:not(:last-of-type) {
-		border-bottom: 1px solid var(--color-shadow);
-	}
+  .skill-details:not(:last-of-type) {
+    border-bottom: 1px solid var(--color-shadow);
+  }
 
-	.skill-details:last-of-type {
-		padding-bottom: 0;
-	}
+  .skill-details:last-of-type {
+    padding-bottom: 0;
+  }
 
-	.skill-details[open] .plus-vertical {
-		transform: rotate(90deg);
-	}
+  .skill-details[open] .plus-vertical {
+    transform: rotate(90deg);
+  }
 
-	.skill-summary {
-		list-style: none;
-	}
+  .skill-summary {
+    list-style: none;
+  }
 
-	.skill-summary-content {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding-top: 16px;
-		padding-bottom: 10px;
-	}
+  .skill-summary-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 10px;
+  }
 
-	.skill-details:first-of-type .skill-summary-content {
-		padding-top: 0;
-	}
+  .skill-details:first-of-type .skill-summary-content {
+    padding-top: 0;
+  }
 
-	.skill-details:last-of-type .skill-summary-content {
-		padding-bottom: 0;
-	}
+  .skill-details:last-of-type .skill-summary-content {
+    padding-bottom: 0;
+  }
 
-	.skill-summary-content .plus-vertical {
-		transform-box: fill-box;
-		transform-origin: center;
-		transition: transform 250ms ease;
-	}
+  .skill-summary-content .plus-vertical {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 250ms ease;
+  }
 
-	.skill-summary-content rect {
-		fill: var(--color-shadow);
-	}
+  .skill-summary-content rect {
+    fill: var(--color-shadow);
+  }
 
-	.skill-content-label {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-	}
+  .skill-content-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
 
-	.tag-category {
-		margin: 10px 0 10px;
-	}
+  .tag-category {
+    margin: 10px 0 10px;
+  }
 
-	.tag-category-count {
-		font-size: var(--text-meta);
-		color: var(--color-shadow);
-	}
+  .tag-category-count {
+    font-size: var(--text-meta);
+    color: var(--color-shadow);
+  }
 
-	.tags {
-		margin-bottom: 30px;
-	}
+  .tags {
+    margin-bottom: 30px;
+  }
 
-	.skill-details:last-of-type .tags {
-		margin-bottom: 0;
-	}
+  .skill-details:last-of-type .tags {
+    margin-bottom: 0;
+  }
 
-	/* Projects */
-	.artifacts {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 20px;
-	}
+  /* Projects */
+  .artifacts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
 
   .view-all-artifacts {
     text-decoration: none;
     color: var(--color-link);
     border-bottom: 1px solid transparent;
-    transition: border-color .25s ease;
+    transition: border-color 0.25s ease;
     width: fit-content;
     margin-top: 20px;
   }
@@ -482,41 +483,41 @@ const projectLimit = 2;
     border-color: var(--color-link);
   }
 
-	/* Contact */
-	.contact-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 24px;
-		margin-top: 24px;
-	}
+  /* Contact */
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 24px;
+  }
 
-	.contact-link {
-		color: var(--color-link);
-		text-decoration: none;
-		font-size: var(--text-body-small);
-		font-weight: 600;
-		border-bottom: 1px solid transparent;
-		transition: border-color 0.2s ease;
-	}
+  .contact-link {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: var(--text-body-small);
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
 
-	.contact-link:hover {
-		border-color: var(--color-link);
-	}
+  .contact-link:hover {
+    border-color: var(--color-link);
+  }
 
-	@media (max-width: 640px) {
-		.timeline-job-row {
-			flex-direction: column;
-			gap: 0;
-		}
+  @media (max-width: 640px) {
+    .timeline-job-row {
+      flex-direction: column;
+      gap: 0;
+    }
 
-		.timeline-job-meta {
-			text-align: left;
-			width: 100%;
-		}
+    .timeline-job-meta {
+      text-align: left;
+      width: 100%;
+    }
 
-		.artifacts {
-			grid-template-columns: 1fr;
-			align-items: stretch;
-		}
-	}
+    .artifacts {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+  }
 </style>
