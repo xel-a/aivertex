@@ -1,0 +1,110 @@
+---
+import { skills } from '../../data/skills';
+---
+
+<div class="skill-content">
+  {
+    skills.map((skill) => (
+      <details class="skill-details">
+        <summary class="skill-summary">
+          <div class="skill-summary-content">
+            <div class="skill-content-label">
+              <h3 class="tag-category">{skill.label}</h3>
+              <span class="tag-category-count">[ {skill.tags.length} ]</span>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
+              <rect class="plus-vertical" x="11" y="5" width="2" height="14" rx="1" />
+              <rect class="plus-horizontal" x="5" y="11" width="14" height="2" rx="1" />
+            </svg>
+          </div>
+        </summary>
+        <div class="tags">
+          {skill.tags.map((tag) => (
+            <a href={`/tags/${tag}`} class="tag">
+              {tag}
+            </a>
+          ))}
+        </div>
+      </details>
+    ))
+  }
+</div>
+
+<style>
+  .skill-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skill-details {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    padding-inline: 10px;
+  }
+
+  .skill-details:not(:last-of-type) {
+    border-bottom: 1px solid var(--color-shadow);
+  }
+
+  .skill-details:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .skill-details[open] .plus-vertical {
+    transform: rotate(90deg);
+  }
+
+  .skill-summary {
+    list-style: none;
+  }
+
+  .skill-summary-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 10px;
+  }
+
+  .skill-details:first-of-type .skill-summary-content {
+    padding-top: 0;
+  }
+
+  .skill-details:last-of-type .skill-summary-content {
+    padding-bottom: 0;
+  }
+
+  .skill-summary-content .plus-vertical {
+    transform-box: fill-box;
+    transform-origin: center;
+    transition: transform 250ms ease;
+  }
+
+  .skill-summary-content rect {
+    fill: var(--color-shadow);
+  }
+
+  .skill-content-label {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .tag-category {
+    margin: 10px 0 10px;
+  }
+
+  .tag-category-count {
+    font-size: var(--text-meta);
+    color: var(--color-shadow);
+  }
+
+  .tags {
+    margin-bottom: 30px;
+  }
+
+  .skill-details:last-of-type .tags {
+    margin-bottom: 0;
+  }
+</style>

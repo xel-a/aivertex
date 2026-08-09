@@ -1,0 +1,214 @@
+---
+import { workHistory } from '../../data/work-history';
+---
+
+<ul class="timeline">
+  {
+    workHistory.map((job) => (
+      <li class="timeline-item">
+        <div class="timeline-marker-col">
+          <span class="timeline-dot" />
+          <span class="timeline-line" />
+        </div>
+        <details class="timeline-job-details">
+          <summary class="timeline-job-summary">
+            <div class="timeline-job-row">
+              <div class="timeline-job-info">
+                <h3 class="timeline-job-title">{job.title}</h3>
+                <p class="timeline-company">{job.company}</p>
+              </div>
+              <div class="timeline-job-meta">
+                <span class="timeline-job-period">{job.period}</span>
+                <p class="timeline-company-location">{job.location}</p>
+              </div>
+            </div>
+            <svg
+              class="timeline-expand-chevron"
+              xmlns="http://www.w3.org/2000/svg"
+              width="1em"
+              height="1em"
+              viewBox="0 0 24 24"
+            >
+              <path d="M0 0h24v24H0z" fill="none" />
+              <path
+                fill="currentColor"
+                d="M18.53 9.53a.75.75 0 0 0 0-1.06H5.47a.75.75 0 0 0 0 1.06l6 6a.75.75 0 0 0 1.06 0z"
+              />
+            </svg>
+          </summary>
+          <ul class="timeline-job-description">
+            {job.description.map((line) => (
+              <li class="timeline-jdescription-item">{line}</li>
+            ))}
+          </ul>
+        </details>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .timeline-job-description {
+    margin: 0;
+    padding: 10px;
+    list-style: disc;
+  }
+
+  .timeline-jdescription-item {
+    color: var(--color-muted);
+    font-size: var(--text-body-small);
+    line-height: 1.75;
+  }
+
+  /* Experience timeline */
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 18px;
+    align-items: stretch;
+  }
+
+  .timeline-job-details {
+    position: relative;
+    flex: 1;
+    margin-bottom: 18px;
+    padding-top: 5px;
+    padding-inline: 10px;
+    transition: background-color 0.5s ease;
+    border: 1px solid transparent;
+    border-radius: 5px;
+  }
+
+  .timeline-job-details[open] .timeline-job-description {
+    animation: fadeDown 250ms ease;
+  }
+
+  @keyframes fadeDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .timeline-job-summary {
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .timeline-job-details:hover {
+    background-color: var(--color-background-shadow);
+    border-color: var(--color-shadow);
+  }
+
+  .timeline-expand-chevron {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: scaleY(0);
+    color: var(--color-shadow);
+  }
+
+  .timeline-job-details:hover .timeline-expand-chevron {
+    transform: scaleY(1);
+  }
+
+  .timeline-job-details[open]:hover .timeline-expand-chevron {
+    transform: rotate(180deg) scale(1);
+  }
+
+  .timeline-item:last-child .timeline-job-details {
+    margin-bottom: 0;
+  }
+
+  .timeline-marker-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 8px;
+    margin-top: 5px;
+    margin-bottom: -5px;
+    flex-shrink: 0;
+  }
+
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-link);
+    margin-block: 7px;
+    flex-shrink: 0;
+  }
+
+  .timeline-item:not(:first-of-type) .timeline-dot {
+    background-color: var(--color-shadow);
+  }
+  .timeline-line {
+    flex: 1;
+    width: 1px;
+    background: var(--color-shadow);
+  }
+
+  .timeline-job-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .timeline-job-info {
+    flex: 1;
+  }
+
+  .timeline-job-meta {
+    width: auto;
+    text-align: right;
+    margin-inline: auto;
+  }
+
+  .timeline-job-title {
+    margin: 0 0 4px;
+  }
+
+  .timeline-job-period {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  .timeline-company {
+    color: var(--color-link);
+    font-size: var(--text-body-small);
+    font-weight: bold;
+    margin: 0 0 10px;
+  }
+
+  .timeline-company-location {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+    margin: 0 0 10px;
+  }
+
+  @media screen and (max-width: 640px) {
+    .timeline-job-row {
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .timeline-job-meta {
+      text-align: left;
+      width: 100%;
+    }
+  }
+</style>

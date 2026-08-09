@@ -1,0 +1,48 @@
+---
+import { social } from '../../config/social';
+---
+
+<div class="network">
+  <p class="network-description">
+    I'm focused on deepening my knowledge of networking and cybersecurity through hands-on labs,
+    CTFs, and personal projects. If you want to chat about cybersecurity, or anything else — feel
+    free to reach out!
+  </p>
+  <div class="contact-links">
+    {
+      social.map((socialLink) => (
+        <a class="contact-link" href={socialLink.url} target="_blank">
+          {socialLink.label} &nearr;
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .network-description {
+    font-size: var(--text-body-small);
+    color: var(--color-muted);
+    margin: 0;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 24px;
+  }
+
+  .contact-link {
+    color: var(--color-link);
+    text-decoration: none;
+    font-size: var(--text-body-small);
+    font-weight: 600;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-link:hover {
+    border-color: var(--color-link);
+  }
+</style>

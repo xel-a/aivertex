@@ -1,0 +1,41 @@
+---
+import { site } from '../../config/site';
+---
+
+<div class="introduciton">
+  <p class="eyebrow">Hello there! I am..</p>
+  <h1 class="page-hero">{site.author.alternateName}</h1>
+  <p class="lead">Learning. Building. Securing. One vertex at a time.</p>
+  <p class="intro-body">
+    I am {site.author.alternateName}, though I usually go by {site.author.name}. AI Vertex is where
+    I document what I'm building, breaking, and learning &mdash; a running record of my projects,
+    experiments, and lessons along the way. Based in Toronto, I usually spend my weekends building
+    something that probably didn't need to exist, playing video games, or dozing off.
+  </p>
+</div>
+
+<style>
+  .eyebrow {
+    font-size: var(--text-label);
+    color: var(--color-link);
+    letter-spacing: 3px;
+  }
+
+  .page-hero {
+    font-size: var(--text-display);
+    letter-spacing: -0.01em;
+    margin: 20px 0 20px;
+  }
+
+  .lead {
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .intro-body {
+    font-size: var(--text-body-small);
+    color: var(--color-muted);
+    margin: 0;
+  }
+</style>

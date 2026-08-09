@@ -1,0 +1,42 @@
+---
+import { projects } from '../../data/projects';
+import ArtifactCard from '../../components/about/ArtifactCard.astro';
+
+const projectLimit = 2;
+---
+
+<div class="artifacts">
+  {projects.map((project, i) => (i < projectLimit ? <ArtifactCard project={project} /> : null))}
+
+  <a href="/projects" class="view-all-artifacts">View all projects &nearr;</a>
+</div>
+
+<style>
+  .artifacts {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .view-all-artifacts {
+    text-decoration: none;
+    color: var(--color-link);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.25s ease;
+    width: fit-content;
+    margin-top: 20px;
+    font-size: var(--text-meta);
+    font-weight: bold;
+  }
+
+  .view-all-artifacts:hover {
+    border-color: var(--color-link);
+  }
+
+  @media (max-width: 640px) {
+    .artifacts {
+      grid-template-columns: 1fr;
+      align-items: stretch;
+    }
+  }
+</style>
