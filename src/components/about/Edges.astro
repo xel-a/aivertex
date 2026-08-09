@@ -47,10 +47,6 @@ import { skills } from '../../data/skills';
     border-bottom: 1px solid var(--color-shadow);
   }
 
-  .skill-details:last-of-type {
-    padding-bottom: 0;
-  }
-
   .skill-details[open] .plus-vertical {
     transform: rotate(90deg);
   }
@@ -71,8 +67,8 @@ import { skills } from '../../data/skills';
     padding-top: 0;
   }
 
-  .skill-details:last-of-type .skill-summary-content {
-    padding-bottom: 0;
+  .skill-details:last-of-type {
+    margin-bottom: 0;
   }
 
   .skill-summary-content .plus-vertical {
@@ -88,7 +84,7 @@ import { skills } from '../../data/skills';
   .skill-content-label {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 10px;
   }
 
   .tag-category {
