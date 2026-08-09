@@ -1,12 +1,17 @@
+type Repository = {
+  name: string;
+  url: string;
+};
+
 type ProjectLinks = {
-  repository?: string;
+  repository?: Repository;
   url?: string;
 };
 
 type ProjectService = {
   name: string;
   tags: string[];
-  repository?: string;
+  repository?: Repository;
   url?: string;
   model?: string;
   createdAt: string;
@@ -23,16 +28,19 @@ interface Project {
   createdAt: string;
 }
 
-export const projects: Project[] = [
+const projects: Project[] = [
   {
     title: 'AIVertex',
     slug: 'aivertex',
     description: 'Where all my work converges',
     category: 'Portfolio',
-    tags: ['astro', 'decap-cms', 'typescript', 'wrangler'],
+    tags: ['astro', 'typescript', 'decap-cms'],
     links: {
       url: 'https://aivertex.ca',
-      repository: 'https://github.com/xel-a/aivertex',
+      repository: {
+        name: 'GitHub',
+        url: 'https://github.com/xel-a/aivertex',
+      },
     },
     createdAt: '2026-07-23',
   },
@@ -43,7 +51,10 @@ export const projects: Project[] = [
     category: 'Finance',
     tags: ['docker', 'golang', 'grafana', 'postgresql'],
     links: {
-      repository: 'https://github.com/xel-a/fluxio',
+      repository: {
+        name: 'GitHub',
+        url: 'https://github.com/xel-a/fluxio',
+      },
     },
     createdAt: '2026-07-02',
   },
@@ -54,17 +65,25 @@ export const projects: Project[] = [
     category: 'Artificial Intelligence',
     tags: ['nextjs', 'prisma', 'react', 'tailwindcss', 'vercel'],
     links: {
-      repository: 'https://github.com/xel-a/thedoppelproject',
+      repository: {
+        name: 'GitHub',
+        url: 'https://github.com/xel-a/thedoppelproject',
+      },
       url: 'https://thedoppelproject.vercel.app',
     },
     services: [
       {
         name: 'Doppel Inferencer',
         tags: ['bert', 'python', 'web-scraping', 'cosine-similarity', 'vector-embeddings'],
-        repository: 'https://github.com/xel-a/doppel-model',
+        repository: {
+          name: 'GitHub',
+          url: 'https://github.com/xel-a/doppel-model',
+        },
         createdAt: '2024-04-22',
       },
     ],
     createdAt: '2023-12-02',
   },
 ];
+
+export { type Project, projects };
