@@ -1,10 +1,13 @@
 export function formatDate(
   date: Date | string,
-  month: Intl.DateTimeFormatOptions['month'] = 'long'
+  month: Intl.DateTimeFormatOptions['month'] = 'long',
+  isMonthYear: boolean = false
 ) {
-  return new Intl.DateTimeFormat('en-CA', {
+  const dateFormat: Intl.DateTimeFormatOptions = {
     month,
-    day: 'numeric',
     year: 'numeric',
-  }).format(new Date(date));
+    ...(isMonthYear ? {} : { day: 'numeric' }),
+  };
+
+  return new Intl.DateTimeFormat('en-CA', dateFormat).format(new Date(date));
 }
