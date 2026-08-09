@@ -13,7 +13,11 @@
     "astro": "astro",
     "generate-types": "wrangler types",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{astro,ts,tsx,js,jsx,mjs,json,jsonc,md,mdx,css,yml,yaml,html}": "prettier --write"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.1.4",
@@ -24,6 +28,8 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.3.0",
     "prettier": "^3.9.6",
     "prettier-plugin-astro": "^0.14.1",
     "typescript": "^6.0.3",
