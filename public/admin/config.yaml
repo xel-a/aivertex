@@ -1,142 +1,194 @@
+# local_backend: true
+
 backend:
   name: github
   repo: xel-a/aivertex
   branch: main
 
-media_folder: '/src/assets/images'
-public_folder: '/src/assets/images'
+media_folder: /src/assets/images
+public_folder: /src/assets/images
 
 collections:
-  - label: 'Blogs'
-    name: 'blogs'
-    folder: 'src/content/blogs'
+  - label: Blogs
+    name: blogs
+    folder: src/content/blogs
     create: true
     slug: '{{slug}}'
-    extension: 'md'
-    format: 'frontmatter'
+    extension: md
+    format: frontmatter
 
     fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: Title, name: title, widget: string, required: true }
 
-      - { label: 'Description', name: 'description', widget: 'text' }
+      - { label: Description, name: description, widget: text }
 
-      - { label: 'Publish Date', name: 'pubDate', widget: 'datetime' }
+      - { label: Publish Date, name: pubDate, widget: datetime }
 
-      - label: 'Author'
-        name: 'author'
-        widget: 'select'
+      - label: Author
+        name: author
+        widget: select
         options:
           - Axel Ignacio
+        default: Axel Ignacio
 
-      - label: 'Category'
-        name: 'category'
-        widget: 'select'
+      - label: Category
+        name: category
+        widget: select
         options:
-          - 'Cybersecurity'
-          - 'Programming'
-          - 'Finance'
-          - 'Design'
-          - 'Testing'
+          - Cybersecurity
+          - Programming
+          - Finance
+          - Design
+          - Testing
+        required: true
 
-      - { label: 'Tags', name: 'tags', widget: 'list' }
+      - { label: Tags, name: tags, widget: list, true }
 
-      - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
+      - { label: Draft, name: draft, widget: boolean, default: false }
 
-      - { label: 'Updated Date', name: 'updatedDate', widget: 'datetime' }
+      - { label: Updated Date, name: updatedDate, widget: datetime, required: false }
 
-      - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: Body, name: body, widget: markdown }
 
-  - label: 'Labs'
-    name: 'labs'
-    folder: 'src/content/labs'
+  - label: Labs
+    name: labs
+    folder: src/content/labs
+    create: true
+    path: '{{type}}s/{{slug}}'
+    extension: md
+    format: frontmatter
+
+    summary: '{{title}} - {{description}}'
+
+    sortable_fields:
+      - title
+      - type
+      - pubDate
+
+    view_filters:
+      - label: Experiments
+        field: type
+        pattern: experiment
+
+      - label: Notes
+        field: type
+        pattern: note
+
+      - label: Writeups
+        field: type
+        pattern: writeup
+
+      - label: Active
+        field: status
+        pattern: active
+
+      - label: Paused
+        field: status
+        pattern: paused
+
+      - label: Completed
+        field: status
+        pattern: completed
+
+    fields:
+      - { label: Title, name: title, widget: string, required: true }
+
+      - { label: Description, name: description, widget: text }
+
+      - { label: Publish Date, name: pubDate, widget: datetime }
+
+      - label: Type
+        name: type
+        widget: select
+        options:
+          - experiment
+          - note
+          - writeup
+        default: note
+
+      - label: Author
+        name: author
+        widget: select
+        options:
+          - Axel Ignacio
+        default: Axel Ignacio
+
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - Cybersecurity
+          - Programming
+          - Finance
+          - Design
+          - Testing
+        required: true
+
+      - { label: Tags, name: tags, widget: list, required: true }
+
+      - label: Status
+        name: status
+        widget: select
+        options:
+          - active
+          - paused
+          - completed
+        default: active
+
+      - { label: Draft, name: draft, widget: boolean, default: false }
+
+      - { label: Updated Date, name: updatedDate, widget: datetime, required: false }
+
+      - { label: Body, name: body, widget: markdown }
+
+  - label: Project
+    name: projects
+    folder: src/content/projects
     create: true
     slug: '{{slug}}'
-    extension: 'md'
-    format: 'frontmatter'
+    extension: md
+    format: frontmatter
 
     fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
+      - { label: Title, name: title, widget: string, required: true }
 
-      - { label: 'Description', name: 'description', widget: 'text' }
+      - { label: Description, name: description, widget: text }
 
-      - { label: 'Publish Date', name: 'pubDate', widget: 'datetime' }
-
-      - label: 'Author'
-        name: 'author'
-        widget: 'select'
+      - label: Author
+        name: author
+        widget: select
         options:
           - Axel Ignacio
+        default: Axel Ignacio
 
-      - label: 'Category'
-        name: 'category'
-        widget: 'select'
+      - label: Category
+        name: category
+        widget: select
         options:
-          - 'Cybersecurity'
-          - 'Programming'
-          - 'Finance'
-          - 'Design'
-          - 'Testing'
+          - Cybersecurity
+          - Artificial Intelligence
+          - Finance
+          - Portfolio
+        required: true
 
-      - { label: 'Tags', name: 'tags', widget: 'list' }
+      - { label: Tags, name: tags, widget: list, required: true }
 
-      - label: 'Status'
-        name: 'status'
-        widget: 'select'
-        options:
-          - 'active'
-          - 'paused'
-          - 'completed'
-        default: 'active'
+      - label: Links
+        name: links
+        widget: object
+        fields:
+          - label: Site
+            name: site
+            widget: string
+            required: false
 
-      - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
+          - label: Repository
+            name: repository
+            widget: string
+            required: false
 
-      - { label: 'Updated Date', name: 'updatedDate', widget: 'datetime' }
+      - { label: Created At, name: createdAt, widget: datetime }
 
-      - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: Draft, name: draft, widget: boolean, default: false }
 
-  - label: 'Project'
-    name: 'projects'
-    folder: 'src/content/projects'
-    create: true
-    slug: '{{slug}}'
-    extension: 'md'
-    format: 'frontmatter'
-
-    fields:
-      - { label: 'Title', name: 'title', widget: 'string' }
-
-      - { label: 'Description', name: 'description', widget: 'text' }
-
-      - label: 'Author'
-        name: 'author'
-        widget: 'select'
-        options:
-          - Axel Ignacio
-
-      - label: 'Category'
-        name: 'category'
-        widget: 'select'
-        options:
-          - 'Cybersecurity'
-          - 'Artificial Intelligence'
-          - 'Finance'
-
-      - { label: 'Tags', name: 'tags', widget: 'list' }
-
-      - label: 'Links'
-      - name: 'links'
-      - widget: 'object'
-      - fields:
-          - label: 'Site'
-          - name: 'site'
-          - widget: 'string'
-
-          - label: 'Repository'
-          - name: 'repository'
-          - widget: 'string'
-
-      - { label: 'Draft', name: 'draft', widget: 'boolean', default: false }
-
-      - { label: 'Updated Date', name: 'updatedDate', widget: 'datetime' }
-
-      - { label: 'Body', name: 'body', widget: 'markdown' }
+      - { label: Body, name: body, widget: markdown }
