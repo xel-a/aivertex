@@ -1,5 +1,6 @@
 ---
 import { type Project } from '../../data/projects';
+import { slugify } from '../../utils/strings';
 
 interface Props {
   project: Project;
@@ -14,7 +15,13 @@ const tagLimit = 4;
   <h3 class="title">{project.title}</h3>
   <p class="description">{project.description}</p>
   <div class="tags">
-    {project.tags.map((tag) => <p class="tag">{tag}</p>)}
+    {
+      project.tags.map((tag) => (
+        <a href={`/tags/${slugify(tag)}`} class="tag">
+          {tag}
+        </a>
+      ))
+    }
     {
       tagsLength - tagLimit > 0 ? (
         <span class="tag-excess">+ {tagsLength - tagLimit} more</span>
@@ -63,10 +70,6 @@ const tagLimit = 4;
   .tags {
     align-items: center;
     margin-block: 20px;
-  }
-
-  .tag {
-    line-height: 1.25;
   }
 
   .tag-excess {

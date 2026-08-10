@@ -1,5 +1,6 @@
 ---
 import { skills } from '../../data/skills';
+import { slugify } from '../../utils/strings';
 ---
 
 <div class="skill-content">
@@ -20,7 +21,7 @@ import { skills } from '../../data/skills';
         </summary>
         <div class="tags">
           {skill.tags.map((tag) => (
-            <a href={`/tags/${tag}`} class="tag">
+            <a href={`/tags/${slugify(tag)}`} class="tag">
               {tag}
             </a>
           ))}

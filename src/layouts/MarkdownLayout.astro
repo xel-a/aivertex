@@ -2,6 +2,7 @@
 import type { CollectionEntry } from 'astro:content';
 import Layout from './Layout.astro';
 import { getReadingTime } from '../utils/reading-time';
+import { slugify } from '../utils/strings';
 
 interface Props {
   frontmatter: CollectionEntry<'blog'>['data'];
@@ -33,7 +34,7 @@ const readingTime = getReadingTime(contentText);
     <section class="tags">
       {
         frontmatter.tags.map((tag: string) => (
-          <a class="tag" href={`tags/${tag}`}>
+          <a class="tag" href={`/tags/${slugify(tag)}`}>
             {tag}
           </a>
         ))
