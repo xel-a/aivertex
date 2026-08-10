@@ -34,7 +34,7 @@ const projects: Project[] = [
     slug: 'aivertex',
     description: 'Where all my work converges',
     category: 'Portfolio',
-    tags: ['astro', 'typescript', 'decap-cms'],
+    tags: ['Astro', 'TypeScript', 'Decap CMS'],
     links: {
       url: 'https://aivertex.ca',
       repository: {
@@ -49,7 +49,7 @@ const projects: Project[] = [
     slug: 'fluxio',
     description: 'A personal finance management system',
     category: 'Finance',
-    tags: ['docker', 'golang', 'grafana', 'postgresql'],
+    tags: ['Docker', 'Go', 'Grafana', 'PostgreSQL'],
     links: {
       repository: {
         name: 'GitHub',
@@ -63,7 +63,7 @@ const projects: Project[] = [
     slug: 'doppel',
     description: 'An online plagiarism checker using machine learning',
     category: 'Artificial Intelligence',
-    tags: ['nextjs', 'prisma', 'react', 'tailwindcss', 'vercel'],
+    tags: ['Next.js', 'Prisma', 'React', 'Tailwind CSS', 'Vercel'],
     links: {
       repository: {
         name: 'GitHub',
@@ -74,7 +74,7 @@ const projects: Project[] = [
     services: [
       {
         name: 'Doppel Inferencer',
-        tags: ['bert', 'python', 'web-scraping', 'cosine-similarity', 'vector-embeddings'],
+        tags: ['BERT', 'Python', 'Web Scraping', 'Cosine Similarity', 'Vector Embeddings'],
         repository: {
           name: 'GitHub',
           url: 'https://github.com/xel-a/doppel-model',
