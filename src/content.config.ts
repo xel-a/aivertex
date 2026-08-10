@@ -1,7 +1,7 @@
 import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
-import { authors, categories, status } from './config/content';
+import { authors, categories, labType, status } from './config/content';
 
 const contentPattern = '**/[^_]*.md';
 const common = {
@@ -32,6 +32,7 @@ const lab = defineCollection({
   }),
   schema: z.object({
     ...common,
+    type: z.enum(labType),
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     status: z.enum(status).optional(),
@@ -51,6 +52,7 @@ const projects = defineCollection({
         repository: z.url().optional(),
       })
       .optional(),
+    createdAt: z.date(),
   }),
 });
 
