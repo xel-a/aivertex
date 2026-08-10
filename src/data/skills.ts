@@ -1,6 +1,6 @@
 interface Skill {
-  label: String;
-  tags: String[];
+  label: string;
+  tags: string[];
 }
 
 export const skills = [
