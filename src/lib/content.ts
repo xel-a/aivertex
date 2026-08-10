@@ -1,8 +1,15 @@
 import { getCollection } from 'astro:content';
+import { traversalNodes } from '../data/current-traversal';
+import { milestones } from '../data/milestones';
+import { projects } from '../data/projects';
+import { skills } from '../data/skills';
+import { slugify } from '../utils/strings';
 
 export async function getAllContent() {
   const blogs = await getCollection('blog');
   const labs = await getCollection('lab');
+  const projects = await getCollection('projects');
+
   const content = [
     ...blogs.map((blog) => ({
       ...blog,
@@ -16,9 +23,57 @@ export async function getAllContent() {
       parent: 'lab',
       path: `/lab/${lab.id}`,
     })),
+    ...projects.map((project) => ({
+      ...project,
+      type: 'project',
+      parent: 'projects',
+      path: `/projects/${project.id}`,
+    })),
   ];
 
   return content;
+}
+
+export function getAllContentTags(allContent: any) {
+  const contentTags = allContent
+    .flatMap((post: any) => post.data.tags)
+    .map((tag: any) => ({ name: tag, slug: slugify(tag) }));
+
+  const traversalNodeTags = traversalNodes.flatMap((node) =>
+    node.topics.map((topic) => ({
+      name: topic.keyword,
+      slug: slugify(topic.keyword),
+    }))
+  );
+
+  const milestoneTags = milestones.flatMap((milestone) =>
+    milestone.tags.map((tag) => ({
+      name: tag,
+      slug: slugify(tag),
+    }))
+  );
+
+  const projectTags = projects.flatMap((project) =>
+    project.tags.map((tag) => ({
+      name: tag,
+      slug: slugify(tag),
+    }))
+  );
+
+  const skillTags = skills.flatMap((skill) =>
+    skill.tags.map((tag) => ({
+      name: tag,
+      slug: slugify(tag),
+    }))
+  );
+
+  return [
+    ...contentTags,
+    ...traversalNodeTags,
+    ...milestoneTags,
+    ...projectTags,
+    ...skillTags,
+  ].filter((tag, index, tags) => tags.findIndex((t) => t.slug === tag.slug) === index);
 }
 
 export async function getBlogPosts() {
