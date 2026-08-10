@@ -1,0 +1,174 @@
+---
+import { milestones } from '../../data/milestones';
+import { formatDate } from '../../utils/date';
+import { slugify } from '../../utils/strings';
+
+interface Props {
+  year: string;
+}
+
+const { year } = Astro.props;
+
+const filteredMilestones = milestones.filter((milestone) => milestone.date.slice(0, 4) === year);
+---
+
+{
+  filteredMilestones.map((milestone) => (
+    <div class="milestone">
+      <div class="milestone-heading">
+        <div class="milestone-info">
+          <h3 class="milestone-name">{milestone.name}</h3>
+          <div class="milestone-ptd">
+            <p class="milestone-type">{milestone.type}</p>
+            {milestone.provider ? <p class="milestone-provider">{milestone.provider}</p> : null}
+            {milestone.distinction ? (
+              <p class="milestone-distinction">{milestone.distinction}</p>
+            ) : null}
+          </div>
+        </div>
+        <div class="milestone-date-location">
+          <p class="milestone-date">{formatDate(milestone.date, 'short', true)}</p>
+          {milestone.location ? <p class="milestone-location">{milestone.location}</p> : null}
+        </div>
+      </div>
+      <div class="tags">
+        {milestone.tags.map((tag) => (
+          <a href={`/tags/${slugify(tag)}`} class="tag">
+            {tag}
+          </a>
+        ))}
+      </div>
+    </div>
+  ))
+}
+
+<style>
+  .milestone:not(:first-of-type) {
+    border-top: 1px solid var(--color-shadow);
+  }
+
+  .milestone:not(:last-of-type) {
+    margin-bottom: 30px;
+  }
+
+  .milestone-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .milestone-name {
+    margin-bottom: 0;
+  }
+
+  .milestone:first-of-type .milestone-name {
+    margin-top: 10px;
+  }
+
+  .milestone-date {
+    font-size: var(--text-meta);
+    color: var(--color-muted);
+    text-wrap: nowrap;
+    margin-bottom: 0;
+  }
+
+  .milestone-date-location {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .milestone-ptd {
+    display: flex;
+    gap: 10px;
+  }
+
+  .milestone-ptd > *:not(:last-of-type, :first-of-type)::after {
+    content: '•';
+    margin-left: 10px;
+  }
+
+  .milestone-ptd > * {
+    font-size: var(--text-body-small);
+    color: var(--color-muted);
+    margin-top: 10px;
+  }
+
+  .milestone-type {
+    font-weight: bold;
+  }
+
+  .milestone-type::after {
+    content: '—';
+    margin-left: 10px;
+  }
+
+  .milestone-provider {
+    font-style: italic;
+  }
+
+  .milestone-distinction {
+    font-weight: bold;
+  }
+
+  .milestone-location {
+    font-size: var(--text-meta);
+    color: var(--color-muted);
+    margin-top: 10px;
+  }
+
+  .tags {
+    margin-top: 10px;
+  }
+
+  @media screen and (max-width: 640px) {
+    .milestone-heading {
+      flex-direction: column;
+      align-items: unset;
+    }
+
+    .milestone-name {
+      margin-bottom: 10px;
+    }
+
+    .milestone-ptd {
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .milestone-ptd > * {
+      margin: 0;
+    }
+
+    .milestone-ptd > *:not(:last-of-type)::after {
+      content: '';
+    }
+
+    .milestone-ptd > *:not(:first-of-type)::before {
+      content: '•';
+      margin-right: 10px;
+    }
+
+    .milestone-date {
+      margin: unset;
+    }
+
+    .milestone-date-location {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tags {
+      margin-top: 0;
+    }
+
+    .tag {
+      flex: 1 1 auto;
+      text-align: center;
+    }
+  }
+</style>
