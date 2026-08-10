@@ -8,6 +8,7 @@ const common = {
   title: z.string(),
   description: z.string().optional(),
   author: z.enum(authors),
+  pubDate: z.coerce.date(),
   category: z.enum(categories),
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
@@ -20,7 +21,6 @@ const blog = defineCollection({
   }),
   schema: z.object({
     ...common,
-    pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
   }),
 });
@@ -33,7 +33,6 @@ const lab = defineCollection({
   schema: z.object({
     ...common,
     type: z.enum(labType),
-    pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     status: z.enum(status).optional(),
   }),
@@ -52,7 +51,6 @@ const projects = defineCollection({
         repository: z.url().optional(),
       })
       .optional(),
-    createdAt: z.date(),
   }),
 });
 

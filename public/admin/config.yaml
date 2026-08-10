@@ -154,6 +154,8 @@ collections:
 
       - { label: Description, name: description, widget: text }
 
+      - { label: Publish Date, name: pubDate, widget: datetime }
+
       - label: Author
         name: author
         widget: select
@@ -186,8 +188,6 @@ collections:
             name: repository
             widget: string
             required: false
-
-      - { label: Created At, name: createdAt, widget: datetime }
 
       - { label: Draft, name: draft, widget: boolean, default: false }
 
