@@ -1,7 +1,14 @@
 ---
 import { createNodesAndEdges } from '../../lib/graph-view-helper';
 
-const { rawNodes, rawEdges } = await createNodesAndEdges();
+interface Props {
+  variant: 'full' | 'compact';
+}
+
+const { variant } = Astro.props;
+
+const { rawNodes, rawEdges } =
+  variant === 'full' ? await createNodesAndEdges('full') : await createNodesAndEdges();
 ---
 
 <div class="graph-view">
@@ -554,8 +561,7 @@ const { rawNodes, rawEdges } = await createNodesAndEdges();
 
   .graph-label {
     fill: var(--color-muted);
-    font-size: 12px;
-    font-weight: 600;
+    font-size: var(--text-meta);
     pointer-events: none;
     user-select: none;
     transition:
