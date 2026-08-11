@@ -1,0 +1,138 @@
+---
+import { getAllContent, getAllContentTags } from '../../lib/content';
+
+import Layout from '../../layouts/Layout.astro';
+import { slugify } from '../../utils/strings';
+import Content from '../../components/tags/Content.astro';
+
+export async function getStaticPaths() {
+  const allContent = await getAllContent();
+
+  const contentTags = getAllContentTags(allContent);
+
+  return contentTags.map(({ name, slug }) => {
+    const filteredContent = allContent.filter(
+      (post) => post.data.tags.some((tag) => slugify(tag) === slug) && !post.data.draft
+    );
+
+    return {
+      params: { tag: slug },
+      props: {
+        posts: filteredContent,
+        tagName: name,
+      },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts, tagName } = Astro.props;
+
+const groupedPosts = Object.groupBy(posts, (post) => post.type);
+const groupLength = Object.keys(groupedPosts).length;
+---
+
+<Layout contentTitle={tagName}>
+  <main>
+    <section class="section intro">
+      <h1 class="title">{tagName}</h1>
+      <p class="description">Things related to — {tagName}</p>
+    </section>
+
+    <section class="section content-groups">
+      {
+        groupLength > 0 ? (
+          Object.entries(groupedPosts).map(([type, posts]) => (
+            <fieldset class="content-group">
+              <legend class="content-group-title">
+                <h2>
+                  {type.toUpperCase()}&MediumSpace; &middot; &MediumSpace;
+                  {String(posts?.length ?? 0).padStart(2, '0')}
+                </h2>
+              </legend>
+              <Content posts={posts} />
+            </fieldset>
+          ))
+        ) : (
+          <div class="fallback">
+            <h2 class="fallback-title">Nothing here yet.</h2>
+            <p class="fallback-description">
+              I haven't written about this topic yet, but there are other things to explore.
+            </p>
+          </div>
+        )
+      }
+    </section>
+
+    <section class="section">
+      <div class="links">
+        <a href="/tags" class="all-tags">Browse all topics &rarr;</a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+
+  .section:not(:first-of-type) {
+    margin-block: 40px;
+  }
+
+  .section:last-of-type {
+    margin-top: 80px;
+  }
+
+  .title {
+    font-size: var(--text-heading);
+    margin-block: 0;
+  }
+
+  .description {
+    font-size: var(--text-lead);
+    color: var(--color-muted);
+    margin-top: 10px;
+  }
+
+  .content-group {
+    border: 1px solid var(--color-shadow);
+    padding: 10px 20px 30px;
+    margin: 0;
+    background-color: var(--color-background-shadow);
+    border-radius: 10px;
+  }
+
+  .content-group-title {
+    padding: 0 10px;
+  }
+
+  .content-group-title > h2 {
+    margin: 0;
+  }
+
+  .content-group {
+    margin-bottom: 30px;
+  }
+
+  .fallback-title {
+    font-weight: bold;
+  }
+
+  .links {
+    margin-top: 30px;
+  }
+
+  .links a {
+    text-decoration: none;
+    color: var(--color-link);
+    border-bottom: 1px solid transparent;
+    transition: border-bottom 250ms ease;
+  }
+
+  .links a:hover {
+    border-color: var(--color-link);
+  }
+</style>

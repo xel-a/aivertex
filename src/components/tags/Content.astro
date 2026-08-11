@@ -1,0 +1,60 @@
+---
+const { posts } = Astro.props;
+---
+
+{
+  posts.map((post: any) => (
+    <div class="content">
+      <a href={post.path} class="title">
+        <h3>{post.data.title}</h3>
+      </a>
+      <p class="description">{post.data.description}</p>
+    </div>
+  ))
+}
+
+<style>
+  .content {
+    padding-block: 20px;
+  }
+
+  .content:first-of-type {
+    padding-top: 0;
+  }
+
+  .content:last-of-type {
+    padding-bottom: 0;
+  }
+
+  .content:not(:first-of-type) {
+    border-top: 1px solid var(--color-shadow);
+  }
+
+  .title {
+    display: block;
+    text-decoration: none;
+    width: fit-content;
+    color: var(--color-text);
+    font-size: var(--text-body);
+    font-weight: bold;
+    margin-top: 16px;
+    border-bottom: 1px solid transparent;
+    transition:
+      color 250ms ease,
+      border-color 250ms ease;
+  }
+
+  .title > h3 {
+    margin: 0;
+  }
+
+  .title:hover {
+    color: var(--color-link);
+    border-color: var(--color-link);
+  }
+
+  .description {
+    color: var(--color-muted);
+    font-size: var(--text-body);
+  }
+</style>
