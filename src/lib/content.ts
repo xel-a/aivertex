@@ -41,8 +41,8 @@ export function getAllContentTags(allContent: any) {
 
   const traversalNodeTags = traversalNodes.flatMap((node) =>
     node.topics.map((topic) => ({
-      name: topic.keyword,
-      slug: slugify(topic.keyword),
+      name: topic.name,
+      slug: slugify(topic.name),
     }))
   );
 

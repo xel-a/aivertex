@@ -67,21 +67,21 @@ const firstTraversalNode = traversalNodes[0];
                   <li>
                     <a
                       class="topic"
-                      href={`/tags/${slugify(topic.keyword)}`}
-                      title={topic.description}
+                      href={`/tags/${slugify(topic.name)}`}
                       data-started={topic.started}
                       data-completed={topic.completed}
                     >
-                      {topic.keyword}
-                      <span> &nearr;</span>
+                      {topic.name}
                     </a>
                   </li>
                 ))}
               </ul>
             </div>
             <div class="section node-timeframe">
-              <h4>Target</h4>
-              <p>Completion date: {formatDate(node.completionDate, 'short')}</p>
+              <h4>
+                Target &mdash;{' '}
+                <span class="target-date">{formatDate(node.completionDate, 'short')}</span>
+              </h4>
             </div>
           </div>
         );
@@ -116,7 +116,7 @@ const firstTraversalNode = traversalNodes[0];
 
   .node-subtitle {
     margin-top: 10px;
-    color: var(--color-link);
+    font-style: italic;
   }
 
   .traversal-node:not(:last-child) {
@@ -222,6 +222,10 @@ const firstTraversalNode = traversalNodes[0];
   .topic:hover {
     color: var(--color-link);
     font-weight: bold;
+  }
+
+  .target-date {
+    font-weight: lighter;
   }
 
   @media screen and (max-width: 768px) {
