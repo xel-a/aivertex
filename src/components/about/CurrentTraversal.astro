@@ -80,7 +80,9 @@ const firstTraversalNode = traversalNodes[0];
             <div class="section node-timeframe">
               <h4>
                 Target &mdash;{' '}
-                <span class="target-date">{formatDate(node.completionDate, 'short')}</span>
+                <span class="target-date">
+                  {formatDate({ date: node.completionDate, month: 'short' })}
+                </span>
               </h4>
             </div>
           </div>

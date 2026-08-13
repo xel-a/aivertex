@@ -27,7 +27,9 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
           </div>
         </div>
         <div class="milestone-date-location">
-          <p class="milestone-date">{formatDate(milestone.date, 'short', true)}</p>
+          <p class="milestone-date">
+            {formatDate({ date: milestone.date, month: 'short', isMonthYear: true })}
+          </p>
           {milestone.location ? <p class="milestone-location">{milestone.location}</p> : null}
         </div>
       </div>
