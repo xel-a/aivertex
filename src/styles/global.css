@@ -6,12 +6,13 @@
 
 :root {
   /* colors */
-  --color-text: #f5f7fa;
-  --color-background: #090a0c;
-  --color-background-shadow: #161920;
-  --color-link: #1d6bff;
-  --color-muted: #9aa1ad;
-  --color-shadow: #4b4b58;
+  --color-text: #f2f3f5;
+  --color-background: #15161b;
+  --color-surface: #191b22;
+  --color-link: #0057ff;
+  --color-muted: #8b93a3;
+  --color-tag: #171920;
+  --color-border: #292c35;
 
   /* fonts */
   --heading-font: 'Space Grotesk', sans-serif;
