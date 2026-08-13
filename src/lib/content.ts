@@ -34,6 +34,17 @@ export async function getAllContent() {
   return content;
 }
 
+export async function getAllLabContent() {
+  const labs = await getCollection('lab');
+
+  return [
+    ...labs.map((lab) => ({
+      ...lab,
+      path: `/lab/${lab.id}`,
+    })),
+  ];
+}
+
 export function getAllContentTags(allContent: any) {
   const contentTags = allContent
     .flatMap((post: any) => post.data.tags)
