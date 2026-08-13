@@ -1,12 +1,22 @@
-export function formatDate(
-  date: Date | string,
-  month: Intl.DateTimeFormatOptions['month'] = 'long',
-  isMonthYear: boolean = false
-) {
+interface FormatDateArgs {
+  date: Date | string;
+  month?: Intl.DateTimeFormatOptions['month'];
+  isMonthYear?: boolean;
+  isMonthDay?: boolean;
+  isYear?: boolean;
+}
+
+export function formatDate({
+  date,
+  month = 'long',
+  isMonthYear = false,
+  isMonthDay = false,
+  isYear = false,
+}: FormatDateArgs) {
   const dateFormat: Intl.DateTimeFormatOptions = {
-    month,
-    year: 'numeric',
-    ...(isMonthYear ? {} : { day: 'numeric' }),
+    ...(isYear ? {} : { month }),
+    ...(isMonthDay ? {} : { year: 'numeric' }),
+    ...(isMonthYear || isYear ? {} : { day: 'numeric' }),
   };
 
   return new Intl.DateTimeFormat('en-CA', dateFormat).format(new Date(date));
