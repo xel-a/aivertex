@@ -10,4 +10,4 @@ decap:
 	npx decap-server
 
 git-log:
-	git log --pretty=format:"%h%x09%an%x09%ad%x09%s" --date=short
+	git log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short
