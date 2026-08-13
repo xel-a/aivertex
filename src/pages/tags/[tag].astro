@@ -3,7 +3,7 @@ import { getAllContent, getAllContentTags } from '../../lib/content';
 
 import Layout from '../../layouts/Layout.astro';
 import { slugify } from '../../utils/strings';
-import Content from '../../components/tags/Content.astro';
+import Content from '../../components/common/Content.astro';
 
 export async function getStaticPaths() {
   const allContent = await getAllContent();
@@ -25,7 +25,7 @@ export async function getStaticPaths() {
   });
 }
 
-const { tag } = Astro.params;
+// const { tag } = Astro.params;
 const { posts, tagName } = Astro.props;
 
 const groupedPosts = Object.groupBy(posts, (post) => post.type);
@@ -42,17 +42,7 @@ const groupLength = Object.keys(groupedPosts).length;
     <section class="section content-groups">
       {
         groupLength > 0 ? (
-          Object.entries(groupedPosts).map(([type, posts]) => (
-            <fieldset class="content-group">
-              <legend class="content-group-title">
-                <h2>
-                  {type.toUpperCase()}&MediumSpace; &middot; &MediumSpace;
-                  {String(posts?.length ?? 0).padStart(2, '0')}
-                </h2>
-              </legend>
-              <Content posts={posts} />
-            </fieldset>
-          ))
+          Object.entries(groupedPosts).map(([type, posts]) => <Content type={type} posts={posts} />)
         ) : (
           <div class="fallback">
             <h2 class="fallback-title">Nothing here yet.</h2>
