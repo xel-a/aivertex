@@ -1,0 +1,43 @@
+---
+interface Props {
+  eyebrow: string;
+  hero: string;
+  lead?: string;
+  body?: string;
+}
+
+const { eyebrow, hero, lead, body } = Astro.props;
+---
+
+<div class="intro">
+  <p class="eyebrow">{eyebrow}</p>
+  <h1 class="page-hero">{hero}</h1>
+  <p class="lead">{lead}</p>
+  <p class="intro-body">{body}</p>
+</div>
+
+<style>
+  .eyebrow {
+    font-size: var(--text-label);
+    color: var(--color-link);
+    letter-spacing: 3px;
+  }
+
+  .page-hero {
+    font-size: var(--text-display);
+    letter-spacing: -0.01em;
+    margin: 20px 0 20px;
+  }
+
+  .lead {
+    font-size: var(--text-lead);
+    line-height: 1.6;
+    margin: 0 0 20px;
+  }
+
+  .intro-body {
+    font-size: var(--text-body-small);
+    color: var(--color-muted);
+    margin: 0;
+  }
+</style>
