@@ -115,5 +115,10 @@ export async function getTagIndexLength(tagName: string) {
 export async function getBlogPosts() {
   const blogs = await getCollection('blog', ({ data }) => !data.draft);
 
-  return blogs.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return blogs
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .map((blog) => ({
+      ...blog,
+      path: `/lab/${blog.id}`,
+    }));
 }
