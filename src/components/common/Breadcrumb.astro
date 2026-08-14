@@ -1,0 +1,54 @@
+---
+interface Props {
+  path: string;
+  current: string;
+}
+
+const { path, current } = Astro.props;
+const pathByParts = path ? path.split('/').filter((part) => part !== '') : [];
+---
+
+<section class="breadcrumb-navigation">
+  {
+    pathByParts.length > 0
+      ? pathByParts.slice(0, -1).map((part, index) => (
+          <div class="breadcrumb-part">
+            <a href={`/${pathByParts.slice(0, index + 1).join('/')}`} class="breadcrumb-part-title">
+              {part[0].toUpperCase() + part.slice(1)}
+            </a>
+            <span class="breadcrumb-separator"> / </span>
+          </div>
+        ))
+      : null
+  }
+  {(<span class="breadcrumb-current">{current}</span>)}
+</section>
+
+<style>
+  .breadcrumb-navigation {
+    display: flex;
+    gap: 10px;
+    font-size: var(--text-label);
+    margin-bottom: 30px;
+  }
+
+  .breadcrumb-part-title {
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 250ms ease;
+  }
+
+  .breadcrumb-part-title:hover {
+    border-color: var(--color-link);
+  }
+
+  .breadcrumb-separator {
+    margin-left: 10px;
+  }
+
+  .breadcrumb-current,
+  .breadcrumb-separator {
+    color: var(--color-muted);
+  }
+</style>
