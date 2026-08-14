@@ -17,10 +17,10 @@ const tagIndexLength = await getTagIndexLength(tag.name);
     <p class="tag-index-content-name">
       {tag.name}
     </p>
-    <p class="tag-index-content-length">
-      {tagIndexLength}
-      {tagIndexLength > 1 ? 'entries' : 'entry'}
-    </p>
+    <div class="tag-index-content-length">
+      <p>{tagIndexLength}</p>
+      <p>{tagIndexLength > 1 ? 'entries' : 'entry'}</p>
+    </div>
   </a>
 </div>
 
@@ -53,6 +53,8 @@ const tagIndexLength = await getTagIndexLength(tag.name);
   }
 
   .tag-index-content-length {
+    display: flex;
+    gap: 5px;
     color: var(--color-muted);
     font-size: var(--text-meta);
   }
