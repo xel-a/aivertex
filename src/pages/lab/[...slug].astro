@@ -1,0 +1,21 @@
+---
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+import { getAllLabContent } from '../../lib/content';
+import { render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const labEntries = await getAllLabContent();
+
+  return labEntries.map((lab) => ({
+    params: { slug: lab.id },
+    props: { lab },
+  }));
+}
+
+const { lab } = Astro.props;
+const { Content } = await render(lab);
+---
+
+<MarkdownLayout frontmatter={lab.data} body={lab.body} path={lab.path}>
+  <Content />
+</MarkdownLayout>
