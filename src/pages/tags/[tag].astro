@@ -4,10 +4,10 @@ import { getAllContent, getAllContentTags } from '../../lib/content';
 import Layout from '../../layouts/Layout.astro';
 import { slugify } from '../../utils/strings';
 import Content from '../../components/common/Content.astro';
+import Breadcrumb from '../../components/common/Breadcrumb.astro';
 
 export async function getStaticPaths() {
   const allContent = await getAllContent();
-
   const contentTags = getAllContentTags(allContent);
 
   return contentTags.map(({ name, slug }) => {
@@ -34,6 +34,7 @@ const groupLength = Object.keys(groupedPosts).length;
 
 <Layout contentTitle={tagName}>
   <main>
+    <Breadcrumb path={`/tags/${tagName}`} current={tagName} />
     <section class="section intro">
       <h1 class="title">{tagName}</h1>
       <p class="description">Things related to — {tagName}</p>
@@ -88,10 +89,10 @@ const groupLength = Object.keys(groupedPosts).length;
   }
 
   .content-group {
-    border: 1px solid var(--color-shadow);
     padding: 10px 20px 30px;
     margin: 0;
-    background-color: var(--color-background-shadow);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 10px;
   }
 
