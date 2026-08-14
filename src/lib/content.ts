@@ -45,7 +45,9 @@ export async function getAllLabContent() {
   ];
 }
 
-export function getAllContentTags(allContent: any) {
+export function getAllContentTags(contents: any) {
+  const allContent = contents;
+
   const contentTags = allContent
     .flatMap((post: any) => post.data.tags)
     .map((tag: any) => ({ name: tag, slug: slugify(tag) }));
@@ -78,13 +80,36 @@ export function getAllContentTags(allContent: any) {
     }))
   );
 
-  return [
+  const tags = [
     ...contentTags,
     ...traversalNodeTags,
     ...milestoneTags,
     ...projectTags,
     ...skillTags,
-  ].filter((tag, index, tags) => tags.findIndex((t) => t.slug === tag.slug) === index);
+  ];
+
+  return [...new Map(tags.map((tag) => [tag.slug, tag])).values()];
+}
+
+export async function getAllContentTagsWithPosts() {
+  const allContent = await getAllContent();
+
+  const tags = allContent
+    .flatMap((post: any) => post.data.tags)
+    .map((tag: any) => ({
+      name: tag,
+      slug: slugify(tag),
+    }));
+
+  return [...new Map(tags.map((tag) => [tag.slug, tag])).values()];
+}
+
+export async function getTagIndexLength(tagName: string) {
+  const allContent = await getAllContent();
+
+  return allContent.filter((content) =>
+    content.data.tags.some((tag) => tag.toLowerCase() === tagName.toLowerCase())
+  ).length;
 }
 
 export async function getBlogPosts() {
