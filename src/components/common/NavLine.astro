@@ -145,7 +145,7 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
     top: 50%;
     transform: translateY(-50%);
     height: 1px;
-    background: var(--color-shadow);
+    background: var(--color-border);
   }
 
   .point {
@@ -155,7 +155,7 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: var(--color-shadow);
+    background: var(--color-border);
     transform: translate(-50%, -50%);
     z-index: 1;
     transition:
@@ -180,7 +180,7 @@ const cssVars = Object.fromEntries(points.map((p) => [`pos-${p.id}`, `${p.x}%`])
   }
 
   .indicator.dimmed {
-    background: var(--color-shadow);
+    background: var(--color-border);
   }
 
   .hover-dot {
