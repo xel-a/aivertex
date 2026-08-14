@@ -1,0 +1,37 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Intro from '../../components/common/Intro.astro';
+import { getAllLabContent } from '../../lib/content';
+import { labType } from '../../config/content';
+import Content from '../../components/common/Content.astro';
+
+const labs = await getAllLabContent();
+---
+
+<Layout pageId="lab">
+  <main>
+    <section class="section intro">
+      <Intro
+        eyebrow="Things I'm exploring, making, and documenting."
+        hero="LAB"
+        lead="A place to figure things out."
+        body="Experiments, prototypes, notes, and things I'm curious enough to investigate."
+      />
+    </section>
+
+    {
+      labType.map((type) => (
+        <section class="section lab-content">
+          <Content type={type} posts={labs} isLabContent={true} />
+        </section>
+      ))
+    }
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Intro from '../../components/common/Intro.astro';
+---
+
+<Layout pageId="projects">
+  <main>
+    <section class="intro">
+      <Intro
+        eyebrow="Things I've built."
+        hero="PROJECTS"
+        lead="A place where ideas take shape."
+        body="Projects, tools, and systems I've built while solving problems and exploring new ideas."
+      />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>

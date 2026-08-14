@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Intro from '../../components/common/Intro.astro';
+---
+
+<Layout pageId="blogs">
+  <main>
+    <section class="intro">
+      <Intro
+        eyebrow="Things I'm thinking about."
+        hero="BLOGS"
+        lead="A place to think out loud."
+        body="Notes, observations, and ideas from whatever I'm currently trying to understand."
+      />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>
