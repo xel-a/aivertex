@@ -1,0 +1,29 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Intro from '../../components/common/Intro.astro';
+import TagIndex from '../../components/tags/TagIndex.astro';
+---
+
+<Layout>
+  <main>
+    <section class="section intro">
+      <Intro
+        eyebrow="Everything in one place."
+        hero="TAGS"
+        lead="An index of the topics I explore."
+        body="A collection of tags that makes it easy to browse related ideas, projects, and notes."
+      />
+    </section>
+
+    <section class="index">
+      <TagIndex />
+    </section>
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>
