@@ -15,6 +15,6 @@ const { blog } = Astro.props;
 const { Content } = await render(blog);
 ---
 
-<MarkdownLayout frontmatter={blog.data} body={blog.body}>
+<MarkdownLayout frontmatter={blog.data} body={blog.body} path={blog.path}>
   <Content />
 </MarkdownLayout>
