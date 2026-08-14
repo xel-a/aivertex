@@ -3,13 +3,21 @@ import type { CollectionEntry } from 'astro:content';
 import Layout from './Layout.astro';
 import { getReadingTime } from '../utils/reading-time';
 import { slugify } from '../utils/strings';
+import Breadcrumb from '../components/common/Breadcrumb.astro';
 
 interface Props {
-  frontmatter: CollectionEntry<'blog'>['data'];
-  body: CollectionEntry<'blog'>['body'];
+  frontmatter:
+    | CollectionEntry<'blog'>['data']
+    | CollectionEntry<'lab'>['data']
+    | CollectionEntry<'projects'>['data'];
+  body:
+    | CollectionEntry<'blog'>['body']
+    | CollectionEntry<'lab'>['body']
+    | CollectionEntry<'projects'>['body'];
+  path: string;
 }
 
-const { frontmatter, body } = Astro.props;
+const { frontmatter, body, path } = Astro.props;
 
 const contentText = body?.trim().split(/\s+/).join(' ')!;
 const readingTime = getReadingTime(contentText);
@@ -17,6 +25,7 @@ const readingTime = getReadingTime(contentText);
 
 <Layout contentTitle={frontmatter.title}>
   <article class="content">
+    <Breadcrumb path={path} current={frontmatter.title} />
     <section class="meta">
       <p class="meta-content">
         {
