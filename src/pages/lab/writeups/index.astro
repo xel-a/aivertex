@@ -1,0 +1,24 @@
+---
+import Breadcrumb from '../../../components/common/Breadcrumb.astro';
+import Intro from '../../../components/common/Intro.astro';
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout>
+  <main>
+    <Breadcrumb path="lab/writeups" current="Writeups" />
+    <Intro
+      eyebrow="Solutions, explained."
+      hero="WRITEUPS"
+      lead="A place where findings take shape."
+      body="Solutions, discoveries, and findings worth sharing."
+    />
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>

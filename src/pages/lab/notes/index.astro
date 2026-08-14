@@ -1,0 +1,24 @@
+---
+import Breadcrumb from '../../../components/common/Breadcrumb.astro';
+import Intro from '../../../components/common/Intro.astro';
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout>
+  <main>
+    <Breadcrumb path="lab/notes" current="Notes" />
+    <Intro
+      eyebrow="Thoughts, considered."
+      hero="NOTES"
+      lead="A place where ideas are expressed."
+      body="Thoughts, opinions, and observations worth putting into words."
+    />
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>

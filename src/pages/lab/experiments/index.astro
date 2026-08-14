@@ -1,0 +1,24 @@
+---
+import Breadcrumb from '../../../components/common/Breadcrumb.astro';
+import Intro from '../../../components/common/Intro.astro';
+import Layout from '../../../layouts/Layout.astro';
+---
+
+<Layout>
+  <main>
+    <Breadcrumb path="lab/experiments" current="Experiments" />
+    <Intro
+      eyebrow="Ideas, explored."
+      hero="EXPERIMENTS"
+      lead="A place to follow the rabbit hole."
+      body="Theories, observations, and questions worth investigating."
+    />
+  </main>
+</Layout>
+
+<style>
+  main {
+    width: min(768px, 100%);
+    margin: 0 auto;
+  }
+</style>
