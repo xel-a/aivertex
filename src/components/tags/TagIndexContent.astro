@@ -1,0 +1,59 @@
+---
+import { getTagIndexLength } from '../../lib/content';
+
+interface Props {
+  tag: {
+    name: string;
+    slug: string;
+  };
+}
+
+const { tag } = Astro.props;
+const tagIndexLength = await getTagIndexLength(tag.name);
+---
+
+<div class="tag-index-content">
+  <a href={`/tags/${tag.slug}`} class="tag-index-content-info">
+    <p class="tag-index-content-name">
+      {tag.name}
+    </p>
+    <p class="tag-index-content-length">
+      {tagIndexLength}
+      {tagIndexLength > 1 ? 'entries' : 'entry'}
+    </p>
+  </a>
+</div>
+
+<style>
+  .tag-index-content {
+    cursor: pointer;
+  }
+
+  .tag-index-content-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-decoration: none;
+    padding-inline: 10px;
+    background-color: var(--color-surface);
+    box-shadow: 0 3px 4px rgba(0, 0, 0, 0.35);
+    border-radius: 10px;
+    outline: 1px solid transparent;
+    transition: outline 250ms ease;
+  }
+
+  .tag-index-content:hover .tag-index-content-info {
+    outline-color: var(--color-link);
+  }
+
+  .tag-index-content-name,
+  .tag-index-content-length {
+    color: var(--color-link);
+    font-size: var(--text-body-small);
+  }
+
+  .tag-index-content-length {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+  }
+</style>

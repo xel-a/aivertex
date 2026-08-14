@@ -1,0 +1,48 @@
+---
+import { getAllContentTagsWithPosts } from '../../lib/content';
+import TagIndexContent from './TagIndexContent.astro';
+
+const tags = await getAllContentTagsWithPosts();
+const letterIndices = [...new Set(tags.map((tag) => tag.name[0].toLowerCase()).sort())];
+const groupedTags = letterIndices.map((letter) => ({
+  letter,
+  tags: tags.filter((tag) => tag.name.toLowerCase().startsWith(letter)),
+}));
+---
+
+{
+  groupedTags.map(({ letter, tags }) => (
+    <div class="tag-index">
+      <h2>{letter.toUpperCase()}</h2>
+      <div class="tag-index-content">
+        {tags.map((tag) => (
+          <TagIndexContent tag={tag} />
+        ))}
+      </div>
+    </div>
+  ))
+}
+
+<style>
+  .tag-index-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+
+  .tag-index {
+    margin-block: 40px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .tag-index-content {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    .tag-index-content {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
