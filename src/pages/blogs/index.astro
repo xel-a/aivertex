@@ -1,6 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Intro from '../../components/common/Intro.astro';
+import Content from '../../components/common/Content.astro';
+import { getBlogPosts } from '../../lib/content';
+
+const blogPosts = await getBlogPosts();
 ---
 
 <Layout pageId="blogs">
@@ -13,6 +17,8 @@ import Intro from '../../components/common/Intro.astro';
         body="Notes, observations, and ideas from whatever I'm currently trying to understand."
       />
     </section>
+
+    <Content posts={blogPosts} showContentType={false} />
   </main>
 </Layout>
 

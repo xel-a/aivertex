@@ -27,9 +27,6 @@ export async function getStaticPaths() {
 
 // const { tag } = Astro.params;
 const { posts, tagName } = Astro.props;
-
-const groupedPosts = Object.groupBy(posts, (post) => post.type);
-const groupLength = Object.keys(groupedPosts).length;
 ---
 
 <Layout contentTitle={tagName}>
@@ -42,8 +39,8 @@ const groupLength = Object.keys(groupedPosts).length;
 
     <section class="section content-groups">
       {
-        groupLength > 0 ? (
-          Object.entries(groupedPosts).map(([type, posts]) => <Content type={type} posts={posts} />)
+        posts.length > 0 ? (
+          <Content posts={posts} showContentType={true} />
         ) : (
           <div class="fallback">
             <h2 class="fallback-title">Nothing here yet.</h2>

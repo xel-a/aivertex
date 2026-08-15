@@ -1,11 +1,10 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import Intro from '../../components/common/Intro.astro';
-import { getAllLabContent } from '../../lib/content';
-import { labType } from '../../config/content';
+import { getLabPosts } from '../../lib/content';
 import Content from '../../components/common/Content.astro';
 
-const labs = await getAllLabContent();
+const labs = await getLabPosts();
 ---
 
 <Layout pageId="lab">
@@ -19,13 +18,7 @@ const labs = await getAllLabContent();
       />
     </section>
 
-    {
-      labType.map((type) => (
-        <section class="section lab-content">
-          <Content type={type} posts={labs} isLabContent={true} />
-        </section>
-      ))
-    }
+    <Content posts={labs} showContentType={true} />
   </main>
 </Layout>
 
