@@ -119,6 +119,6 @@ export async function getBlogPosts() {
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .map((blog) => ({
       ...blog,
-      path: `/lab/${blog.id}`,
+      path: `/blogs/${blog.id}`,
     }));
 }
