@@ -3,34 +3,26 @@ import { formatDate } from '../../utils/date';
 import { padContentLength } from '../../utils/strings';
 
 interface Props {
-  type: string;
   posts: any;
-  isLabContent?: boolean;
+  showContentType: boolean;
 }
 
-const { type, posts, isLabContent } = Astro.props;
-const filteredPosts = posts.filter((post: any) =>
-  isLabContent ? post.data.type === type : post.type === type
-);
+const { posts, showContentType } = Astro.props;
 const postsByYear = Object.entries(
-  Object.groupBy(filteredPosts, (post: any) =>
-    formatDate({ date: post.data.pubDate, isYear: true })
-  )
+  Object.groupBy(posts, (post: any) => formatDate({ date: post.data.pubDate, isYear: true }))
 ).sort(([yearA], [yearB]) => yearB.localeCompare(yearA));
 ---
 
 {
-  postsByYear.length > 0 ? (
-    <fieldset class="content-group-type">
-      <legend class="content-group-type-title">
-        <h2>{type.toUpperCase()}</h2>
-      </legend>
-      {postsByYear.map(([year, posts]: [string, any]) => (
-        <div class="content-group-year">
-          <h3 class="content-group-year-title">
-            {year} &nbsp; &middot; &nbsp {padContentLength(posts.length)}
-          </h3>
-          {posts.map((post: any) => (
+  postsByYear.length > 0
+    ? postsByYear.map(([year, groupedPosts]) => (
+        <fieldset class="content-group">
+          <legend>
+            <h2 class="content-group-title">
+              <span>{year}</span> &nbsp; &middot; &nbsp; {padContentLength(groupedPosts!.length)}
+            </h2>
+          </legend>
+          {groupedPosts!.map((post: any) => (
             <a href={post.path} class="content">
               <div class="content-info">
                 <p class="content-date">
@@ -38,44 +30,34 @@ const postsByYear = Object.entries(
                 </p>
                 <p class="content-title">{post.data.title}</p>
               </div>
+              {showContentType ? (
+                <p class="content-type">&bull; {post.data.type || post.type}</p>
+              ) : null}
             </a>
           ))}
-        </div>
-      ))}
-    </fieldset>
-  ) : null
+        </fieldset>
+      ))
+    : null
 }
 
 <style>
-  .content-group-type {
+  .content-group {
     border: 1px solid var(--color-border);
     border-inline: none;
     margin-top: 40px;
   }
 
-  .content-group-type:not(:first-of-type) {
+  .content-group:not(:first-of-type) {
     margin-top: 60px;
   }
 
-  .content-group-type:last-of-type {
+  .content-group:last-of-type {
     margin-bottom: 60px;
   }
 
-  .content-group-type-title h2 {
+  .content-group-title {
     font-size: var(--text-title);
     margin: 0;
-  }
-
-  .content-group-year:not(:last-of-type) {
-    margin-bottom: 30px;
-  }
-
-  .content-group-year-title {
-    margin: 0 0 10px;
-  }
-
-  .content {
-    padding-inline: 10px;
   }
 
   .content-info {
@@ -86,10 +68,12 @@ const postsByYear = Object.entries(
 
   .content {
     text-decoration: none;
-    display: block;
+    display: flex;
+    justify-content: space-between;
     font-size: var(--text-body-small);
     border-radius: 5px;
     transition: background-color 250ms ease;
+    padding-inline: 10px;
   }
 
   .content p {
@@ -113,6 +97,13 @@ const postsByYear = Object.entries(
       text-decoration-color 250ms ease;
   }
 
+  .content-type {
+    font-size: var(--text-label);
+    color: var(--color-muted);
+    text-align: left;
+    min-width: 90px;
+  }
+
   .content:hover {
     background-color: var(--color-surface);
   }
@@ -131,6 +122,10 @@ const postsByYear = Object.entries(
       flex-direction: column;
       gap: 0;
       align-items: unset;
+    }
+
+    .content-type {
+      display: none;
     }
   }
 </style>
