@@ -34,17 +34,6 @@ export async function getAllContent() {
   return content;
 }
 
-export async function getAllLabContent() {
-  const labs = await getCollection('lab');
-
-  return [
-    ...labs.map((lab) => ({
-      ...lab,
-      path: `/lab/${lab.id}`,
-    })),
-  ];
-}
-
 export function getAllContentTags(contents: any) {
   const allContent = contents;
 
@@ -121,4 +110,15 @@ export async function getBlogPosts() {
       ...blog,
       path: `/blogs/${blog.id}`,
     }));
+}
+
+export async function getLabPosts() {
+  const labs = await getCollection('lab');
+
+  return [
+    ...labs.map((lab) => ({
+      ...lab,
+      path: `/lab/${lab.id}`,
+    })),
+  ];
 }
