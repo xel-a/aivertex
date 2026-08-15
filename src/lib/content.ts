@@ -108,6 +108,7 @@ export async function getBlogPosts() {
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .map((blog) => ({
       ...blog,
+      type: 'blog',
       path: `/blogs/${blog.id}`,
     }));
 }
@@ -118,6 +119,7 @@ export async function getLabPosts() {
   return [
     ...labs.map((lab) => ({
       ...lab,
+      type: 'lab',
       path: `/lab/${lab.id}`,
     })),
   ];
