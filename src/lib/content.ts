@@ -31,7 +31,7 @@ export async function getAllContent() {
     })),
   ];
 
-  return content;
+  return content.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
 export function getAllContentTags(contents: any) {
