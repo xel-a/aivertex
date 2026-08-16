@@ -1,8 +1,157 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import GraphView from '../components/home/GraphView.astro';
 import HomepageHero from '../components/home/HomepageHero.astro';
+import { getAllContent } from '../lib/content';
+import ContentItem from '../components/common/ContentItem.astro';
+
+const posts = (await getAllContent()).slice(0, 3);
 ---
 
 <Layout pageId="home">
-  <HomepageHero />
+  <main>
+    <div class="main-content">
+      <HomepageHero />
+      <section class="section">
+        <h2 class="section-title">A brief history of <a href="/about">me</a></h2>
+        <ul class="brief">
+          <li class="brief-content">
+            <p class="date">2014 - 2020</p>
+            <p class="description">
+              A consistent honor student with plenty of hobbies: badminton, chess, guitar, video
+              games, and art. Life felt simple back then, before college.
+            </p>
+          </li>
+          <li class="brief-content">
+            <p class="date">2020 - 2024</p>
+            <p class="description">
+              Earned a degree in Computer Science, participated in several hackathons, attended a
+              Capture the flag (CTF) event, completed two internships (first as a developer, then in
+              InfraSecOps), and worked hard to graduate with Latin honors.
+            </p>
+          </li>
+          <li class="brief-content">
+            <p class="date">2025</p>
+            <p class="description">
+              I moved from the Philippines to Canada with my father's support. With no connections
+              and little idea of what to do next, I struggled to find my footing. Somewhere along
+              the way, I got burned out.
+            </p>
+          </li>
+
+          <li class="brief-content">
+            <p class="date">2026 - present</p>
+            <p class="description">
+              Currently working as a cook at a local KFC. Surprisingly, this became the push I
+              needed to rediscover my curiosity and start learning again. Now, I'm studying and
+              working toward a career in cybersecurity.
+            </p>
+          </li>
+        </ul>
+      </section>
+      <section class="section">
+        <h2 class="section-title">What I'm currently doing</h2>
+        <ul class="section-content">
+          <li>
+            Studying for <a href="/about#current-traversal">SC-200 certification</a> using a voucher from
+            Microsoft AI Skills Fest.
+          </li>
+          <li>Cooking chicken at KFC in the morning, building my portfolio website at night.</li>
+          <li>Playing video games to stay sane.</li>
+          <li>
+            Listening to <a
+              href="https://music.youtube.com/playlist?list=OLAK5uy_m-gtPajGgyMQQeEjgJ2XAiXTBR-HiDb_o"
+              target="_blank">someone</a
+            > who knows how to make a guitar cry.
+          </li>
+          <li>Still chasing that first tech job.</li>
+        </ul>
+      </section>
+      <section class="section">
+        <h2 class="section-title new-posts">What's new</h2>
+        {posts.map((post) => <ContentItem post={post} showContentType={true} />)}
+      </section>
+    </div>
+    <aside class="graph">
+      <GraphView variant="compact" />
+    </aside>
+  </main>
 </Layout>
+
+<style>
+  main {
+    display: grid;
+    grid-template-columns: 1fr 480px;
+    margin-bottom: 40px;
+    gap: 20px;
+    align-items: start;
+  }
+
+  .brief {
+    padding: 0;
+    list-style: none;
+  }
+
+  .brief-content {
+    display: flex;
+    align-items: start;
+    gap: 20px;
+  }
+
+  .brief-content .date {
+    color: var(--color-muted);
+    font-size: var(--text-meta);
+    min-width: 90px;
+    margin-top: 16px;
+  }
+
+  .graph {
+    position: sticky;
+    top: 100px;
+  }
+
+  .section:not(:last-of-type) {
+    margin-bottom: 40px;
+  }
+
+  .section-content > * {
+    line-height: 1.75;
+  }
+
+  a {
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+
+  a:hover {
+    border-color: var(--color-link);
+  }
+
+  @media screen and (max-width: 768px) {
+    main {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    .section:first-of-type {
+      margin-top: 60px;
+    }
+
+    .brief-content {
+      flex-direction: column;
+    }
+
+    .brief-content:not(:last-of-type) {
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .brief-content .date {
+      margin-bottom: 0;
+    }
+
+    .brief-content .description {
+      margin-top: 0;
+    }
+  }
+</style>
