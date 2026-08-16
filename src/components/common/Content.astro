@@ -1,6 +1,7 @@
 ---
 import { formatDate } from '../../utils/date';
 import { padContentLength } from '../../utils/strings';
+import ContentItem from './ContentItem.astro';
 
 interface Props {
   posts: any;
@@ -23,17 +24,7 @@ const postsByYear = Object.entries(
             </h2>
           </legend>
           {groupedPosts!.map((post: any) => (
-            <a href={post.path} class="content">
-              <div class="content-info">
-                <p class="content-date">
-                  {formatDate({ date: post.data.pubDate, isMonthDay: true })}
-                </p>
-                <p class="content-title">{post.data.title}</p>
-              </div>
-              {showContentType ? (
-                <p class="content-type">&bull; {post.data.type || post.type}</p>
-              ) : null}
-            </a>
+            <ContentItem post={post} showContentType={showContentType} />
           ))}
         </fieldset>
       ))
@@ -58,74 +49,5 @@ const postsByYear = Object.entries(
   .content-group-title {
     font-size: var(--text-title);
     margin: 0;
-  }
-
-  .content-info {
-    display: flex;
-    gap: 30px;
-    align-items: center;
-  }
-
-  .content {
-    text-decoration: none;
-    display: flex;
-    justify-content: space-between;
-    font-size: var(--text-body-small);
-    border-radius: 5px;
-    transition: background-color 250ms ease;
-    padding-inline: 10px;
-  }
-
-  .content p {
-    margin-block: 5px;
-    cursor: pointer;
-  }
-
-  .content-date {
-    color: var(--color-muted);
-    transition: color 250ms ease;
-  }
-
-  .content-title {
-    flex: 1;
-    width: fit-content;
-    color: var(--color-text);
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    transition:
-      color 250ms ease,
-      text-decoration-color 250ms ease;
-  }
-
-  .content-type {
-    font-size: var(--text-label);
-    color: var(--color-muted);
-    text-align: left;
-    min-width: 90px;
-  }
-
-  .content:hover {
-    background-color: var(--color-surface);
-  }
-
-  .content:hover .content-date {
-    color: var(--color-text);
-  }
-
-  .content:hover .content-title {
-    color: var(--color-link);
-    text-decoration-color: var(--color-link);
-  }
-
-  @media screen and (max-width: 768px) {
-    .content-info {
-      flex-direction: column;
-      gap: 0;
-      align-items: unset;
-    }
-
-    .content-type {
-      display: none;
-    }
   }
 </style>
