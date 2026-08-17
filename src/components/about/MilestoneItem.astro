@@ -9,7 +9,9 @@ interface Props {
 
 const { year } = Astro.props;
 
-const filteredMilestones = milestones.filter((milestone) => milestone.date.slice(0, 4) === year);
+const filteredMilestones = milestones
+  .filter((milestone) => milestone.date.slice(0, 4) === year)
+  .sort((a, b) => b.date.localeCompare(a.date));
 ---
 
 {
@@ -23,6 +25,11 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
             {milestone.provider ? <p class="milestone-provider">{milestone.provider}</p> : null}
             {milestone.distinction ? (
               <p class="milestone-distinction">{milestone.distinction}</p>
+            ) : null}
+            {milestone.url ? (
+              <a href={milestone.url} class="milestone-url" target="_blank">
+                Verify Certificate
+              </a>
             ) : null}
           </div>
         </div>
@@ -45,6 +52,16 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
 }
 
 <style>
+  .milestone-ptd > .milestone-url {
+    text-decoration: underline;
+    transition: color 250ms ease;
+    margin-left: 10px;
+  }
+
+  .milestone-ptd > .milestone-url:hover {
+    color: var(--color-link);
+  }
+
   .milestone:not(:first-of-type) {
     border-top: 1px solid var(--color-border);
   }
@@ -56,7 +73,7 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
   .milestone-heading {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: start;
   }
 
   .milestone-name {
@@ -71,13 +88,14 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
     font-size: var(--text-meta);
     color: var(--color-muted);
     text-wrap: nowrap;
-    margin-bottom: 0;
+    margin-block: 0;
   }
 
   .milestone-date-location {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    margin-top: 18.72px;
   }
 
   .milestone-ptd {
@@ -138,7 +156,8 @@ const filteredMilestones = milestones.filter((milestone) => milestone.date.slice
       gap: 10px;
     }
 
-    .milestone-ptd > * {
+    .milestone-ptd > *,
+    .milestone-ptd > .milestone-url {
       margin: 0;
     }
 

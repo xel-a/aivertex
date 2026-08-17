@@ -11,6 +11,19 @@ interface Milestone {
 
 const milestones: Milestone[] = [
   {
+    name: 'Google Cybersecurity Professional Certificate',
+    type: 'Certification',
+    date: '2024-08-17',
+    tags: [
+      'NIST Cybersecurity Framework',
+      'Risk Management Framework',
+      'Security Information and Event Management',
+      'Intrusion Detection System',
+    ],
+    provider: 'Coursera',
+    url: 'https://www.credly.com/badges/53ea3445-c8c1-4cd2-b288-cfe235bf4e7e/linked_in_profile',
+  },
+  {
     name: 'Bachelor of Science in Computer Science',
     type: 'Achievement',
     date: '2024-06-20',
