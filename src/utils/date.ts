@@ -17,6 +17,7 @@ export function formatDate({
     ...(isYear ? {} : { month }),
     ...(isMonthDay ? {} : { year: 'numeric' }),
     ...(isMonthYear || isYear ? {} : { day: 'numeric' }),
+    timeZone: 'UTC',
   };
 
   return new Intl.DateTimeFormat('en-CA', dateFormat).format(new Date(date));
