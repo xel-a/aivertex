@@ -2,6 +2,7 @@ interface LinkPart {
   text: string;
   href: string;
   type: 'link';
+  target: '_blank' | '_self';
 }
 
 type ActivityPart = string | LinkPart;
@@ -22,6 +23,7 @@ export const currentlyDoing: CurrentlyDoing = {
         text: 'SC-200 certification',
         href: '/about#current-traversal',
         type: 'link',
+        target: '_self',
       },
       ' utilizing a voucher from Microsoft AI Skills Fest.',
     ],
@@ -33,6 +35,7 @@ export const currentlyDoing: CurrentlyDoing = {
         text: 'someone',
         href: 'https://music.youtube.com/playlist?list=OLAK5uy_m-gtPajGgyMQQeEjgJ2XAiXTBR-HiDb_o',
         type: 'link',
+        target: '_blank',
       },
       ' who knows how to make a guitar cry.',
     ],
