@@ -27,9 +27,14 @@ const posts = (await getAllContent()).slice(0, 3);
           <li class="brief-content">
             <p class="date">2020 - 2024</p>
             <p class="description">
-              Earned a degree in Computer Science, participated in several hackathons, attended a
-              Capture the flag (CTF) event, completed two internships (first as a developer, then in
-              InfraSecOps), and worked hard to graduate with Latin honors.
+              Earned a degree in Computer Science, participated in several hackathons, and also in a <a
+                href="/blogs/looking-back-at-hack4gov-2023-my-first-ctf-experience"
+                >Capture the Flag (CTF)</a
+              > event that sparked my interest in cybersecurity. Completed two internships—first as a
+              developer, then in InfraSecOps—and later earned <a
+                href="https://www.credly.com/badges/53ea3445-c8c1-4cd2-b288-cfe235bf4e7e/linked_in_profile"
+                target="_blank">Google's Cybersecurity Professional Certificate</a
+              >. Worked hard to graduate with Latin honors.
             </p>
           </li>
           <li class="brief-content">
@@ -44,9 +49,11 @@ const posts = (await getAllContent()).slice(0, 3);
           <li class="brief-content">
             <p class="date">2026 - present</p>
             <p class="description">
-              Currently working as a cook at a local KFC. Surprisingly, this became the push I
-              needed to rediscover my curiosity and start learning again. Now, I'm studying and
-              working toward a career in cybersecurity.
+              Currently working as a cook at a local KFC and at the same time building <a href="/"
+                >aivertex</a
+              >, my portfolio website. Surprisingly, this became the push I needed to rediscover my
+              curiosity and start learning again. Now, I'm studying and working toward a career in
+              cybersecurity.
             </p>
           </li>
         </ul>
@@ -175,6 +182,8 @@ const posts = (await getAllContent()).slice(0, 3);
     color: var(--color-link);
     text-decoration: none;
     border-bottom: 1px solid transparent;
+    transition: border 250ms ease;
+    font-weight: bold;
   }
 
   a:hover {
