@@ -3,7 +3,7 @@ import { defineCollection } from 'astro:content';
 import { z } from 'astro/zod';
 import { authors, categories, labType, status } from './config/content';
 
-const contentPattern = '**/[^_]*.md';
+const contentPattern = '**/[^_]*.@(md|mdx)';
 const common = {
   title: z.string(),
   description: z.string().optional(),
