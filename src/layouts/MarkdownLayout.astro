@@ -4,6 +4,8 @@ import Layout from './Layout.astro';
 import { getReadingTime } from '../utils/reading-time';
 import { slugify } from '../utils/strings';
 import Breadcrumb from '../components/common/Breadcrumb.astro';
+import Link from '../components/markdown/Link.astro';
+import { formatDate } from '../utils/date';
 
 interface Props {
   frontmatter:
@@ -24,70 +26,196 @@ const readingTime = getReadingTime(contentText);
 ---
 
 <Layout contentTitle={frontmatter.title}>
-  <article class="content">
-    <Breadcrumb path={path} current={frontmatter.title} />
-    <section class="meta">
-      <p class="meta-content">
-        {
-          frontmatter.pubDate.toLocaleDateString('en-CA', {
-            month: 'long',
-            day: 'numeric',
-            year: 'numeric',
-          })
-        }
-      </p>
-      <span>·</span>
-      <p class="meta-content">{readingTime.minutes} min read</p>
-    </section>
-    <h1 class="title">{frontmatter.title}</h1>
-    <section class="tags">
-      {
-        frontmatter.tags.map((tag: string) => (
-          <a class="tag" href={`/tags/${slugify(tag)}`}>
-            {tag}
-          </a>
-        ))
-      }
-    </section>
-    <slot />
-  </article>
+  <main>
+    <article class="content">
+      <section class="content-info">
+        <Breadcrumb path={path} current={frontmatter.title} />
+        <section class="meta">
+          <p class="meta-content">
+            {formatDate({ date: frontmatter.pubDate, month: 'long' })}
+          </p>
+          <span>·</span>
+          <p class="meta-content">{readingTime.minutes} min read</p>
+        </section>
+        <h1 class="title">{frontmatter.title}</h1>
+        <section class="tags">
+          {
+            frontmatter.tags.map((tag: string) => (
+              <a class="tag" href={`/tags/${slugify(tag)}`}>
+                {tag}
+              </a>
+            ))
+          }
+        </section>
+      </section>
+      <section class="content-body">
+        <slot />
+      </section>
+      <section class="more">
+        <Link name="Blogs" url="/blogs" target="_self" />
+        <Link name="Lab" url="/lab" target="_self" />
+        <Link name="Projects" url="/projects" target="_self" />
+      </section>
+    </article>
+    <aside class="toc">
+      <h3>Table of Contents</h3>
+    </aside>
+  </main>
 </Layout>
 
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const main = document.querySelector('main');
+    const content = document.querySelector('.content-body');
+    const toc = document.querySelector('.toc');
+
+    if (main && content && toc) {
+      const headings = [...content.querySelectorAll('h2, h3')];
+
+      if (headings.length < 5) {
+        main.classList.add('no-toc');
+        toc.classList.add('hidden');
+        return;
+      }
+
+      // Create TOC
+      headings.forEach((heading) => {
+        if (!heading.id) return;
+
+        const link = document.createElement('a');
+
+        link.href = `#${heading.id}`;
+        link.textContent = heading.textContent ?? '';
+        link.classList.add(`toc-${heading.tagName.toLowerCase()}`);
+
+        toc.appendChild(link);
+      });
+
+      const links = [...toc.querySelectorAll('a')];
+
+      // Track headings entering/leaving the viewport
+      const observer = new IntersectionObserver(
+        (entries) => {
+          const visible = entries
+            .filter((entry) => entry.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+          if (visible.length === 0) return;
+
+          const activeId = visible[0].target.id;
+
+          links.forEach((link) => {
+            link.classList.toggle('active', link.getAttribute('href') === `#${activeId}`);
+          });
+        },
+        {
+          // Treat the top ~25% of the viewport as the
+          // "currently reading" area.
+          rootMargin: '0px 0px -70% 0px',
+        }
+      );
+
+      headings.forEach((heading) => observer.observe(heading));
+    }
+  });
+</script>
+
 <style is:global>
-  .content {
-    max-width: 768px;
+  main {
+    display: grid;
+    grid-template-columns: var(--content-width) var(--toc-width);
+    grid-template-rows: auto 1fr;
+    align-items: start;
+    max-width: calc(var(--content-width) + var(--toc-width));
     margin: auto;
     padding-bottom: 40px;
+    column-gap: 80px;
   }
 
-  a {
-    color: unset;
+  main.no-toc {
+    grid-template-columns: 1fr;
+    width: var(--content-width);
+  }
+
+  .content {
+    display: contents;
+  }
+
+  .content-info {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .content-body {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .toc {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    grid-column: 2;
+    grid-row: 2;
+    position: sticky;
+    top: 20px;
+    margin-top: 10px;
+  }
+
+  .toc.hidden {
+    display: none;
+  }
+
+  .toc a {
+    display: block;
+    padding: 6px 12px;
+    border-radius: 10px;
+    color: var(--color-muted);
     text-decoration: none;
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+    font-weight: normal;
+    font-size: var(--text-label);
+    border: 0;
   }
 
-  .title,
-  .date {
-    margin: 0;
+  .toc a:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface);
   }
 
-  .content .title {
-    font-size: var(--text-heading);
-    margin-bottom: 0.4rem;
+  .toc a.active {
+    color: var(--color-link);
+    background: var(--color-surface);
   }
 
-  .content h1 {
+  .toc-h3 {
+    margin-left: 24px;
+  }
+
+  .content-body :is(h2, h3) {
+    scroll-margin-top: 56px;
+  }
+
+  .content-body h2:not(:first-of-type) {
+    margin-top: 56px;
+  }
+
+  .content-body h2 {
     font-size: var(--text-title);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 10px;
   }
 
-  .content h2 {
-    font-size: var(--text-lead);
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-  }
-
-  .content p {
+  .content-body p {
+    color: var(--color-text-body);
     font-size: var(--text-body);
     line-height: 1.75;
+  }
+  .title {
+    font-size: var(--text-heading);
+    margin-block: 10px;
   }
 
   .content .meta-content {
@@ -104,5 +232,23 @@ const readingTime = getReadingTime(contentText);
 
   .tags {
     margin-bottom: 40px;
+  }
+
+  .more {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    margin-top: 56px;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  @media screen and (max-width: 768px) {
+    main {
+      grid-template-columns: 1fr;
+    }
+    .toc {
+      display: none;
+    }
   }
 </style>
