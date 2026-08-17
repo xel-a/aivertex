@@ -1,0 +1,25 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  target: '_blank' | '_self';
+}
+
+const { name, url, target } = Astro.props;
+---
+
+<a href={url} target={target}>{name}</a>
+
+<style is:global>
+  a:not(.aivertex-logo, .tag) {
+    color: var(--color-link);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border 250ms ease;
+    font-weight: bold;
+  }
+
+  a:not(.aivertex-logo, .tag):hover {
+    border-color: var(--color-link);
+  }
+</style>
