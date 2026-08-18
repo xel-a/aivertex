@@ -15,8 +15,11 @@ tags:
 draft: false
 ---
 
-import ImageFigure from './src/components/markdown/ImageFigure.astro';
-import Link from './src/components/markdown/Link.astro';
+import ImageFigure from '../../components/markdown/ImageFigure.astro';
+import Link from '../../components/markdown/Link.astro';
+import groupPhoto from '../../assets/images/blogs/looking-back-at-hack4gov-2023/hack4gov-group-photo.jpg';
+import rankings from '../../assets/images/blogs/looking-back-at-hack4gov-2023/hack4gov-rankings.png';
+import top5 from '../../assets/images/blogs/looking-back-at-hack4gov-2023/hack4gov-top5.jpg';
 
 <h2 id="introduction">Introduction</h2>
 
@@ -33,7 +36,7 @@ import Link from './src/components/markdown/Link.astro';
 <h2 id="meet-the-team">Meet the Team</h2>
 
 <ImageFigure
-  src="/src/assets/images/hack4gov-group-photo.jpg"
+  src={groupPhoto}
   title="Hack4Gov Team"
   alt="Hack4Gov Team"
   caption="CCS-Webmasters: From left to right, our coach Sir Paul, King, me, MJ, and Earl."
@@ -79,7 +82,7 @@ import Link from './src/components/markdown/Link.astro';
 <h2 id="our-performance">Our performance</h2>
 
 <ImageFigure
-  src="/src/assets/images/hack4gov-rankings.png"
+  src={rankings}
   title="Team leaderboard"
   alt="Team leaderboard"
   caption="Team leaderboard: Our team finished with 1,180 points, with my username listed as ignashuu, scoring 590pts."
@@ -100,7 +103,7 @@ import Link from './src/components/markdown/Link.astro';
 <h2 id="the-top-5-scorers">The Top 5 Scorers</h2>
 
 <ImageFigure
-  src="/src/assets/images/hack4gov-top5.jpg"
+  src={top5}
   title="Top 5 Scorers"
   alt="Top 5 Scorers"
   caption="The top 5 scorers: I'm the first person from the left."
