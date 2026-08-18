@@ -69,54 +69,87 @@ const readingTime = getReadingTime(contentText);
     const content = document.querySelector('.content-body');
     const toc = document.querySelector('.toc');
 
-    if (main && content && toc) {
-      const headings = [...content.querySelectorAll('h2, h3')];
+    if (!main || !content || !toc) return;
 
-      if (headings.length < 5) {
-        main.classList.add('no-toc');
-        toc.classList.add('hidden');
-        return;
+    const headings = [...content.querySelectorAll('h2, h3')];
+
+    if (headings.length < 5) {
+      main.classList.add('no-toc');
+      toc.classList.add('hidden');
+      return;
+    }
+
+    // Create TOC
+    headings.forEach((heading) => {
+      if (!heading.id) return;
+
+      const link = document.createElement('a');
+
+      link.href = `#${heading.id}`;
+      link.textContent = heading.textContent ?? '';
+      link.classList.add(`toc-${heading.tagName.toLowerCase()}`);
+
+      toc.appendChild(link);
+    });
+
+    const links = [...toc.querySelectorAll('a')];
+
+    let ticking = false;
+
+    const updateActiveHeading = () => {
+      const viewportHeight = window.innerHeight;
+      const scrollPosition = window.scrollY;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // If we're at the bottom, the last heading is always active.
+      const atBottom = scrollPosition + viewportHeight >= documentHeight - 50;
+
+      let activeHeading;
+
+      if (atBottom) {
+        activeHeading = headings[headings.length - 1];
+      } else {
+        // Use a reading line around 30% down the viewport.
+        const readingPosition = viewportHeight * 0.3;
+
+        // Find the last heading that has passed the reading position.
+        activeHeading = headings[0];
+
+        for (const heading of headings) {
+          const rect = heading.getBoundingClientRect();
+
+          if (rect.top <= readingPosition) {
+            activeHeading = heading;
+          } else {
+            break;
+          }
+        }
       }
 
-      // Create TOC
-      headings.forEach((heading) => {
-        if (!heading.id) return;
+      if (!activeHeading?.id) return;
 
-        const link = document.createElement('a');
-
-        link.href = `#${heading.id}`;
-        link.textContent = heading.textContent ?? '';
-        link.classList.add(`toc-${heading.tagName.toLowerCase()}`);
-
-        toc.appendChild(link);
+      links.forEach((link) => {
+        link.classList.toggle('active', link.getAttribute('href') === `#${activeHeading.id}`);
       });
 
-      const links = [...toc.querySelectorAll('a')];
+      ticking = false;
+    };
 
-      // Track headings entering/leaving the viewport
-      const observer = new IntersectionObserver(
-        (entries) => {
-          const visible = entries
-            .filter((entry) => entry.isIntersecting)
-            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateActiveHeading);
+        ticking = true;
+      }
+    };
 
-          if (visible.length === 0) return;
+    window.addEventListener('scroll', handleScroll, {
+      passive: true,
+    });
 
-          const activeId = visible[0].target.id;
+    window.addEventListener('resize', updateActiveHeading);
 
-          links.forEach((link) => {
-            link.classList.toggle('active', link.getAttribute('href') === `#${activeId}`);
-          });
-        },
-        {
-          // Treat the top ~25% of the viewport as the
-          // "currently reading" area.
-          rootMargin: '0px 0px -70% 0px',
-        }
-      );
-
-      headings.forEach((heading) => observer.observe(heading));
-    }
+    // Set the initial active heading.
+    updateActiveHeading();
   });
 </script>
 
