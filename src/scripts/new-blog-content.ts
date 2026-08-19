@@ -6,20 +6,13 @@ import { slugify } from '../utils/strings';
 
 const [, , type] = process.argv;
 
-const config = {
-  blog: {
-    template: './templates/blog.mdx',
-    contentDir: './src/content/blogs',
-    categories,
-  },
-};
+const blogContentDir = './src/content/blogs';
+const blogTemplateDir = './templates/blog.mdx';
 
-if (!type || !(type in config)) {
+if (!type || !(type === 'blog')) {
   console.error('Usage: make blog | lab | project');
   process.exit(1);
 }
-
-const contentConfig = config[type as keyof typeof config];
 
 async function main() {
   const title = await input({
@@ -38,7 +31,7 @@ async function main() {
 
   const category = await select({
     message: 'Category:',
-    choices: [...contentConfig.categories],
+    choices: [...categories],
   });
 
   const tagsInput = await input({
@@ -54,7 +47,7 @@ async function main() {
 
   const slug = slugify(title);
 
-  const template = await readFile(contentConfig.template, 'utf8');
+  const template = await readFile(blogTemplateDir, 'utf8');
 
   const content = template
     .replaceAll('{{title}}', title)
@@ -64,9 +57,9 @@ async function main() {
     .replaceAll('{{pubDate}}', new Date().toISOString())
     .replaceAll('{{tags}}', tagsYaml);
 
-  const contentPath = path.join(contentConfig.contentDir, `${slug}.mdx`);
+  const contentPath = path.join(blogContentDir, `${slug}.mdx`);
 
-  await mkdir(contentConfig.contentDir, {
+  await mkdir(blogContentDir, {
     recursive: true,
   });
 

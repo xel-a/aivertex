@@ -16,4 +16,4 @@ git-log:
 	git log --pretty=format:'%C(yellow)%h %Cred%ad %Cblue%an%Cgreen%d %Creset%s' --date=short
 
 blog:
-	npx tsx src/scripts/new-content.ts blog
+	npx tsx src/scripts/new-blog-content.ts blog
