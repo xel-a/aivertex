@@ -1,18 +1,11 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { input, select } from '@inquirer/prompts';
 import { categories } from '../config/content';
 import { slugify } from '../utils/strings';
 
-const [, , type] = process.argv;
-
 const blogContentDir = './src/content/blogs';
 const blogTemplateDir = './templates/blog.mdx';
-
-if (!type || !(type === 'blog')) {
-  console.error('Usage: make blog | lab | project');
-  process.exit(1);
-}
 
 async function main() {
   const title = await input({
@@ -58,10 +51,6 @@ async function main() {
     .replaceAll('{{tags}}', tagsYaml);
 
   const contentPath = path.join(blogContentDir, `${slug}.mdx`);
-
-  await mkdir(blogContentDir, {
-    recursive: true,
-  });
 
   await writeFile(contentPath, content, 'utf8');
 
