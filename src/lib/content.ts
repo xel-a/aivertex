@@ -1,14 +1,13 @@
 import { getCollection } from 'astro:content';
 import { traversalNodes } from '../data/current-traversal';
 import { milestones } from '../data/milestones';
-import { projects } from '../data/projects';
 import { skills } from '../data/skills';
 import { slugify } from '../utils/strings';
 
 export async function getAllContent() {
   const blogs = await getCollection('blog');
   const labs = await getCollection('lab');
-  const projects = await getCollection('projects');
+  const projects = await getCollection('project');
 
   const content = [
     ...blogs.map((blog) => ({
@@ -55,13 +54,6 @@ export function getAllContentTags(contents: any) {
     }))
   );
 
-  const projectTags = projects.flatMap((project) =>
-    project.tags.map((tag) => ({
-      name: tag,
-      slug: slugify(tag),
-    }))
-  );
-
   const skillTags = skills.flatMap((skill) =>
     skill.tags.map((tag) => ({
       name: tag,
@@ -69,13 +61,7 @@ export function getAllContentTags(contents: any) {
     }))
   );
 
-  const tags = [
-    ...contentTags,
-    ...traversalNodeTags,
-    ...milestoneTags,
-    ...projectTags,
-    ...skillTags,
-  ];
+  const tags = [...contentTags, ...traversalNodeTags, ...milestoneTags, ...skillTags];
 
   return [...new Map(tags.map((tag) => [tag.slug, tag])).values()];
 }
@@ -97,7 +83,7 @@ export async function getTagIndexLength(tagName: string) {
   const allContent = await getAllContent();
 
   return allContent.filter((content) =>
-    content.data.tags.some((tag) => tag.toLowerCase() === tagName.toLowerCase())
+    content.data.tags.some((tag: any) => tag.toLowerCase() === tagName.toLowerCase())
   ).length;
 }
 
@@ -121,6 +107,17 @@ export async function getLabPosts() {
       ...lab,
       type: 'lab',
       path: `/lab/${lab.id}`,
+    })),
+  ];
+}
+
+export async function getProjectPosts() {
+  const projects = await getCollection('project');
+
+  return [
+    ...projects.map((project) => ({
+      ...project,
+      path: `/projects/${project.id}`,
     })),
   ];
 }
