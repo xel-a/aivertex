@@ -1,4 +1,9 @@
-export const categories = ['Cybersecurity', 'Programming', 'Finance', 'Design', 'Testing'] as const;
+export const categories = [
+  'Artificial Intelligence',
+  'Cybersecurity',
+  'Finance',
+  'Portfolio',
+] as const;
 
 export const authors = ['Axel Ignacio'] as const;
 
