@@ -4,9 +4,10 @@ import { slugify } from '../../utils/strings';
 
 interface Props {
   project: CollectionEntry<'project'>;
+  includeTags: boolean;
 }
 
-const { project } = Astro.props;
+const { project, includeTags } = Astro.props;
 const tagsLength = project.data.tags.length;
 const tagLimit = 4;
 ---
@@ -14,24 +15,24 @@ const tagLimit = 4;
 <div class="artifact-card">
   <h3 class="title">{project.data.title}</h3>
   <p class="description">{project.data.description}</p>
-  <div class="tags">
-    {
-      project.data.tags.map((tag) => (
-        <a href={`/tags/${slugify(tag)}`} class="tag">
-          {tag}
-        </a>
-      ))
-    }
-    {
-      tagsLength - tagLimit > 0 ? (
-        <span class="tag-excess">+ {tagsLength - tagLimit} more</span>
-      ) : null
-    }
-  </div>
+  {
+    includeTags ? (
+      <div class="tags">
+        {project.data.tags.map((tag) => (
+          <a href={`/tags/${slugify(tag)}`} class="tag">
+            {tag}
+          </a>
+        ))}
+        {tagsLength - tagLimit > 0 ? (
+          <span class="tag-excess">+ {tagsLength - tagLimit} more</span>
+        ) : null}
+      </div>
+    ) : null
+  }
   <div class="project-links">
     {
       project.data.links?.site ? (
-        <a href={project.data.links.site} class="project-link">
+        <a href={project.data.links.site} class="project-link" target="_blank">
           Site &nearr;
         </a>
       ) : null
@@ -39,13 +40,19 @@ const tagLimit = 4;
 
     {
       project.data.links?.repository ? (
-        <a href={project.data.links.repository} class="project-link">
+        <a href={project.data.links.repository} class="project-link" target="_blank">
           Source &nearr;
         </a>
       ) : null
     }
 
-    <a href={`projects/${project.id}`} class="project-link">Overview &nearr;</a>
+    {
+      project.body ? (
+        <a href={`projects/${project.id}`} class="project-link">
+          Overview &nearr;
+        </a>
+      ) : null
+    }
   </div>
 </div>
 
@@ -64,12 +71,12 @@ const tagLimit = 4;
   .description {
     font-size: var(--text-body-small);
     color: var(--color-muted);
-    margin-block: 10px;
+    margin-top: 10px;
+    margin-bottom: 20px;
   }
 
   .tags {
     align-items: center;
-    margin-block: 20px;
   }
 
   .tag-excess {
@@ -80,6 +87,7 @@ const tagLimit = 4;
   .project-links {
     display: flex;
     gap: 10px;
+    margin-top: 20px;
   }
 
   .project-link {

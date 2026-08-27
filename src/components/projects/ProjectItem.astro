@@ -1,0 +1,55 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { padContentLength } from '../../utils/strings';
+import ArtifactCard from '../common/ArtifactCard.astro';
+
+interface Props {
+  year: number;
+  posts: CollectionEntry<'project'>[];
+}
+
+const { year, posts } = Astro.props;
+const filteredPosts = posts.filter((post) => post.data.pubDate.getFullYear() === year);
+---
+
+<fieldset class="project-grid">
+  <legend class="project-year">
+    <h2 class="project-title">
+      <span>{year}</span> &nbsp; &middot; &nbsp; {padContentLength(filteredPosts!.length)}
+    </h2>
+  </legend>
+  {
+    filteredPosts
+      .filter((project) => project.data.pubDate.getFullYear() === year)
+      .map((project) => <ArtifactCard project={project} includeTags={false} />)
+  }
+</fieldset>
+
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    border: 1px solid var(--color-border);
+    border-inline: none;
+    padding-bottom: 20px;
+  }
+
+  .project-title {
+    font-size: var(--text-title);
+    font-weight: bold;
+    padding: 0 10px;
+    margin: 0;
+  }
+
+  .project-grid:not(:last-of-type) {
+    margin-bottom: 56px;
+  }
+
+  @media screen and (max-width: 640px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

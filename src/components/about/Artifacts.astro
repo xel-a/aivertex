@@ -7,7 +7,11 @@ const projectLimit = 2;
 ---
 
 <div class="artifacts">
-  {projects.map((project, i) => (i < projectLimit ? <ArtifactCard project={project} /> : null))}
+  {
+    projects.map((project, i) =>
+      i < projectLimit ? <ArtifactCard project={project} includeTags={true} /> : null
+    )
+  }
 
   <a href="/projects" class="view-all-artifacts">View all projects &nearr;</a>
 </div>
