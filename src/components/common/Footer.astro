@@ -1,9 +1,17 @@
 ---
 import { site } from '../../config/site';
+import GitHubIcon from './GitHubIcon.astro';
+import LinkedInIcon from './LinkedInIcon.astro';
 ---
 
 <footer class="footer-content">
-  <p class="site">{site.author.name} | {site.name}</p>
+  <div class="left">
+    <p class="site">{site.author.name} | {site.name}</p>
+    <div class="social">
+      <GitHubIcon />
+      <LinkedInIcon />
+    </div>
+  </div>
   <p class="footer-text">Where ideas converge.</p>
 </footer>
 
@@ -12,9 +20,21 @@ import { site } from '../../config/site';
     margin-top: auto;
     display: flex;
     justify-content: space-between;
+    align-items: flex-end;
     font-size: var(--text-meta);
     border-top: 1px solid var(--color-border);
     padding-block: 10px;
+  }
+
+  .left {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .social {
+    display: flex;
+    gap: 24px;
   }
 
   .site {
@@ -24,5 +44,13 @@ import { site } from '../../config/site';
 
   .footer-text {
     color: var(--color-muted);
+  }
+
+  @media screen and (max-width: 640px) {
+    .left {
+      flex-direction: column-reverse;
+      align-items: flex-start;
+      gap: 0;
+    }
   }
 </style>
