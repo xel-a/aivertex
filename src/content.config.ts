@@ -47,8 +47,8 @@ const projects = defineCollection({
     ...common,
     links: z
       .object({
-        site: z.url().optional(),
-        repository: z.url().optional(),
+        site: z.url().nullable().optional(),
+        repository: z.url().nullable().optional(),
       })
       .optional(),
   }),
