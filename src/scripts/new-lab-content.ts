@@ -27,6 +27,11 @@ async function main() {
     default: 'Axel Ignacio',
   });
 
+  const pubDate = await input({
+    message: 'Date published:',
+    validate: (value) => /^\d{4}-\d{2}-\d{2}$/.test(value) || 'Date format should be yyyy-mm-dd',
+  });
+
   const category = await select({
     message: 'Category:',
     choices: [...categories],
@@ -58,7 +63,7 @@ async function main() {
     .replaceAll('{{type}}', type)
     .replaceAll('{{category}}', category)
     .replaceAll('{{author}}', author)
-    .replaceAll('{{pubDate}}', new Date().toISOString())
+    .replaceAll('{{pubDate}}', pubDate || new Date().toISOString().slice(0, 10))
     .replaceAll('{{tags}}', tagsYaml)
     .replaceAll('{{status}}', contentStatus);
 
