@@ -38,7 +38,7 @@ const lab = defineCollection({
   }),
 });
 
-const projects = defineCollection({
+const project = defineCollection({
   loader: glob({
     pattern: contentPattern,
     base: 'src/content/projects',
@@ -54,4 +54,4 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { blog, lab, projects };
+export const collections = { blog, lab, project };

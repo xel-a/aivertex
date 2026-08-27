@@ -11,11 +11,11 @@ interface Props {
   frontmatter:
     | CollectionEntry<'blog'>['data']
     | CollectionEntry<'lab'>['data']
-    | CollectionEntry<'projects'>['data'];
+    | CollectionEntry<'project'>['data'];
   body:
     | CollectionEntry<'blog'>['body']
     | CollectionEntry<'lab'>['body']
-    | CollectionEntry<'projects'>['body'];
+    | CollectionEntry<'project'>['body'];
   path: string;
 }
 
