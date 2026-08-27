@@ -1,7 +1,7 @@
-import { getAllContent } from '../lib/content';
+import { getAllPosts } from '../lib/content';
 
 export async function getRSSItems() {
-  const posts = await getAllContent();
+  const posts = await getAllPosts();
 
   return posts.map((post) => ({
     title: post.data.title,

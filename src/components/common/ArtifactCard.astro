@@ -1,22 +1,22 @@
 ---
-import { type Project } from '../../data/projects';
+import type { CollectionEntry } from 'astro:content';
 import { slugify } from '../../utils/strings';
 
 interface Props {
-  project: Project;
+  project: CollectionEntry<'project'>;
 }
 
 const { project } = Astro.props;
-const tagsLength = project.tags.length;
+const tagsLength = project.data.tags.length;
 const tagLimit = 4;
 ---
 
 <div class="artifact-card">
-  <h3 class="title">{project.title}</h3>
-  <p class="description">{project.description}</p>
+  <h3 class="title">{project.data.title}</h3>
+  <p class="description">{project.data.description}</p>
   <div class="tags">
     {
-      project.tags.map((tag) => (
+      project.data.tags.map((tag) => (
         <a href={`/tags/${slugify(tag)}`} class="tag">
           {tag}
         </a>
@@ -30,22 +30,22 @@ const tagLimit = 4;
   </div>
   <div class="project-links">
     {
-      project.links.repository ? (
-        <a href={project.links.repository.url} class="project-link">
-          {project.links.repository.name} &nearr;
-        </a>
-      ) : null
-    }
-
-    {
-      project.links.url ? (
-        <a href={project.links.url} class="project-link">
+      project.data.links?.site ? (
+        <a href={project.data.links.site} class="project-link">
           Site &nearr;
         </a>
       ) : null
     }
 
-    <a href={`projects/${project.slug}`} class="project-link">Overview &nearr;</a>
+    {
+      project.data.links?.repository ? (
+        <a href={project.data.links.repository} class="project-link">
+          Source &nearr;
+        </a>
+      ) : null
+    }
+
+    <a href={`projects/${project.id}`} class="project-link">Overview &nearr;</a>
   </div>
 </div>
 

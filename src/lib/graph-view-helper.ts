@@ -1,5 +1,5 @@
 import { navigation } from '../config/navigation';
-import { getAllContent } from './content';
+import { getAllPosts } from './content';
 
 export interface RawNode {
   id: string;
@@ -15,7 +15,7 @@ export interface RawEdge {
 const LAB_SECTIONS = new Set(['experiments', 'notes', 'writeups']);
 
 export async function createNodesAndEdges(variant: 'full' | 'compact' = 'compact') {
-  const content = await getAllContent();
+  const content = await getAllPosts();
 
   const rawNodes: RawNode[] = [];
   const rawEdges: RawEdge[] = [];

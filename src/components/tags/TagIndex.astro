@@ -1,8 +1,8 @@
 ---
-import { getAllContentTagsWithPosts } from '../../lib/content';
+import { getAllTags } from '../../lib/content';
 import TagIndexContent from './TagIndexContent.astro';
 
-const tags = await getAllContentTagsWithPosts();
+const tags = await getAllTags({ excludeTagsWithoutPosts: true });
 const letterIndices = [...new Set(tags.map((tag) => tag.name[0].toLowerCase()).sort())];
 const groupedTags = letterIndices.map((letter) => ({
   letter,

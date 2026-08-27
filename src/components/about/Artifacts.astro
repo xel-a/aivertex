@@ -1,7 +1,8 @@
 ---
-import { projects } from '../../data/projects';
-import ArtifactCard from '../../components/about/ArtifactCard.astro';
+import ArtifactCard from '../../components/common/ArtifactCard.astro';
+import { getPostsByType } from '../../lib/content';
 
+const projects = await getPostsByType('project');
 const projectLimit = 2;
 ---
 

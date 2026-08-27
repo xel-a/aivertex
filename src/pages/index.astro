@@ -2,12 +2,12 @@
 import Layout from '../layouts/Layout.astro';
 import GraphView from '../components/home/GraphView.astro';
 import HomepageHero from '../components/home/HomepageHero.astro';
-import { getAllContent } from '../lib/content';
+import { getAllPosts } from '../lib/content';
 import ContentItem from '../components/common/ContentItem.astro';
 import { formatDate } from '../utils/date';
 import { currentlyDoing } from '../data/currently-doing';
 
-const posts = (await getAllContent()).slice(0, 3);
+const posts = (await getAllPosts()).slice(0, 3);
 ---
 
 <Layout pageId="home">

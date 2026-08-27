@@ -2,9 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Intro from '../../components/common/Intro.astro';
 import Content from '../../components/common/Content.astro';
-import { getBlogPosts } from '../../lib/content';
+import { getPostsByType } from '../../lib/content';
 
-const blogPosts = await getBlogPosts();
+const blogPosts = await getPostsByType('blog');
 ---
 
 <Layout pageId="blogs">

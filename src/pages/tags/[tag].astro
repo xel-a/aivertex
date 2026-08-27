@@ -1,5 +1,5 @@
 ---
-import { getAllContent, getAllContentTags } from '../../lib/content';
+import { getAllPosts, getAllTags } from '../../lib/content';
 
 import Layout from '../../layouts/Layout.astro';
 import { slugify } from '../../utils/strings';
@@ -7,8 +7,8 @@ import Content from '../../components/common/Content.astro';
 import Breadcrumb from '../../components/common/Breadcrumb.astro';
 
 export async function getStaticPaths() {
-  const allContent = await getAllContent();
-  const contentTags = getAllContentTags(allContent);
+  const allContent = await getAllPosts();
+  const contentTags = await getAllTags();
 
   return contentTags.map(({ name, slug }) => {
     const filteredContent = allContent.filter(

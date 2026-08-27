@@ -1,10 +1,10 @@
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry, type CollectionKey } from 'astro:content';
 import { traversalNodes } from '../data/current-traversal';
 import { milestones } from '../data/milestones';
 import { skills } from '../data/skills';
 import { slugify } from '../utils/strings';
 
-export async function getAllContent() {
+export async function getAllPosts() {
   const blogs = await getCollection('blog');
   const labs = await getCollection('lab');
   const projects = await getCollection('project');
@@ -33,8 +33,25 @@ export async function getAllContent() {
   return content.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
-export function getAllContentTags(contents: any) {
-  const allContent = contents;
+export async function getPostsByType<T extends CollectionKey>(
+  type: T
+): Promise<(CollectionEntry<T> & { path: string })[]> {
+  const posts = await getCollection(type, ({ data }) => !data.draft);
+
+  return posts
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .map((post) => ({
+      ...post,
+      path: `${post.collection}${post.collection === 'lab' ? '' : 's'}/${post.id}`,
+    }));
+}
+
+export async function getAllTags({
+  excludeTagsWithoutPosts = false,
+}: {
+  excludeTagsWithoutPosts?: boolean;
+} = {}) {
+  const allContent = await getAllPosts();
 
   const contentTags = allContent
     .flatMap((post: any) => post.data.tags)
@@ -63,61 +80,18 @@ export function getAllContentTags(contents: any) {
 
   const tags = [...contentTags, ...traversalNodeTags, ...milestoneTags, ...skillTags];
 
+  if (excludeTagsWithoutPosts) {
+    return [...new Map(contentTags.map((tag) => [tag.slug, tag])).values()];
+  }
+
+  // you might be wondering what is this for. to avoid duplicate tags!
   return [...new Map(tags.map((tag) => [tag.slug, tag])).values()];
 }
 
-export async function getAllContentTagsWithPosts() {
-  const allContent = await getAllContent();
-
-  const tags = allContent
-    .flatMap((post: any) => post.data.tags)
-    .map((tag: any) => ({
-      name: tag,
-      slug: slugify(tag),
-    }));
-
-  return [...new Map(tags.map((tag) => [tag.slug, tag])).values()];
-}
-
-export async function getTagIndexLength(tagName: string) {
-  const allContent = await getAllContent();
+export async function getTagSizeByTagName(tagName: string) {
+  const allContent = await getAllPosts();
 
   return allContent.filter((content) =>
     content.data.tags.some((tag: any) => tag.toLowerCase() === tagName.toLowerCase())
   ).length;
-}
-
-export async function getBlogPosts() {
-  const blogs = await getCollection('blog', ({ data }) => !data.draft);
-
-  return blogs
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    .map((blog) => ({
-      ...blog,
-      type: 'blog',
-      path: `/blogs/${blog.id}`,
-    }));
-}
-
-export async function getLabPosts() {
-  const labs = await getCollection('lab');
-
-  return [
-    ...labs.map((lab) => ({
-      ...lab,
-      type: 'lab',
-      path: `/lab/${lab.id}`,
-    })),
-  ];
-}
-
-export async function getProjectPosts() {
-  const projects = await getCollection('project');
-
-  return [
-    ...projects.map((project) => ({
-      ...project,
-      path: `/projects/${project.id}`,
-    })),
-  ];
 }

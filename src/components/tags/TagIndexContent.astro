@@ -1,5 +1,5 @@
 ---
-import { getTagIndexLength } from '../../lib/content';
+import { getTagSizeByTagName } from '../../lib/content';
 
 interface Props {
   tag: {
@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { tag } = Astro.props;
-const tagIndexLength = await getTagIndexLength(tag.name);
+const tagIndexLength = await getTagSizeByTagName(tag.name);
 ---
 
 <div class="tag-index-content">

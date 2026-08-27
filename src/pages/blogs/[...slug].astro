@@ -1,10 +1,11 @@
 ---
 import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
 import { render } from 'astro:content';
-import { getBlogPosts } from '../../lib/content';
+import { getPostsByType } from '../../lib/content';
 
 export async function getStaticPaths() {
-  const blogs = await getBlogPosts();
+  const blogs = await getPostsByType('blog');
+
   return blogs.map((blog) => ({
     params: { slug: blog.id },
     props: { blog },
