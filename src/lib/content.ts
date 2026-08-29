@@ -30,7 +30,9 @@ export async function getAllPosts() {
     })),
   ];
 
-  return content.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  return content
+    .filter((post) => !post.data.draft && post.body)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
 export async function getPostsByType<T extends CollectionKey>(
@@ -39,6 +41,7 @@ export async function getPostsByType<T extends CollectionKey>(
   const posts = await getCollection(type, ({ data }) => !data.draft);
 
   return posts
+    .filter((post) => !post.data.draft)
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .map((post) => ({
       ...post,
