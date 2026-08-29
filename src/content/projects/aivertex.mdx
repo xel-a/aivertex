@@ -1,5 +1,5 @@
 ---
-title: AIVertex
+title: AI Vertex
 description: Where all my work converges
 pubDate: 2026-07-23
 author: Axel Ignacio
@@ -7,9 +7,108 @@ category: Portfolio
 tags:
   - Astro
   - TypeScript
-  - Decap CMS
+  - Cloudflare Workers & Pages
 links:
   site: https://aivertex.ca
   repository: https://github.com/xel-a/aivertex
 draft: false
 ---
+
+import ProjectMetadata from '../../components/markdown/ProjectMetadata.astro';
+import TechStack from '../../components/markdown/TechStack.astro';
+import CodeBlock from '../../components/markdown/CodeBlock.astro';
+
+## Project Metadata
+
+<ProjectMetadata status="In Progress" version="1.0" updated="2026-08-29" />
+
+## Overview
+
+AI Vertex is my personal portfolio website. This project started after I purchased my very first domain using my own money
+from working as a cook at KFC. This website contains my projects, ideas, notes, and lessons from whatever satiates my curiosity.
+
+## Architecture
+
+I designed this website with the intention of having markdown support for my posts. Initially, I wanted to use **_Next.js_** since
+I had experience in using the framework in one of my projects. But, I thought that Next.js might not be the framework that I needed.
+So, I asked ChatGPT to list down modern frameworks that fit my requirements. I got mesmerized by **_Astro_** and their concept of
+**_Island components_**, and **_Content collection_**. First of all, Island components? it's fantastic! It allows you to explore
+multiple frameworks without the need of creating different projects. You can just create components using different frameworks and
+place them in your pages. Content collection is also a wonderful feature. Since my website will be content heavy in the future,
+content collection organizes my posts and handle the task of making them readily available for querying.
+
+Below is how a content is rendered in my website:
+
+<CodeBlock
+  code={`
+  [Content Collection] MDX files
+               ↓
+   [Astro Pages] getCollection()
+               ↓
+         [Post Layout]
+               ↓
+         [Static HTML]
+               ↓
+       [Cloudflare Pages]
+    `}
+  lang="text"
+  title="Content Architecture"
+/>
+
+I chose MDX rather than a normal markdown file because I wanted additional flexibility and customization through the use of
+components.
+
+For CI/CD, I do the following for ease of development:
+
+<CodeBlock
+  code={`
+  local:
+      [Husky] pre-commit
+              ↓
+        [lint-staged] 
+              ↓
+          [prettier]
+              ↓
+         [astro-check]
+  
+  remote:
+       [GitHub actions]
+              ↓
+        [Build check]
+              ↓
+           [Deploy]
+              ↓
+      [Cloudflare workers]
+    `}
+  lang="text"
+  title="CI/CD"
+/>
+
+You might be wondering: _"Where is the test? Why don't you do testing?"_. Well, it's my personal preference not to do it since it
+is time-consuming to create tests. It's a personal project and not a commercial project that has users. Personally, I don't test
+my projects, I just build, break, and fix. You'll probably find some functions that is not unit-testable within the source code.
+Don't worry, I'll refactor them. But, not now. Maybe in the future? So anyways, where still going to tackle the technology stack
+that I'm using.
+
+## Technology Stack
+
+<TechStack
+  languages={['TypeScript']}
+  frontend={['Astro']}
+  infrastructure={['Cloudflare Workers & Pages']}
+  devops={['GitHub Actions']}
+  tools={['husky', 'lint-staged', 'prettier']}
+/>
+
+This is probably not the final technology stack as I might explore other frameworks for the components. So, basically, the programming
+language that I use mostly is **TypeScript** for type safety and object IntelliSense. For the frontend, I mainly use **Astro** components.
+As for deployment, I use **Cloudflare Workers & Pages**. Cloudflare is where I purchased my domain so, it is also where I configured
+my deployment by linking my GitHub repository for continuous integration and deployment. As part of the CI/CD pipeline, I use **GitHub actions**
+to verify the build integrity before deploying it to cloudflare workers. I have seen **Husky** being used multiple times but this is the first
+time I integrated it. I find it very useful since it reduces the chances of your build to fail by launching hooks such as a pre-commit
+hook. Currently, I'm using lint-staged to format the staged files via **prettier** and **astro-check** to check for errors within the source code.
+
+## What's next?
+
+The website is currently lacking content. I'll focus on writing and making posts instead of making new features. The features can wait
+after I populated the site with a bit of content.
