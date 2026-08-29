@@ -1,34 +1,16 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { slugify } from '../../utils/strings';
 
 interface Props {
   project: CollectionEntry<'project'>;
-  includeTags: boolean;
 }
 
-const { project, includeTags } = Astro.props;
-const tagsLength = project.data.tags.length;
-const tagLimit = 4;
+const { project } = Astro.props;
 ---
 
 <div class="artifact-card">
   <h3 class="title">{project.data.title}</h3>
   <p class="description">{project.data.description}</p>
-  {
-    includeTags ? (
-      <div class="tags">
-        {project.data.tags.map((tag) => (
-          <a href={`/tags/${slugify(tag)}`} class="tag">
-            {tag}
-          </a>
-        ))}
-        {tagsLength - tagLimit > 0 ? (
-          <span class="tag-excess">+ {tagsLength - tagLimit} more</span>
-        ) : null}
-      </div>
-    ) : null
-  }
   <div class="project-links">
     {
       project.data.links?.site ? (
@@ -73,15 +55,6 @@ const tagLimit = 4;
     color: var(--color-muted);
     margin-top: 10px;
     margin-bottom: 20px;
-  }
-
-  .tags {
-    align-items: center;
-  }
-
-  .tag-excess {
-    font-size: var(--text-meta);
-    color: var(--color-border);
   }
 
   .project-links {

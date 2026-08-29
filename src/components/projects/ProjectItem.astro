@@ -21,7 +21,7 @@ const filteredPosts = posts.filter((post) => post.data.pubDate.getFullYear() ===
   {
     filteredPosts
       .filter((project) => project.data.pubDate.getFullYear() === year)
-      .map((project) => <ArtifactCard project={project} includeTags={false} />)
+      .map((project) => <ArtifactCard project={project} />)
   }
 </fieldset>
 
