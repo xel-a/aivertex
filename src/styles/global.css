@@ -15,6 +15,13 @@
   --color-tag: #171920;
   --color-border: #292c35;
 
+  /* shiki colors */
+  --shiki-highlight-background: #34463d;
+  --shiki-add-background: #29382f;
+  --shiki-add-color: #a5e1a5;
+  --shiki-remove-background: #3a2d2f;
+  --shiki-remove-color: #ed8a8a;
+
   /* fonts */
   --heading-font: 'Space Grotesk', sans-serif;
   --body-font: 'Inter', sans-serif;
