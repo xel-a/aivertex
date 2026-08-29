@@ -1,0 +1,187 @@
+---
+import type { CodeLanguage } from 'astro';
+import { Code } from 'astro:components';
+import type { ShikiTransformer } from 'shiki';
+
+interface Props {
+  code: string;
+  lang: CodeLanguage;
+  title?: string;
+  transformers?: ShikiTransformer[];
+}
+
+const { code, lang, title, transformers } = Astro.props;
+---
+
+<div class="code-block">
+  <header class="code-header">
+    <span class="code-title">{title}</span>
+
+    <div class="code-actions">
+      <span class="code-language">{lang}</span>
+      <button class="copy-button" type="button" aria-label="Copy code">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+          <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+        </svg>
+
+        <span>Copy</span>
+      </button>
+    </div>
+  </header>
+
+  <Code code={code} lang={lang} class="code" transformers={transformers} />
+</div>
+
+<script>
+  document.querySelectorAll('.code-block').forEach((block) => {
+    const button = block.querySelector<HTMLButtonElement>('.copy-button');
+
+    if (!button) return;
+
+    button.addEventListener('click', async () => {
+      const code = block.querySelector('code')?.textContent;
+
+      if (!code) return;
+
+      try {
+        await navigator.clipboard.writeText(code);
+
+        button.classList.add('copied');
+
+        const text = button.querySelector('span');
+        if (text) text.textContent = 'Copied!';
+
+        setTimeout(() => {
+          button.classList.remove('copied');
+
+          if (text) text.textContent = 'Copy';
+        }, 2000);
+      } catch {
+        console.error('Failed to copy code');
+      }
+    });
+  });
+</script>
+
+<style>
+  .code-block {
+    border: 1px solid var(--color-border);
+    border-radius: 0.5rem;
+    overflow-x: hidden;
+    width: min(calc(100vw - 60px), var(--content-width));
+    max-width: var(--content-width);
+  }
+
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 10px;
+    background-color: var(--color-surface);
+    font-size: var(--text-caption);
+  }
+
+  .code-title {
+    color: var(--color-muted);
+  }
+
+  .code-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .code-language {
+    color: var(--color-muted);
+  }
+
+  .copy-button {
+    display: inline-flex;
+    align-items: center;
+    border: 0;
+    color: var(--color-muted);
+    padding: 5px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    gap: 5px;
+    font: inherit;
+    cursor: pointer;
+    transition:
+      color 250ms ease,
+      border-color 250ms ease;
+  }
+
+  .copy-button:hover {
+    color: var(--color-link);
+    border-color: var(--color-link);
+  }
+
+  .copy-button.copied {
+    color: var(--color-link);
+  }
+
+  :global(.code-block pre) {
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    overflow-x: auto;
+    min-width: 0;
+  }
+
+  :global(.code-block code) {
+    display: block;
+    padding-bottom: 10px;
+    font-size: var(--text-caption);
+    width: 100%;
+    padding-inline: 16px;
+  }
+
+  /* shiki custom syntax style */
+
+  :global(.code-block code > .line) {
+    display: inline-block;
+    width: 100%;
+    padding-inline: 5px;
+    line-height: 1.75;
+    border-radius: 3px;
+  }
+
+  :global(.code-block code > .line.highlighted) {
+    background-color: var(--shiki-highlight-background);
+  }
+
+  :global(.code-block code > .line .highlighted-word) {
+    background-color: var(--shiki-highlight-background);
+    padding-inline: 5px;
+  }
+
+  :global(.code-block code > .line.diff.add) {
+    background-color: var(--shiki-add-background);
+  }
+
+  :global(.code-block code > .line.diff.add::before) {
+    content: '++ ';
+    color: var(--shiki-add-color);
+  }
+
+  :global(.code-block code > .line.diff.remove) {
+    background-color: var(--shiki-remove-background);
+  }
+
+  :global(.code-block code > .line.diff.remove::before) {
+    content: '-- ';
+    color: var(--shiki-remove-color);
+  }
+</style>

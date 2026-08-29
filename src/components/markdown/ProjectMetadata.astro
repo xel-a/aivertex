@@ -1,0 +1,51 @@
+---
+import { formatDate } from '../../utils/date';
+
+interface Props {
+  status: string;
+  version: string;
+  updated: string;
+}
+
+const { status, version, updated } = Astro.props;
+---
+
+<div class="project-metadata">
+  <div class="metadata">
+    <p class="metadata-label">Status:</p>
+    <p>{status}</p>
+  </div>
+  <div class="metadata">
+    <p class="metadata-label">Version:</p>
+    <p>{version}</p>
+  </div>
+  <div class="metadata">
+    <p class="metadata-label">Updated:</p>
+    <p>{formatDate({ date: updated })}</p>
+  </div>
+</div>
+
+<style>
+  .project-metadata {
+    margin-bottom: 56px;
+    background-color: var(--color-surface);
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+  }
+
+  .metadata {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .metadata p {
+    margin: 0;
+  }
+
+  .metadata-label {
+    width: 56px;
+    font-weight: bold;
+  }
+</style>

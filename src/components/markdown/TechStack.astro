@@ -1,0 +1,86 @@
+---
+interface Props {
+  languages?: string[];
+  frontend?: string[];
+  backend?: string[];
+  data?: string[];
+  infrastructure?: string[];
+  devops?: string[];
+  ai?: string[];
+  tools?: string[];
+  services?: string[];
+}
+
+const categories = {
+  languages: 'Languages',
+  frontend: 'Frontend',
+  backennd: 'Backend',
+  data: 'Data',
+  infrastructure: 'Infrastructure',
+  devops: 'DevOps / CI/CD',
+  ai: 'AI / ML',
+  tools: 'Tools',
+  services: 'Services',
+};
+---
+
+<div class="tech-stack">
+  {
+    Object.entries(Astro.props).map(
+      ([category, technologies]: [category: string, technologies: string[]]) =>
+        technologies.length > 0 ? (
+          <div class="stack-group">
+            <p class="group-label">{categories[category as keyof typeof categories]}:</p>
+            <div class="stack-items">
+              {technologies.map((technology) => (
+                <a class="tag">{technology}</a>
+              ))}
+            </div>
+          </div>
+        ) : null
+    )
+  }
+</div>
+
+<style>
+  .tech-stack {
+    padding-inline: 20px;
+  }
+
+  .stack-group {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .stack-group:not(:last-of-type) {
+    margin-bottom: 10px;
+  }
+
+  .group-label {
+    margin: 0;
+    font-weight: bold;
+    color: var(--color-text);
+    width: 140px;
+    user-select: text;
+  }
+
+  .stack-items {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    overflow: auto;
+  }
+
+  .tag {
+    cursor: default;
+  }
+
+  @media screen and (max-width: 640px) {
+    .stack-group {
+      flex-direction: column;
+      align-items: start;
+      gap: 0;
+    }
+  }
+</style>
