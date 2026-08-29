@@ -73,7 +73,7 @@ const readingTime = getReadingTime(contentText);
 
     const headings = [...content.querySelectorAll('h2, h3')];
 
-    if (headings.length < 5) {
+    if (headings.length < 4) {
       main.classList.add('no-toc');
       toc.classList.add('hidden');
       return;
@@ -167,7 +167,7 @@ const readingTime = getReadingTime(contentText);
 
   main.no-toc {
     grid-template-columns: 1fr;
-    width: var(--content-width);
+    width: min(100%, var(--content-width));
   }
 
   .content {
