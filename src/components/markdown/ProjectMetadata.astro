@@ -2,7 +2,7 @@
 import { formatDate } from '../../utils/date';
 
 interface Props {
-  status: string;
+  status: 'Planned' | 'In Progress' | 'On Hold' | 'Completed';
   version: string;
   updated: string;
 }
@@ -11,41 +11,75 @@ const { status, version, updated } = Astro.props;
 ---
 
 <div class="project-metadata">
-  <div class="metadata">
-    <p class="metadata-label">Status:</p>
-    <p>{status}</p>
+  <div class="header">
+    <p class="metadata-status-label">Status</p>
+    <p class="metadata-version-label">Version</p>
+    <p class="metadata-updated-label">Updated</p>
   </div>
-  <div class="metadata">
-    <p class="metadata-label">Version:</p>
-    <p>{version}</p>
-  </div>
-  <div class="metadata">
-    <p class="metadata-label">Updated:</p>
-    <p>{formatDate({ date: updated })}</p>
+  <div class="values">
+    <p class="metadata-status-value">{status}</p>
+    <p class="metadata-version-value">{version}</p>
+    <p class="metadata-updated-value">{formatDate({ date: updated })}</p>
   </div>
 </div>
 
 <style>
   .project-metadata {
-    margin-bottom: 56px;
-    background-color: var(--color-surface);
     padding: 10px 15px;
     border: 1px solid var(--color-border);
     border-radius: 10px;
+    font-size: var(--text-meta);
   }
 
-  .metadata {
-    display: flex;
-    align-items: center;
-    gap: 24px;
+  .header,
+  .values {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
   }
 
-  .metadata p {
+  .header {
+    background-color: var(--color-surface);
+    border-radius: 5px;
+    padding-block: 5px;
+    margin-bottom: 5px;
+  }
+
+  [class^='metadata'] {
     margin: 0;
+    text-align: center;
   }
 
-  .metadata-label {
-    width: 56px;
+  [class^='metadata-'][class$='-label'] {
     font-weight: bold;
+    text-transform: uppercase;
+    font-size: inherit;
+  }
+
+  [class^='metadata-'][class$='-value'] {
+    font-size: inherit;
+    color: var(--color-muted);
+  }
+
+  @media screen and (max-width: 768px) {
+    .project-metadata {
+      display: flex;
+      gap: 24px;
+    }
+
+    [class^='metadata'] {
+      text-align: unset;
+    }
+
+    .header,
+    .values {
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+
+    .header {
+      background-color: unset;
+      padding-block: unset;
+      margin-bottom: unset;
+    }
   }
 </style>
