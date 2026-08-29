@@ -1,0 +1,23 @@
+---
+import { render } from 'astro:content';
+import { getPostsByType } from '../../lib/content';
+import MarkdownLayout from '../../layouts/MarkdownLayout.astro';
+
+export async function getStaticPaths() {
+  const projects = await getPostsByType('project');
+
+  return projects
+    .filter((project) => project.body)
+    .map((project) => ({
+      params: { project: project.id },
+      props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+---
+
+<MarkdownLayout frontmatter={project.data} body={project.body} path={project.path}>
+  <Content />
+</MarkdownLayout>
