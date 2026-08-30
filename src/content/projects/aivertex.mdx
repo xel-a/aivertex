@@ -37,6 +37,8 @@ multiple frameworks without the need of creating different projects. You can jus
 place them in your pages. Content collection is also a wonderful feature. Since my website will be content heavy in the future,
 content collection organizes my posts and handle the task of making them readily available for querying.
 
+### Content Rendering
+
 Below is how a content is rendered in my website:
 
 <CodeBlock
@@ -58,7 +60,9 @@ Below is how a content is rendered in my website:
 I chose MDX rather than a normal markdown file because I wanted additional flexibility and customization through the use of
 components.
 
-For CI/CD, I do the following for ease of development:
+### CI/CD Pipeline
+
+I do the following for ease of development and deployment:
 
 <CodeBlock
   code={`
@@ -87,7 +91,7 @@ For CI/CD, I do the following for ease of development:
 You might be wondering: _"Where is the test? Why don't you do testing?"_. Well, it's my personal preference not to do it since it
 is time-consuming to create tests. It's a personal project and not a commercial project that has users. Personally, I don't test
 my projects, I just build, break, and fix. You'll probably find some functions that is not unit-testable within the source code.
-Don't worry, I'll refactor them. But, not now. Maybe in the future? So anyways, where still going to tackle the technology stack
+Don't worry, I'll refactor them. But, not now. Maybe in the future? So anyways, we're still going to tackle the technology stack
 that I'm using.
 
 ## Technology Stack
