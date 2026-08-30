@@ -69,7 +69,7 @@ const { post, showContentType } = Astro.props;
     background-color: var(--color-surface);
   }
 
-  .content:hover .content-date {
+  .content:hover :is(.content-date, .content-type) {
     color: var(--color-text);
   }
 

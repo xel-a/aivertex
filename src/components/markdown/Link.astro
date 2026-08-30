@@ -10,7 +10,7 @@ const { name, url, target } = Astro.props;
 
 <a href={url} target={target}>{name}</a>
 
-<style is:global>
+<style>
   a:not(.aivertex-logo, .tag) {
     color: var(--color-link);
     text-decoration: none;
