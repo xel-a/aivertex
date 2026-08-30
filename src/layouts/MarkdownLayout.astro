@@ -6,6 +6,7 @@ import { slugify } from '../utils/strings';
 import Breadcrumb from '../components/common/Breadcrumb.astro';
 import Link from '../components/markdown/Link.astro';
 import { formatDate } from '../utils/date';
+import { type NodeId } from '../config/navigation';
 
 interface Props {
   frontmatter:
@@ -23,9 +24,10 @@ const { frontmatter, body, path } = Astro.props;
 
 const contentText = body?.trim().split(/\s+/).join(' ')!;
 const readingTime = getReadingTime(contentText);
+const parent = path.split('/')[0] as NodeId;
 ---
 
-<Layout contentTitle={frontmatter.title}>
+<Layout pageId={parent} contentTitle={frontmatter.title}>
   <main>
     <article class="content">
       <section class="content-info">
