@@ -1,6 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { input, select } from '@inquirer/prompts';
-import { categories, labType, status } from '../config/content';
+import { categories, labType, labStatus } from '../config/content';
 import { slugify } from '../utils/strings';
 import path from 'node:path';
 
@@ -43,7 +43,7 @@ async function main() {
 
   const contentStatus = await select({
     message: 'Status:',
-    choices: status,
+    choices: labStatus,
   });
 
   const tags = tagsInput
