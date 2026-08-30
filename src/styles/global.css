@@ -22,6 +22,12 @@
   --shiki-remove-background: #3a2d2f;
   --shiki-remove-color: #ed8a8a;
 
+  /* writeup difficulty colors */
+  --writeup-beginner-color: #a5e1a5;
+  --writeup-intermediate-color: #e3ed8a;
+  --writeup-advanced-color: #edc98a;
+  --writeup-insane-color: #ed8a8a;
+
   /* fonts */
   --heading-font: 'Space Grotesk', sans-serif;
   --body-font: 'Inter', sans-serif;
