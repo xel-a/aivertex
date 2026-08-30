@@ -14,3 +14,141 @@ links:
   repository: https://github.com/xel-a/fluxio
 draft: false
 ---
+
+import ProjectMetadata from '../../components/markdown/ProjectMetadata.astro';
+import CodeBlock from '../../components/markdown/CodeBlock.astro';
+import TechStack from '../../components/markdown/TechStack.astro';
+import ImageFigure from '../../components/markdown/ImageFigure.astro';
+import fluxio_erd from '../../assets/images/projects/fluxio/fluxio_erd.png';
+
+## Project Metadata
+
+<ProjectMetadata status="On Hold" version="1.0" updated="2026-07/13" />
+
+## Overview
+
+Fluxio is a personal finance management system I built to help me manage and budget my income from KFC. I haven't used other
+budgeting applications, nor do I currently plan to. I may explore a few for inspiration and to see how others approach personal
+finance, but I've always enjoyed building tools that solve problems I personally experience and will actually use.
+
+## Architecture
+
+### API
+
+<CodeBlock
+  code={`
+       [route]
+          ↓
+     [middleware]
+          ↓
+      [handler]
+          ↓
+      [service]
+          ↓
+     [repository]
+          ↓
+     [postgreSQL]
+    `}
+  lang="text"
+  title="API Layers"
+/>
+
+The API is broken down into five (5) layers: route, middleware, handler, service, and repository. Currently it doesn't have a
+middleware but I plan to add one in the future. The **route** layer defines the API endpoints and maps them to the appropriate handlers.
+The **handler** processes HTTP requests and delegates the required work to the appropriate service. A **service** contains the application's
+business logic and uses the repository to retrieve or manipulate data. Finally, the **repository** abstracts access to the database and
+is responsible for interacting with PostgreSQL.
+
+### Data Ingestion
+
+Currently, fluxio only has backend at the moment. I ingest data by doing the following:
+
+<CodeBlock
+  code={`
+  local:
+     [insomnia] JSON body
+              ↓
+            [API]
+              ↓
+     [deserialize request]
+              ↓
+      [write to database]
+              ↓
+         [PostgreSQL]
+    `}
+  lang="text"
+  title="Data Ingestion"
+/>
+
+I use **insomnia** to test, and use my API. The API handles request body
+deserialization, business logic, and database manipulation. **PostgreSQL** is my database of choice. I have been using **Microsoft
+SQL Server** during my time in college. So, I went with **PostgreSQL** because it is open source and highly scalable.
+
+### Docker Infrastructure
+
+Docker is a great tool for self-hosting since it allows you to run individual app services as containers. I have four (4)
+containers: **_API_**, **_postgresql_**, **_grafana_**, and **_grafana renderer_**. Below is how each services interact:
+
+<CodeBlock
+  code={`
+       [API]
+         ↓
+    [postgreSQL]
+         ↑
+     [grafana] --> [grafana renderer]
+         ↓                 ↓
+    [dashboards]   [dashboard export]
+    `}
+  lang="text"
+  title="Docker Infrastructure"
+/>
+
+The **API** interacts and manipulates the database, while **grafana** reads the data from the **postgreSQL** database and
+display it as dashboards. **Grafana renderer** is an optional plugin I added since I wanted a way to export the dashboards
+instead of using screen captures.
+
+## Database
+
+I used **PostgreSQL** as my database. The **ERD** for the application database is as follows:
+
+<ImageFigure
+  src={fluxio_erd}
+  title="Fluxio ERD"
+  alt="Fluxio Entity Relationship Diagram"
+  caption="Entity Relationship Diagram for Fluxio"
+/>
+
+The database has two (2) independent groups: cash flow, and investments. For cashflow, I have tables for _income/expense
+transaction, income distribution, budget plan, category, category group, and transaction type_. While investments has _transaction,
+distribution, broker, category, and account type_. I designed the database based on the data that I needed. Tables might be updated
+or added, depending on my current needs. For now, I just needed to know the following:
+
+- Monthly/Annual Income & Expense
+- Income Distribution
+- Income vs. Expense
+- Budget Plan
+- Investment Transaction & Distribution
+- Available Cash to Spend
+- Total Net Worth
+
+I like keeping things simple so I try not to overengineer the database.
+
+## Technology Stack
+
+<TechStack
+  languages={['Go']}
+  backend={['Go / REST API']}
+  infrastructure={['Docker', 'Docker Compose']}
+  data={['PostgreSQL']}
+  tools={['Grafana', 'Air', 'Makefile']}
+/>
+
+I chose **Go** for the backend since it is fast and simple. For infrastructure, I use **Docker** and **Docker Compose** to
+start individual services easier, especially since the application is self-hosted. **Air** provides live reloading during
+development, while **Makefile** is used to aggregate commands for running, stopping, and viewing logs from docker containers.
+**Grafana** and **PostgreSQL** are already explained in the above sections.
+
+## What's next?
+
+This project is currently on hold since I am too busy with my website <a href='/'>aivertex</a>, working at KFC, and studying
+for an <a href='/about/#current-traversal'>SC-200 certification</a>. I'll try to make the system easy to setup for self-hosting in the future.
