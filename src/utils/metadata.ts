@@ -4,6 +4,10 @@ import { getNodeInfo } from './navigation';
 
 export function generatePageTitle(pageId?: NodeId, contentTitle?: string) {
   if (pageId) {
+    if (contentTitle) {
+      return `${contentTitle} | ${site.name}`;
+    }
+
     const navInfo = getNodeInfo(pageId)!;
 
     switch (pageId) {
@@ -12,9 +16,5 @@ export function generatePageTitle(pageId?: NodeId, contentTitle?: string) {
       default:
         return `${navInfo.label} | ${site.name}`;
     }
-  }
-
-  if (contentTitle) {
-    return `${contentTitle} | ${site.name}`;
   }
 }
