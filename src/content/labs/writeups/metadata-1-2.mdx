@@ -1,0 +1,134 @@
+---
+title: Metadata 1 & 2
+description: Find the hidden message within the image
+pubDate: 2026-08-30
+type: writeup
+author: Axel Ignacio
+category: Cybersecurity
+tags:
+  - Hack4Gov
+  - Steganography
+  - Metadata
+  - ExifTool
+status: completed
+draft: false
+updatedDate: null
+---
+
+import WriteupMetadata from '../../../components/markdown/WriteupMetadata.astro';
+import CodeBlock from '../../../components/markdown/CodeBlock.astro';
+import ImageFigure from '../../../components/markdown/ImageFigure.astro';
+import Link from '../../../components/markdown/Link.astro';
+import exiftoolOutput from '../../../assets/images/labs/writeups/metadata-1-2/exiftool-output.png';
+import exiftoolDescription from '../../../assets/images/labs/writeups/metadata-1-2/exiftool-description.png';
+import decoderOutput from '../../../assets/images/labs/writeups/metadata-1-2/decoder-output.png';
+import googleMapsResult from '../../../assets/images/labs/writeups/metadata-1-2/google-maps-result.png';
+import challengeImage from '../../../assets/images/labs/writeups/metadata-1-2/IMG_9623.jpg';
+
+## Writeup Metadata
+
+<WriteupMetadata status={frontmatter.status} difficulty="Beginner" />
+
+## Overview
+
+I completed this challenge during <Link url='/blogs/looking-back-at-hack4gov-2023-my-first-ctf-experience' name='Hack4Gov 2023' />.
+The challenge provides an image inside a RAR archive and asks us to find the hidden messages within it.
+
+Since the challenge is named Metadata 1 & 2, the first assumption is that the flags are hidden somewhere in the image's metadata.
+The goal is to find the two (2) hidden flags.
+
+## Artifacts
+
+- **IMG_9623.rar**
+
+<ImageFigure
+  src={challengeImage}
+  title="Extracted Image"
+  alt="Extracted Image of the challenge"
+  caption="Extracted Image"
+/>
+
+If you already guessed that this image is Mt. Tapyas then good for you. If I knew during the CTF, I wouldn't have had to
+locate the second flag. If you want to try the challenge, download the image in
+my <Link url='https://github.com/xel-a/aivertex/tree/main/src/assets/images/labs/writeups/metadata-1-2/IMG_9623.jpg' name='GitHub repository' target='_blank' />
+rather than directly downloading this image since Astro optimizes uploaded images and converts them to webp.
+
+## Tools
+
+- **ExifTool** — used to extract and examine the image's metadata.
+- **Hexadecimal decoder** — used to convert the hexadecimal value into plain text.
+- **Google Maps** — used to identify the location represented by the coordinates.
+
+## Approach
+
+First, I extracted the image from the **IMG_9623.rar** archive.
+
+I then used ExifTool to examine the image's metadata using the command: exiftool [path/to/image]
+
+<CodeBlock
+  code={`
+  exiftool IMG_9623.jpg
+`}
+  title="ExifTool command"
+  lang="bash"
+/>
+
+### Flag #1
+
+While examining the output, I noticed that the Author field contained a hexadecimal value.
+
+<ImageFigure
+  src={exiftoolOutput}
+  title="ExifTool output"
+  alt="Output of ExifTool command"
+  caption="Author in Hexadecimal"
+/>
+
+Since hexadecimal data can represent text, I decoded the value from hexadecimal into plain text using a hexadecimal decoder.
+
+<ImageFigure
+  src={decoderOutput}
+  title="Decoder output"
+  alt="Output of Online Decoder"
+  caption="Hexadecimal String"
+/>
+
+This revealed the first flag — **H4G\{y0u_d!d_4_gr34t_j0b\}**
+
+### Flag #2
+
+After finding the first flag, I initially had difficulty locating the second one. I re-read the challenge description and noticed
+that the second challenge was related to finding the location where the image was taken.
+
+I went through the ExifTool output again and noticed the Description field. The value appeared to contain a pair of coordinates
+representing latitude and longitude.
+
+<ImageFigure
+  src={exiftoolDescription}
+  title="ExifTool output"
+  alt="Output of ExifTool"
+  caption="Coordinates found in description"
+/>
+
+I searched these coordinates using **Google Maps** and found that they pointed to **Mount Tapyas** in Palawan.
+
+<ImageFigure
+  src={googleMapsResult}
+  title="Google Maps result"
+  alt="Output of Google Maps search"
+  caption="Location in Google Maps"
+/>
+
+This revealed the second flag: **H4G\{mount tapyas\}**
+
+## Lessons Learned
+
+- **Always inspect metadata first.** Images can contain useful information such as author names, comments, descriptions, coordinates, and other EXIF fields.
+- **Pay attention to unusual values.** The hexadecimal string in the Author field was a clue that the value was encoded rather than plain text.
+- **Read the challenge description carefully.** The second flag required finding the image's location, which helped narrow down what to look for in the metadata.
+- **Know your basic tools.** ExifTool can quickly reveal a large amount of metadata and is a useful first step when investigating image-based CTF challenges.
+
+## Flags
+
+- Flag #1: **H4G\{y0u_d!d_4_gr34t_j0b\}**
+- Flag #2: **H4G\{mount tapyas\}**
