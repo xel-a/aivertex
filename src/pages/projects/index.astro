@@ -2,10 +2,9 @@
 import Layout from '../../layouts/Layout.astro';
 import Intro from '../../components/common/Intro.astro';
 import { getPostsByType } from '../../lib/content';
-import ProjectItem from '../../components/projects/ProjectItem.astro';
+import ProjectContent from '../../components/projects/ProjectContent.astro';
 
 const projects = await getPostsByType('project');
-const projectYears = [...new Set(projects.map((project) => project.data.pubDate.getFullYear()))];
 ---
 
 <Layout pageId="projects">
@@ -18,9 +17,8 @@ const projectYears = [...new Set(projects.map((project) => project.data.pubDate.
         body="Projects, tools, and systems I've built while solving problems and exploring new ideas."
       />
     </section>
-    <section class="projects-content">
-      {projectYears.map((year) => <ProjectItem year={year} posts={projects} />)}
-    </section>
+
+    <ProjectContent projects={projects} />
   </main>
 </Layout>
 
@@ -28,9 +26,5 @@ const projectYears = [...new Set(projects.map((project) => project.data.pubDate.
   main {
     width: min(768px, 100%);
     margin: 0 auto;
-  }
-
-  .projects-content {
-    padding-block: 56px;
   }
 </style>

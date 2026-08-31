@@ -1,0 +1,62 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { padContentLength } from '../../utils/strings';
+import ArtifactCard from '../common/ArtifactCard.astro';
+import { formatDate } from '../../utils/date';
+
+interface Props {
+  projects: CollectionEntry<'project'>[];
+}
+
+const { projects } = Astro.props;
+const projectsByYear = Object.entries(
+  Object.groupBy(projects, (project) => formatDate({ date: project.data.pubDate, isYear: true }))
+).sort(([yearA], [yearB]) => yearB.localeCompare(yearA));
+---
+
+{
+  projectsByYear.length > 0
+    ? projectsByYear.map(([year, projects]) => (
+        <fieldset class="project-grid">
+          <legend class="project-year">
+            <h2 class="project-title">
+              <span>{year}</span> &nbsp; &middot; &nbsp; {padContentLength(projects!.length)}
+            </h2>
+          </legend>
+          {projects!.map((project) => (
+            <ArtifactCard project={project} />
+          ))}
+        </fieldset>
+      ))
+    : null
+}
+
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    align-items: stretch;
+    border: 1px solid var(--color-border);
+    border-inline: none;
+    padding-bottom: 20px;
+    margin-block: 56px;
+  }
+
+  .project-title {
+    font-size: var(--text-title);
+    font-weight: bold;
+    padding: 0 10px;
+    margin: 0;
+  }
+
+  .project-grid:not(:last-of-type) {
+    margin-bottom: 56px;
+  }
+
+  @media screen and (max-width: 640px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
