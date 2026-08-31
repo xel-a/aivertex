@@ -1,0 +1,128 @@
+---
+import { labStatus } from '../../config/content';
+
+interface Props {
+  status: (typeof labStatus)[number];
+  difficulty: 'Beginner' | 'Intermediate' | 'Advanced' | 'Insane';
+}
+
+const { status, difficulty } = Astro.props;
+---
+
+<div class="writeup-metadata">
+  <div class="header">
+    <p class="metadata-difficulty-label">Difficulty</p>
+    <p class="metadata-status-label">Status</p>
+  </div>
+  <div class="values">
+    <p class="metadata-difficulty-value">{difficulty}</p>
+    <p class="metadata-status-value">{status}</p>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const difficulty = document.querySelector('.metadata-difficulty-value');
+    const previousDifficulty = [...difficulty?.classList!].find((item) =>
+      item.startsWith('difficulty-color')
+    );
+
+    switch (difficulty?.textContent) {
+      case 'Beginner':
+        difficulty.classList.remove(previousDifficulty!);
+        difficulty.classList.add('difficulty-color-beginner');
+        break;
+      case 'Intermediate':
+        difficulty.classList.remove(previousDifficulty!);
+        difficulty.classList.add('difficulty-color-intermediate');
+        break;
+      case 'Advanced':
+        difficulty.classList.remove(previousDifficulty!);
+        difficulty.classList.add('difficulty-color-advanced');
+        break;
+      case 'Insane':
+        difficulty.classList.remove(previousDifficulty!);
+        difficulty.classList.add('difficulty-color-insane');
+        break;
+    }
+  });
+</script>
+
+<style>
+  .writeup-metadata {
+    padding: 10px 15px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    font-size: var(--text-meta);
+  }
+
+  .header,
+  .values {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .header {
+    background-color: var(--color-surface);
+    border-radius: 5px;
+    padding-block: 5px;
+    margin-bottom: 5px;
+  }
+
+  [class^='metadata'] {
+    margin: 0;
+    text-align: center;
+  }
+
+  [class^='metadata-'][class$='-label'] {
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: inherit;
+  }
+
+  .metadata-status-value,
+  .metadata-difficulty-value {
+    font-size: inherit;
+    color: var(--color-muted);
+    text-transform: capitalize;
+  }
+
+  .difficulty-color-beginner {
+    color: var(--writeup-beginner-color);
+  }
+
+  .difficulty-color-intermediate {
+    color: var(--writeup-intermediate-color);
+  }
+
+  .difficulty-color-advanced {
+    color: var(--writeup-advanced-color);
+  }
+
+  .difficulty-color-insane {
+    color: var(--writeup-insane-color);
+  }
+
+  @media screen and (max-width: 768px) {
+    .writeup-metadata {
+      display: flex;
+      gap: 24px;
+    }
+
+    [class^='metadata'] {
+      text-align: unset;
+    }
+
+    .header,
+    .values {
+      grid-template-columns: 1fr;
+      align-items: center;
+    }
+
+    .header {
+      background-color: unset;
+      padding-block: unset;
+      margin-bottom: unset;
+    }
+  }
+</style>
