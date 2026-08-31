@@ -1,10 +1,16 @@
 ---
 import Breadcrumb from '../../../components/common/Breadcrumb.astro';
+import Content from '../../../components/common/Content.astro';
 import Intro from '../../../components/common/Intro.astro';
 import Layout from '../../../layouts/Layout.astro';
+import { getPostsByType } from '../../../lib/content';
+
+const posts = await getPostsByType('lab').then((posts) =>
+  posts.filter((post) => post.data.type === 'writeup')
+);
 ---
 
-<Layout>
+<Layout pageId="lab">
   <main>
     <Breadcrumb path="lab/writeups" current="Writeups" />
     <Intro
@@ -13,6 +19,7 @@ import Layout from '../../../layouts/Layout.astro';
       lead="A place where findings take shape."
       body="Solutions, discoveries, and findings worth sharing."
     />
+    <Content posts={posts} showContentType={false} />
   </main>
 </Layout>
 
