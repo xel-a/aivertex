@@ -45,7 +45,7 @@ export async function getPostsByType<T extends CollectionKey>(
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .map((post) => ({
       ...post,
-      path: `${post.collection}${post.collection === 'lab' ? '' : 's'}/${post.id}`,
+      path: `/${post.collection}${post.collection === 'lab' ? '' : 's'}/${post.id}`,
     }));
 }
 
