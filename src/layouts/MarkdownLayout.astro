@@ -24,7 +24,7 @@ const { frontmatter, body, path } = Astro.props;
 
 const contentText = body?.trim().split(/\s+/).join(' ')!;
 const readingTime = getReadingTime(contentText);
-const parent = path.split('/')[0] as NodeId;
+const parent = path.split('/')[1] as NodeId;
 ---
 
 <Layout pageId={parent} contentTitle={frontmatter.title}>
