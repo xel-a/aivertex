@@ -72,7 +72,11 @@ const posts = (await getAllPosts()).slice(0, 3);
                   else {
                     switch (part.type) {
                       case 'link':
-                        return <a href={part.href}>{part.text}</a>;
+                        return (
+                          <a href={part.href} target={part.target}>
+                            {part.text}
+                          </a>
+                        );
                     }
                   }
                 })}

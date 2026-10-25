@@ -8,7 +8,7 @@ interface Experience {
 
 export const workHistory = [
   {
-    title: 'Back of House (Part-time)',
+    title: 'Back of House (Full-time)',
     company: 'KFC & Taco Bell',
     location: 'Toronto, CA',
     period: 'May 20, 2026 — Present',
@@ -16,6 +16,7 @@ export const workHistory = [
       'Operate and maintain commercial kitchen equipment while following oil filtration and maintenance procedures to ensure consistent food quality.',
       'Follow food safety and sanitation standards during food preparation and cooking to prevent cross-contamination.',
       'Maintain composure and perform effectively in high-pressure, fast-paced environments.',
+      'Assisted the middle of house with preparing and organizing food orders to ensure timely and accurate service.',
     ],
   },
   {

@@ -15,30 +15,30 @@ export const traversalNodes: TraversalNode[] = [
   {
     title: 'SC-200 Certification',
     subtitle: 'Microsoft Certified: Security Operations Analyst Associate',
-    completionDate: 'October 17, 2026',
+    completionDate: '',
     topics: [
       {
         name: 'Microsoft Defender XDR',
         started: true,
-        completed: false,
+        completed: true,
       },
       {
         name: 'Microsoft Defender for Endpoint',
-        started: false,
-        completed: false,
+        started: true,
+        completed: true,
       },
       {
         name: 'Microsoft Defender for Cloud',
-        started: false,
-        completed: false,
+        started: true,
+        completed: true,
       },
+      { name: 'Microsoft Sentinel', started: true, completed: true },
+      { name: 'Microsoft Purview', started: true, completed: true },
       {
         name: 'Kusto Query Language (KQL)',
-        started: false,
+        started: true,
         completed: false,
       },
-      { name: 'Microsoft Sentinel', started: false, completed: false },
-      { name: 'Microsoft Purview', started: false, completed: false },
     ],
   },
 ];

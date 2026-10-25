@@ -81,7 +81,9 @@ const firstTraversalNode = traversalNodes[0];
               <h4>
                 Target &mdash;{' '}
                 <span class="target-date">
-                  {formatDate({ date: node.completionDate, month: 'short' })}
+                  {node.completionDate
+                    ? formatDate({ date: node.completionDate, month: 'short' })
+                    : 'TBD'}
                 </span>
               </h4>
             </div>

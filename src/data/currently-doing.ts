@@ -15,7 +15,7 @@ interface CurrentlyDoing {
 }
 
 export const currentlyDoing: CurrentlyDoing = {
-  updatedAt: '8/16/2026',
+  updatedAt: '10/25/2026',
   activities: [
     [
       'Studying for ',
@@ -27,7 +27,8 @@ export const currentlyDoing: CurrentlyDoing = {
       },
       ' utilizing a voucher from Microsoft AI Skills Fest.',
     ],
-    ['Cooking chicken at KFC in the morning, building my portfolio website at night.'],
+    ['Re-scheduling my SC-200 exam again because of technical issues during my last attempt.'],
+    ['Working at KFC in the morning, building my portfolio website at night.'],
     ['Playing video games to stay sane'],
     [
       'Listening to ',
@@ -39,6 +40,5 @@ export const currentlyDoing: CurrentlyDoing = {
       },
       ' who knows how to make a guitar cry.',
     ],
-    ['Still chasing that first tech job.'],
   ],
 };
